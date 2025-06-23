@@ -17,3 +17,75 @@ body {
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
 }
+
+/* Custom utility classes for better responsiveness */
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
+
+/* Better responsive modal styles */
+.responsive-modal .ant-modal-content {
+  margin: 16px;
+}
+
+@media (max-width: 640px) {
+  .responsive-modal .ant-modal-content {
+    margin: 8px;
+  }
+  
+  .responsive-modal .ant-modal-header {
+    padding: 16px 20px;
+  }
+  
+  .responsive-modal .ant-modal-body {
+    padding: 16px 20px;
+  }
+  
+  .responsive-modal .ant-modal-footer {
+    padding: 12px 20px 16px;
+  }
+}
+
+/* Improve card hover effects on mobile */
+@media (hover: hover) {
+  .instance-card:hover {
+    transform: translateY(-2px);
+  }
+}
+
+@media (hover: none) {
+  .instance-card:active {
+    transform: translateY(1px);
+  }
+}
+
+/* Better focus states for accessibility */
+.ant-btn:focus-visible,
+.ant-input:focus-visible,
+.ant-select-selector:focus-visible {
+  outline: 2px solid #1890ff;
+  outline-offset: 2px;
+}
+
+/* Responsive text sizing */
+@media (max-width: 640px) {
+  .responsive-text-lg {
+    font-size: 1rem;
+    line-height: 1.5rem;
+  }
+  
+  .responsive-text-xl {
+    font-size: 1.125rem;
+    line-height: 1.75rem;
+  }
+  
+  .responsive-text-2xl {
+    font-size: 1.25rem;
+    line-height: 1.75rem;
+  }
+}
