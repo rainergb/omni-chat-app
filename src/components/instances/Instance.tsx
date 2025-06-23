@@ -1,6 +1,6 @@
 // src/pages/InstancesPage.tsx (ou onde você usa os componentes)
 import React, { useState } from "react";
-import { InstanceHeader } from "@/components/instances/InstanceHeader";
+import { InstanceHeader } from "@/components/instances/Components/InstanceHeader/InstanceHeader";
 import { InstanceList } from "@/components/instances/InstanceList";
 import { useInstances } from "@/hooks/useInstances";
 
