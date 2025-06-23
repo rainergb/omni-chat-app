@@ -1,24 +1,22 @@
 // src/components/instances/Components/InstanceTable/InstanceTable.tsx
 import React, { useState } from "react";
 import { Row, Col, Skeleton } from "antd";
-import { Grid3X3, List, Plus } from "lucide-react";
+import { Grid3X3, Plus } from "lucide-react";
 import { ViewMode, Instance } from "@/libs/types";
 import { InstanceCard } from "../InstanceCard/InstanceCard";
+import { InstanceList } from "../InstanceList/InstanceList";
 import { QRCodeModal } from "../../QRCodeModal";
 import { useTheme } from "@/contexts/ThemeContext";
 import {
   Container,
+  ContentWrapper,
   SkeletonCard,
   EmptyContainer,
   EmptyContent,
   EmptyIconContainer,
   EmptyTitle,
   EmptyDescription,
-  CreateButton,
-  ListViewContainer,
-  ListViewContent,
-  ListViewTitle,
-  ListViewDescription
+  CreateButton
 } from "./InstanceTable.styles";
 
 interface InstanceTableProps {
@@ -105,7 +103,6 @@ export const InstanceTable: React.FC<InstanceTableProps> = ({
       </EmptyContent>
     </EmptyContainer>
   );
-
   const renderInstances = () => {
     if (viewMode === "cards") {
       return (
@@ -124,33 +121,34 @@ export const InstanceTable: React.FC<InstanceTableProps> = ({
           ))}
         </Row>
       );
-    }    return (
-      <ListViewContainer $isDark={isDark}>
-        <ListViewContent>
-          <List
-            size={48}
-            className={`mx-auto mb-4 ${
-              isDark ? "text-gray-400" : "text-gray-300"
-            }`}
-          />
-          <ListViewTitle $isDark={isDark}>
-            Visualização em Lista
-          </ListViewTitle>
-          <ListViewDescription $isDark={isDark}>
-            Esta visualização será implementada em breve
-          </ListViewDescription>
-        </ListViewContent>
-      </ListViewContainer>
+    }
+
+    return (
+      <InstanceList
+        instances={filteredInstances}
+        filteredInstances={filteredInstances}
+        loading={false}
+        searchTerm={searchTerm}
+        statusFilter={statusFilter}
+        typeFilter={typeFilter}
+        onConnect={onConnect}
+        onDisconnect={onDisconnect}
+        onDelete={onDelete}
+        onOpenChat={handleOpenChat}
+        onCreateInstance={onCreateInstance}
+      />
     );
   };
   return (
     <Container>
-      {/* Conteúdo */}
-      {loading
-        ? renderSkeleton()
-        : filteredInstances.length === 0
-        ? renderEmpty()
-        : renderInstances()}
+      <ContentWrapper>
+        {/* Conteúdo */}
+        {loading
+          ? renderSkeleton()
+          : filteredInstances.length === 0
+          ? renderEmpty()
+          : renderInstances()}
+      </ContentWrapper>
 
       {/* Modal QR Code */}
       <QRCodeModal

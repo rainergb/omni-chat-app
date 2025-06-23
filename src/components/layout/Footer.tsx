@@ -1,7 +1,7 @@
 // src/components/layout/Footer.tsx
-import React from "react";
-import { Button, Tooltip } from "antd";
-import { Github, Globe, HelpCircle } from "lucide-react";
+// import React from "react";
+// import { Button, Tooltip } from "antd";
+// import { Github, Globe, HelpCircle } from "lucide-react";
 import { useTheme } from "@/contexts/ThemeContext";
 import styled from "styled-components";
 
@@ -38,12 +38,12 @@ const CenteredContainer = styled.div`
   gap: 0.5rem;
 `;
 
-const LinksContainer = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 1rem;
-`;
+// const LinksContainer = styled.div`
+//   display: flex;
+//   align-items: center;
+//   justify-content: center;
+//   gap: 1rem;
+// `;
 
 const BadgeContainer = styled.div`
   display: flex;
@@ -71,7 +71,7 @@ export const Footer: React.FC = () => {
       <FooterContainer>
         <CenteredContainer>
           {/* Links úteis - centralizados e sempre visíveis */}
-          <LinksContainer>
+          {/* <LinksContainer>
             <Tooltip title="Documentação">
               <Button
                 type="text"
@@ -107,11 +107,12 @@ export const Footer: React.FC = () => {
                 }`}
               />
             </Tooltip>
-          </LinksContainer>          {/* Badge de versão - centralizado */}
+          </LinksContainer> 
+           */}
+
+          {/* Badge de versão - centralizado */}
           <BadgeContainer>
-            <VersionBadge $isDark={isDark}>
-              v1.0.0
-            </VersionBadge>
+            <VersionBadge $isDark={isDark}>v1.0.0</VersionBadge>
           </BadgeContainer>
         </CenteredContainer>
       </FooterContainer>
