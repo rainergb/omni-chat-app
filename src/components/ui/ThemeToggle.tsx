@@ -9,7 +9,6 @@ export const ThemeToggle: React.FC = () => {
 
   return (
     <Tooltip title={`Alternar para modo ${isDark ? "claro" : "escuro"}`}>
-      {" "}
       <Button
         type="text"
         icon={isDark ? <Sun size={18} /> : <Moon size={18} />}

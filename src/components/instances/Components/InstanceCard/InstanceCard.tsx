@@ -142,7 +142,6 @@ export const InstanceCard: React.FC<InstanceCardProps> = ({
           {/* Header */}
           <Header>
             <HeaderLeft>
-              {" "}
               <AvatarContainer>
                 <Avatar
                   size={48}
@@ -182,8 +181,8 @@ export const InstanceCard: React.FC<InstanceCardProps> = ({
                 className="dropdown-button"
               />
             </Dropdown>
-          </Header>{" "}
-          {/* Stats */}{" "}
+          </Header>
+          {/* Stats */}
           <StatsSection $isDark={isDark}>
             <StatItem $colors={colors} $isDark={isDark}>
               <StatLeft>

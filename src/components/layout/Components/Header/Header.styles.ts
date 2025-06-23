@@ -31,6 +31,35 @@ export const HeaderContent = styled.div`
   width: 100%;
   max-width: 112rem;
   margin: 0 auto;
+  gap: 1rem;
+`;
+
+export const NavigationContainer = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex: 1;
+
+  .ant-segmented {
+    border-radius: 12px;
+    padding: 4px;
+    height: 48px;
+    min-width: 200px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+
+    .ant-segmented-item {
+      height: 40px;
+      line-height: 40px;
+      font-weight: 500;
+      font-size: 14px;
+      padding: 0 20px;
+
+      &.ant-segmented-item-selected {
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.12);
+        font-weight: 600;
+      }
+    }
+  }
 `;
 
 export const LogoContainer = styled.div`

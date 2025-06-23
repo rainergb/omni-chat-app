@@ -65,11 +65,6 @@ export const Avatar = styled(AntAvatar)<StyledProps>`
   }}
 `;
 
-export const StatusIconContainer = styled.div`
-  position: absolute;
-  bottom: -0.25rem;
-  right: -0.25rem;
-`;
 
 export const InstanceInfo = styled.div`
   min-width: 0;

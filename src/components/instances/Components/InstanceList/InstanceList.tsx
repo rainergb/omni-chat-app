@@ -240,7 +240,6 @@ export const InstanceList: React.FC<InstanceListProps> = ({
             return (
               <ListRow key={instance.id} $isDark={isDark}>
                 <ListCell>
-                  {" "}
                   <InstanceInfo>
                     <InstanceAvatar $isDark={isDark}>
                       <Avatar

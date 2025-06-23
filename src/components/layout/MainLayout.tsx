@@ -1,18 +1,31 @@
 // src/components/layout/MainLayout.tsx
 import React from "react";
 import { Layout } from "antd";
-import MainTabs from "./MainTabs";
+import { useNavigation } from "@/contexts/NavigationContext";
+import { Chatpage } from "@/components/chatpage/Chatpage";
+import { InstancesPage } from "@/components/instances/Instance";
 
 const { Content } = Layout;
 
 export const MainLayout: React.FC = () => {
+  const { activeTab } = useNavigation();
+
+  const renderContent = () => {
+    switch (activeTab) {
+      case "chat":
+        return <Chatpage />;
+      case "instances":
+        return <InstancesPage />;
+      default:
+        return <InstancesPage />;
+    }
+  };
+
   return (
     <Layout className="min-h-screen" style={{ paddingBottom: "80px" }}>
       {/* Main Content */}
       <Content className="flex-1 overflow-hidden">
-        <div className="h-full max-w-7xl mx-auto">
-          <MainTabs />
-        </div>
+        <div className="h-full max-w-7xl mx-auto">{renderContent()}</div>
       </Content>
     </Layout>
   );
