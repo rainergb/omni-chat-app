@@ -1,6 +1,6 @@
 // src/pages/InstancesPage.tsx (ou onde você usa os componentes)
 import React, { useState } from "react";
-import { InstanceList } from "@/components/instances/InstanceList";
+import { InstanceTable } from "@/components/instances/Components/InstanceTable/InstanceTable";
 import { useInstances } from "@/hooks/useInstances";
 import { InstanceHeader } from "./Components/InstanceHeader/InstanceHeader";
 
@@ -59,7 +59,7 @@ export const InstancesPage: React.FC = () => {
         loading={loading}
       />
 
-      <InstanceList
+      <InstanceTable
         instances={instances}
         filteredInstances={filteredInstances}
         viewMode={viewMode}

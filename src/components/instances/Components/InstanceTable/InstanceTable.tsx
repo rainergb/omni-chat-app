@@ -1,13 +1,27 @@
-// src/components/instances/InstanceList.tsx
+// src/components/instances/Components/InstanceTable/InstanceTable.tsx
 import React, { useState } from "react";
-import { Row, Col, Button, Skeleton } from "antd";
+import { Row, Col, Skeleton } from "antd";
 import { Grid3X3, List, Plus } from "lucide-react";
 import { ViewMode, Instance } from "@/libs/types";
-import { InstanceCard } from "./Components/InstanceCard/InstanceCard";
-import { QRCodeModal } from "./QRCodeModal";
+import { InstanceCard } from "../InstanceCard/InstanceCard";
+import { QRCodeModal } from "../../QRCodeModal";
 import { useTheme } from "@/contexts/ThemeContext";
+import {
+  Container,
+  SkeletonCard,
+  EmptyContainer,
+  EmptyContent,
+  EmptyIconContainer,
+  EmptyTitle,
+  EmptyDescription,
+  CreateButton,
+  ListViewContainer,
+  ListViewContent,
+  ListViewTitle,
+  ListViewDescription
+} from "./InstanceTable.styles";
 
-interface InstanceListProps {
+interface InstanceTableProps {
   instances: Instance[];
   filteredInstances: Instance[];
   viewMode: ViewMode;
@@ -22,7 +36,7 @@ interface InstanceListProps {
   onCreateInstance: () => void;
 }
 
-export const InstanceList: React.FC<InstanceListProps> = ({
+export const InstanceTable: React.FC<InstanceTableProps> = ({
   filteredInstances = [],
   viewMode,
   loading,
@@ -47,64 +61,49 @@ export const InstanceList: React.FC<InstanceListProps> = ({
   const handleOpenChat = (instanceId: string) => {
     onOpenChat?.(instanceId);
   };
-
   const renderSkeleton = () => (
     <Row gutter={[24, 24]}>
       {Array.from({ length: 6 }).map((_, index) => (
         <Col xs={24} sm={12} lg={8} xl={6} key={index}>
-          <div
-            className={`p-6 rounded-xl ${
-              isDark ? "bg-gray-800" : "bg-white"
-            } shadow-lg`}
-          >
+          <SkeletonCard $isDark={isDark}>
             <Skeleton active paragraph={{ rows: 4 }} />
-          </div>
+          </SkeletonCard>
         </Col>
       ))}
     </Row>
   );
-
   const renderEmpty = () => (
-    <div className="flex items-center justify-center h-96">
-      <div className="text-center">
-        <div
-          className={`w-24 h-24 mx-auto mb-6 rounded-full flex items-center justify-center ${
-            isDark ? "bg-gray-800" : "bg-gray-100"
-          }`}
-        >
+    <EmptyContainer>
+      <EmptyContent>
+        <EmptyIconContainer $isDark={isDark}>
           <Grid3X3
             size={40}
             className={isDark ? "text-gray-600" : "text-gray-400"}
           />
-        </div>
-        <h3
-          className={`text-xl font-semibold mb-2 ${
-            isDark ? "text-gray-200" : "text-gray-700"
-          }`}
-        >
+        </EmptyIconContainer>
+        <EmptyTitle $isDark={isDark}>
           {searchTerm || statusFilter !== "all" || typeFilter !== "all"
             ? "Nenhuma instância encontrada"
             : "Nenhuma instância criada"}
-        </h3>
-        <p className={`mb-6 ${isDark ? "text-gray-400" : "text-gray-500"}`}>
+        </EmptyTitle>
+        <EmptyDescription $isDark={isDark}>
           {searchTerm || statusFilter !== "all" || typeFilter !== "all"
             ? "Tente ajustar os filtros para encontrar suas instâncias"
             : "Crie sua primeira instância para começar a gerenciar seus chats"}
-        </p>
+        </EmptyDescription>
         {!searchTerm && statusFilter === "all" && typeFilter === "all" && (
-          <Button
+          <CreateButton
             type="primary"
             icon={<Plus size={16} />}
             onClick={onCreateInstance}
             size="large"
             loading={loading}
-            className="bg-gradient-to-r from-blue-500 to-purple-600 border-0 hover:from-blue-600 hover:to-purple-700 shadow-lg"
           >
             Nova Instância
-          </Button>
+          </CreateButton>
         )}
-      </div>
-    </div>
+      </EmptyContent>
+    </EmptyContainer>
   );
 
   const renderInstances = () => {
@@ -125,38 +124,27 @@ export const InstanceList: React.FC<InstanceListProps> = ({
           ))}
         </Row>
       );
-    }
-
-    return (
-      <div
-        className={`rounded-xl ${
-          isDark ? "bg-gray-800" : "bg-white"
-        } shadow-lg p-6`}
-      >
-        <div className="text-center py-12">
+    }    return (
+      <ListViewContainer $isDark={isDark}>
+        <ListViewContent>
           <List
             size={48}
             className={`mx-auto mb-4 ${
               isDark ? "text-gray-400" : "text-gray-300"
             }`}
           />
-          <h3
-            className={`text-lg font-semibold ${
-              isDark ? "text-gray-200" : "text-gray-700"
-            }`}
-          >
+          <ListViewTitle $isDark={isDark}>
             Visualização em Lista
-          </h3>
-          <p className={`${isDark ? "text-gray-400" : "text-gray-500"}`}>
+          </ListViewTitle>
+          <ListViewDescription $isDark={isDark}>
             Esta visualização será implementada em breve
-          </p>
-        </div>
-      </div>
+          </ListViewDescription>
+        </ListViewContent>
+      </ListViewContainer>
     );
   };
-
   return (
-    <div className="space-y-6">
+    <Container>
       {/* Conteúdo */}
       {loading
         ? renderSkeleton()
@@ -170,6 +158,6 @@ export const InstanceList: React.FC<InstanceListProps> = ({
         onClose={() => setQrModalOpen(false)}
         instanceId={selectedInstanceId}
       />
-    </div>
+    </Container>
   );
 };
