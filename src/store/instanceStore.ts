@@ -30,8 +30,7 @@ const mockInstances: Instance[] = [
     lastActivity: new Date(Date.now() - 2 * 60 * 1000).toISOString(),
     messagesCount: 147,
     createdAt: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString(),
-    webhook: "https://api.exemplo.com/webhook/wpp1",
-    avatar: null
+    webhook: "https://api.exemplo.com/webhook/wpp1"
   },
   {
     id: "2",
@@ -41,8 +40,7 @@ const mockInstances: Instance[] = [
     lastActivity: new Date(Date.now() - 15 * 60 * 1000).toISOString(),
     messagesCount: 89,
     createdAt: new Date(Date.now() - 3 * 24 * 60 * 60 * 1000).toISOString(),
-    webhook: "https://api.exemplo.com/webhook/ig1",
-    avatar: null
+    webhook: "https://api.exemplo.com/webhook/ig1"
   },
   {
     id: "3",
@@ -52,8 +50,7 @@ const mockInstances: Instance[] = [
     lastActivity: new Date(Date.now() - 4 * 60 * 60 * 1000).toISOString(),
     messagesCount: 23,
     createdAt: new Date(Date.now() - 5 * 24 * 60 * 60 * 1000).toISOString(),
-    webhook: "https://api.exemplo.com/webhook/fb1",
-    avatar: null
+    webhook: "https://api.exemplo.com/webhook/fb1"
   },
   {
     id: "4",
@@ -63,8 +60,7 @@ const mockInstances: Instance[] = [
     lastActivity: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000).toISOString(),
     messagesCount: 12,
     createdAt: new Date(Date.now() - 10 * 24 * 60 * 60 * 1000).toISOString(),
-    webhook: "https://api.exemplo.com/webhook/tg1",
-    avatar: null
+    webhook: "https://api.exemplo.com/webhook/tg1"
   },
   {
     id: "5",
@@ -74,12 +70,11 @@ const mockInstances: Instance[] = [
     lastActivity: new Date(Date.now() - 30 * 60 * 1000).toISOString(),
     messagesCount: 301,
     createdAt: new Date(Date.now() - 15 * 24 * 60 * 60 * 1000).toISOString(),
-    webhook: "https://api.exemplo.com/webhook/wpp2",
-    avatar: null
+    webhook: "https://api.exemplo.com/webhook/wpp2"
   }
 ];
 
-export const useInstanceStore = create<InstanceStore>((set, get) => ({
+export const useInstanceStore = create<InstanceStore>((set) => ({
   instances: [],
   viewMode: "cards",
   loading: false,
