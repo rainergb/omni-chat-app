@@ -23,6 +23,7 @@ const SegmentedWrapper = styled.div<{ $isDark: boolean }>`
         color: #d1d5db;
         
         &.ant-segmented-item-selected {
+        height: 35px;
           background: #4b5563;
           color: #f9fafb;
         }

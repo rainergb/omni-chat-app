@@ -13,15 +13,17 @@ import {
   WifiOff,
   AlertCircle,
   Clock,
-  Plus
+  Plus,
+  Instagram,
+  Send,
+  Facebook
 } from "lucide-react";
 import type { MenuProps } from "antd";
 import { Instance } from "@/libs/types";
 import {
   formatDate,
   getStatusColor as getStatusBadgeColor,
-  getStatusText,
-  getPlatformIcon
+  getStatusText
 } from "@/libs/utils";
 import { useTheme } from "@/contexts/ThemeContext";
 import { QRCodeModal } from "../../QRCodeModal";
@@ -83,6 +85,24 @@ export const InstanceList: React.FC<InstanceListProps> = ({
   const { isDark } = useTheme();
   const [qrModalOpen, setQrModalOpen] = useState(false);
   const [selectedInstanceId, setSelectedInstanceId] = useState<string>("");
+
+  // Helper function to render platform icons
+  const renderPlatformIcon = (platformType: string) => {
+    const iconProps = { size: 20 };
+
+    switch (platformType) {
+      case "whatsapp":
+        return <MessageCircle {...iconProps} />;
+      case "instagram":
+        return <Instagram {...iconProps} />;
+      case "facebook":
+        return <Facebook {...iconProps} />;
+      case "telegram":
+        return <Send {...iconProps} />;
+      default:
+        return <MessageCircle {...iconProps} />;
+    }
+  };
 
   const handleShowQR = (instanceId: string) => {
     setSelectedInstanceId(instanceId);
@@ -228,12 +248,12 @@ export const InstanceList: React.FC<InstanceListProps> = ({
           <HeaderCell>Última Atividade</HeaderCell>
           <HeaderCell>Ações</HeaderCell>
         </ListHeader>
-        
+
         <ListContent>
           {filteredInstances.map((instance) => {
             const isConnected = instance.status === "connected";
             const isConnecting = instance.status === "connecting";
-            
+
             return (
               <ListRow key={instance.id} $isDark={isDark}>
                 <ListCell>
@@ -243,16 +263,16 @@ export const InstanceList: React.FC<InstanceListProps> = ({
                         size={40}
                         src={instance.avatar}
                         style={{
-                          backgroundColor: isDark ? '#374151' : '#f3f4f6'
+                          backgroundColor: isDark ? "#374151" : "#f3f4f6"
                         }}
                       >
-                        {getPlatformIcon(instance.type)}
+                        {renderPlatformIcon(instance.type)}
                       </Avatar>
                       <StatusIconContainer>
                         {getStatusIcon(instance.status)}
                       </StatusIconContainer>
                     </InstanceAvatar>
-                    
+
                     <InstanceDetails>
                       <InstanceName $isDark={isDark}>
                         {instance.name}
@@ -263,40 +283,46 @@ export const InstanceList: React.FC<InstanceListProps> = ({
                         )}
                       </InstanceName>
                       <InstanceType $isDark={isDark}>
-                        {instance.type.charAt(0).toUpperCase() + instance.type.slice(1)}
+                        {instance.type.charAt(0).toUpperCase() +
+                          instance.type.slice(1)}
                       </InstanceType>
                     </InstanceDetails>
                   </InstanceInfo>
                 </ListCell>
-                
+
                 <ListCell>
                   <StatusContainer>
                     <Badge
                       color={getStatusBadgeColor(instance.status)}
                       text={getStatusText(instance.status)}
                       style={{
-                        fontSize: '0.875rem',
-                        color: isDark ? '#d1d5db' : '#4b5563'
+                        fontSize: "0.875rem",
+                        color: isDark ? "#d1d5db" : "#4b5563"
                       }}
                     />
                   </StatusContainer>
                 </ListCell>
-                
+
                 <ListCell>
                   <StatsBadge $isDark={isDark}>
                     {instance.messagesCount.toLocaleString()}
                   </StatsBadge>
                 </ListCell>
-                
+
                 <ListCell>
                   <div className="flex items-center space-x-2 text-sm">
-                    <Clock size={14} className={isDark ? "text-gray-400" : "text-gray-500"} />
-                    <span className={isDark ? "text-gray-300" : "text-gray-600"}>
+                    <Clock
+                      size={14}
+                      className={isDark ? "text-gray-400" : "text-gray-500"}
+                    />
+                    <span
+                      className={isDark ? "text-gray-300" : "text-gray-600"}
+                    >
                       {formatDate(instance.lastActivity)}
                     </span>
                   </div>
                 </ListCell>
-                
+
                 <ListCell>
                   <ActionsContainer>
                     <Tooltip title={isConnected ? "Desconectar" : "Conectar"}>
@@ -318,7 +344,7 @@ export const InstanceList: React.FC<InstanceListProps> = ({
                         {isConnected ? "Desconectar" : "Conectar"}
                       </ConnectButton>
                     </Tooltip>
-                    
+
                     <Tooltip title="Abrir Chat">
                       <ActionButton
                         type="text"
@@ -330,7 +356,7 @@ export const InstanceList: React.FC<InstanceListProps> = ({
                         $isDark={isDark}
                       />
                     </Tooltip>
-                    
+
                     <Dropdown
                       menu={{ items: getMenuItems(instance) }}
                       trigger={["click"]}

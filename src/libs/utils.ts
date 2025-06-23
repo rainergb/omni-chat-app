@@ -48,12 +48,12 @@ export function getStatusText(status: string): string {
 
 export function getPlatformIcon(type: string): string {
   const icons = {
-    whatsapp: "💬",
-    instagram: "📷",
-    facebook: "📘",
-    telegram: "✈️"
+    whatsapp: "whatsapp",
+    instagram: "instagram",
+    facebook: "facebook",
+    telegram: "telegram"
   };
-  return icons[type as keyof typeof icons] || "📱";
+  return icons[type as keyof typeof icons] || "whatsapp";
 }
 
 export function generateId(): string {

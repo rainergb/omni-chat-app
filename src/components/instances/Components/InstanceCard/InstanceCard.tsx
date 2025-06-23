@@ -9,18 +9,17 @@ import {
   MessageCircle,
   Settings,
   QrCode,
-  Wifi,
-  WifiOff,
-  AlertCircle,
-  Clock
+  Clock,
+  Instagram,
+  Send,
+  Facebook
 } from "lucide-react";
 import type { MenuProps } from "antd";
 import { Instance } from "@/libs/types";
 import {
   formatDate,
   getStatusColor as getStatusBadgeColor,
-  getStatusText,
-  getPlatformIcon
+  getStatusText
 } from "@/libs/utils";
 import { useTheme } from "@/contexts/ThemeContext";
 import { Card } from "@/components/ui";
@@ -31,7 +30,6 @@ import {
   HeaderLeft,
   AvatarContainer,
   Avatar,
-  StatusIconContainer,
   InstanceInfo,
   InstanceName,
   StatusContainer,
@@ -75,16 +73,21 @@ export const InstanceCard: React.FC<InstanceCardProps> = ({
   const isConnecting = instance.status === "connecting";
   const hasError = instance.status === "error";
 
-  const getStatusIcon = () => {
-    switch (instance.status) {
-      case "connected":
-        return <Wifi size={16} className="text-green-500" />;
-      case "connecting":
-        return <RotateCw size={16} className="text-yellow-500 animate-spin" />;
-      case "error":
-        return <AlertCircle size={16} className="text-red-500" />;
+  // Helper function to render platform icons
+  const renderPlatformIcon = (platformType: string) => {
+    const iconProps = { size: 20 };
+
+    switch (platformType) {
+      case "whatsapp":
+        return <MessageCircle {...iconProps} />;
+      case "instagram":
+        return <Instagram {...iconProps} />;
+      case "facebook":
+        return <Facebook {...iconProps} />;
+      case "telegram":
+        return <Send {...iconProps} />;
       default:
-        return <WifiOff size={16} className="text-gray-500" />;
+        return <MessageCircle {...iconProps} />;
     }
   };
 
@@ -154,24 +157,18 @@ export const InstanceCard: React.FC<InstanceCardProps> = ({
                   $isConnecting={isConnecting}
                   $hasError={hasError}
                 >
-                  {getPlatformIcon(instance.type)}
+                  {renderPlatformIcon(instance.type)}
                 </Avatar>
-                <StatusIconContainer>
-                  {getStatusIcon()}
-                </StatusIconContainer>
               </AvatarContainer>
-
               <InstanceInfo>
-                <InstanceName $isDark={isDark}>
-                  {instance.name}
-                </InstanceName>
+                <InstanceName $isDark={isDark}>{instance.name}</InstanceName>
                 <StatusContainer>
                   <Badge
                     color={getStatusBadgeColor(instance.status)}
                     text={getStatusText(instance.status)}
                     style={{
-                      fontSize: '0.75rem',
-                      color: isDark ? '#d1d5db' : '#4b5563'
+                      fontSize: "0.75rem",
+                      color: isDark ? "#d1d5db" : "#4b5563"
                     }}
                   />
                 </StatusContainer>
@@ -199,9 +196,7 @@ export const InstanceCard: React.FC<InstanceCardProps> = ({
                 <StatIcon $isDark={isDark}>
                   <MessageCircle size={16} />
                 </StatIcon>
-                <StatLabel $isDark={isDark}>
-                  Mensagens
-                </StatLabel>
+                <StatLabel $isDark={isDark}>Mensagens</StatLabel>
               </StatLeft>
               <StatValue $isDark={isDark}>
                 {instance.messagesCount.toLocaleString()}
@@ -213,9 +208,7 @@ export const InstanceCard: React.FC<InstanceCardProps> = ({
                 <StatIcon $isDark={isDark}>
                   <Clock size={16} />
                 </StatIcon>
-                <StatLabel $isDark={isDark}>
-                  Última atividade
-                </StatLabel>
+                <StatLabel $isDark={isDark}>Última atividade</StatLabel>
               </StatLeft>
               <StatValueSmall $isDark={isDark}>
                 {formatDate(instance.lastActivity)}
