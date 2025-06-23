@@ -5,15 +5,20 @@ import { Sun, Moon } from 'lucide-react';
 import { useTheme } from '@/contexts/ThemeContext';
 
 export const ThemeToggle: React.FC = () => {
-  const { mode, toggleMode, isDark } = useTheme();
+  const { toggleMode, isDark } = useTheme();
 
   return (
-    <Tooltip title={`Alternar para modo ${isDark ? 'claro' : 'escuro'}`}>
+    <Tooltip title={`Alternar para modo ${isDark ? "claro" : "escuro"}`}>
+      {" "}
       <Button
         type="text"
         icon={isDark ? <Sun size={18} /> : <Moon size={18} />}
         onClick={toggleMode}
-        className="flex items-center justify-center hover:bg-blue-50 dark:hover:bg-gray-700 transition-colors"
+        className={`flex items-center justify-center transition-colors ${
+          isDark
+            ? "text-gray-400 hover:text-green-400 hover:bg-gray-800"
+            : "text-gray-500 hover:text-green-500 hover:bg-gray-100"
+        }`}
         size="large"
       />
     </Tooltip>

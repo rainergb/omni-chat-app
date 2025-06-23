@@ -1,24 +1,54 @@
 @import "tailwindcss";
 
 :root {
+  /* Light theme */
   --background: #ffffff;
   --foreground: #171717;
+  --surface: #f8fafc;
+  --surface-hover: #f1f5f9;
+  --border: #e2e8f0;
+  --border-hover: #cbd5e1;
+  --text-primary: #0f172a;
+  --text-secondary: #64748b;
+  --text-muted: #94a3b8;
+  --shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
+  --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+[data-theme="dark"] {
+  /* Dark theme */
+  --background: #0f172a;
+  --foreground: #f8fafc;
+  --surface: #1e293b;
+  --surface-hover: #334155;
+  --border: #334155;
+  --border-hover: #475569;
+  --text-primary: #f8fafc;
+  --text-secondary: #cbd5e1;
+  --text-muted: #94a3b8;
+  --shadow: 0 1px 3px 0 rgb(0 0 0 / 0.3), 0 1px 2px -1px rgb(0 0 0 / 0.3);
+  --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.3), 0 4px 6px -4px rgb(0 0 0 / 0.3);
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', sans-serif;
+  line-height: 1.6;
+  transition: background-color 0.3s ease, color 0.3s ease;
 }
 
-/* Custom utility classes for better responsiveness */
+/* Scrollbar customization */
 .scrollbar-hide {
   -ms-overflow-style: none;
   scrollbar-width: none;
@@ -28,64 +58,200 @@ body {
   display: none;
 }
 
-/* Better responsive modal styles */
-.responsive-modal .ant-modal-content {
-  margin: 16px;
+/* Custom scrollbar for visible scrollbars */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
 }
 
+::-webkit-scrollbar-track {
+  background: var(--surface);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--border-hover);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--text-muted);
+}
+
+/* Ant Design theme customizations */
+.ant-layout {
+  background: var(--background) !important;
+}
+
+.ant-card {
+  background: var(--surface) !important;
+  border: 1px solid var(--border) !important;
+  box-shadow: var(--shadow) !important;
+}
+
+.ant-card:hover {
+  border-color: var(--border-hover) !important;
+  box-shadow: var(--shadow-lg) !important;
+}
+
+.ant-btn {
+  border-radius: 8px !important;
+  font-weight: 500 !important;
+  transition: all 0.2s ease !important;
+}
+
+.ant-btn-primary {
+  background: linear-gradient(135deg, #3b82f6 0%, #8b5cf6 100%) !important;
+  border: none !important;
+}
+
+.ant-btn-primary:hover {
+  background: linear-gradient(135deg, #2563eb 0%, #7c3aed 100%) !important;
+  transform: translateY(-1px) !important;
+  box-shadow: var(--shadow-lg) !important;
+}
+
+.ant-modal-content {
+  background: var(--surface) !important;
+  border-radius: 12px !important;
+}
+
+.ant-modal-header {
+  background: var(--surface) !important;
+  border-bottom: 1px solid var(--border) !important;
+  border-radius: 12px 12px 0 0 !important;
+}
+
+.ant-modal-title {
+  color: var(--text-primary) !important;
+}
+
+.ant-modal-body {
+  background: var(--surface) !important;
+}
+
+.ant-modal-footer {
+  background: var(--surface) !important;
+  border-top: 1px solid var(--border) !important;
+  border-radius: 0 0 12px 12px !important;
+}
+
+.ant-input {
+  background: var(--background) !important;
+  border: 1px solid var(--border) !important;
+  color: var(--text-primary) !important;
+  border-radius: 8px !important;
+}
+
+.ant-input:focus,
+.ant-input:hover {
+  border-color: #3b82f6 !important;
+  box-shadow: 0 0 0 2px rgb(59 130 246 / 0.1) !important;
+}
+
+.ant-select-selector {
+  background: var(--background) !important;
+  border: 1px solid var(--border) !important;
+  border-radius: 8px !important;
+}
+
+.ant-select-dropdown {
+  background: var(--surface) !important;
+  border: 1px solid var(--border) !important;
+  border-radius: 8px !important;
+  box-shadow: var(--shadow-lg) !important;
+}
+
+.ant-select-item {
+  color: var(--text-primary) !important;
+}
+
+.ant-select-item:hover {
+  background: var(--surface-hover) !important;
+}
+
+.ant-form-item-label > label {
+  color: var(--text-primary) !important;
+}
+
+.ant-alert {
+  border-radius: 8px !important;
+}
+
+.ant-qrcode {
+  background: white !important;
+  border-radius: 8px !important;
+  padding: 16px !important;
+}
+
+/* Custom utility classes */
+.surface {
+  background: var(--surface);
+}
+
+.surface-hover {
+  background: var(--surface-hover);
+}
+
+.text-primary {
+  color: var(--text-primary);
+}
+
+.text-secondary {
+  color: var(--text-secondary);
+}
+
+.text-muted {
+  color: var(--text-muted);
+}
+
+.border-custom {
+  border-color: var(--border);
+}
+
+.shadow-custom {
+  box-shadow: var(--shadow);
+}
+
+.shadow-custom-lg {
+  box-shadow: var(--shadow-lg);
+}
+
+/* Animation utilities */
+.animate-fade-in {
+  animation: fadeIn 0.3s ease-out;
+}
+
+.animate-slide-up {
+  animation: slideUp 0.3s ease-out;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes slideUp {
+  from { 
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to { 
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Responsive improvements */
 @media (max-width: 640px) {
-  .responsive-modal .ant-modal-content {
-    margin: 8px;
+  .ant-modal {
+    padding: 16px !important;
   }
   
-  .responsive-modal .ant-modal-header {
-    padding: 16px 20px;
+  .ant-modal-content {
+    margin: 0 !important;
   }
   
-  .responsive-modal .ant-modal-body {
-    padding: 16px 20px;
-  }
-  
-  .responsive-modal .ant-modal-footer {
-    padding: 12px 20px 16px;
-  }
-}
-
-/* Improve card hover effects on mobile */
-@media (hover: hover) {
-  .instance-card:hover {
-    transform: translateY(-2px);
-  }
-}
-
-@media (hover: none) {
-  .instance-card:active {
-    transform: translateY(1px);
-  }
-}
-
-/* Better focus states for accessibility */
-.ant-btn:focus-visible,
-.ant-input:focus-visible,
-.ant-select-selector:focus-visible {
-  outline: 2px solid #1890ff;
-  outline-offset: 2px;
-}
-
-/* Responsive text sizing */
-@media (max-width: 640px) {
-  .responsive-text-lg {
-    font-size: 1rem;
-    line-height: 1.5rem;
-  }
-  
-  .responsive-text-xl {
-    font-size: 1.125rem;
-    line-height: 1.75rem;
-  }
-  
-  .responsive-text-2xl {
-    font-size: 1.25rem;
-    line-height: 1.75rem;
+  .ant-card-body {
+    padding: 16px !important;
   }
 }
