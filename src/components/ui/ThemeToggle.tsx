@@ -16,8 +16,8 @@ export const ThemeToggle: React.FC = () => {
         onClick={toggleMode}
         className={`flex items-center justify-center transition-colors ${
           isDark
-            ? "text-gray-400 hover:text-green-400 hover:bg-gray-800"
-            : "text-gray-500 hover:text-green-500 hover:bg-gray-100"
+            ? "text-gray-400 hover:text-teal-400 hover:bg-gray-800"
+            : "text-gray-500 hover:text-teal-500 hover:bg-gray-100"
         }`}
         size="large"
       />

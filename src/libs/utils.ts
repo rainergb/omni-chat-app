@@ -1,4 +1,5 @@
 import { type ClassValue, clsx } from "clsx";
+import { getStatusColor, getStatusText, getStatusBadgeColor } from "./theme";
 
 export function cn(...inputs: ClassValue[]) {
   return clsx(inputs);
@@ -26,25 +27,8 @@ export function formatDate(date: string | Date): string {
   return targetDate.toLocaleDateString("pt-BR");
 }
 
-export function getStatusColor(status: string): string {
-  const colors = {
-    connected: "#52c41a",
-    disconnected: "#f5222d",
-    connecting: "#faad14",
-    error: "#ff4d4f"
-  };
-  return colors[status as keyof typeof colors] || "#d9d9d9";
-}
-
-export function getStatusText(status: string): string {
-  const texts = {
-    connected: "Conectado",
-    disconnected: "Desconectado",
-    connecting: "Conectando...",
-    error: "Erro"
-  };
-  return texts[status as keyof typeof texts] || "Desconhecido";
-}
+// Re-exporta as funções do sistema de tema
+export { getStatusColor, getStatusText, getStatusBadgeColor };
 
 export function getPlatformIcon(type: string): string {
   const icons = {

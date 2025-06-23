@@ -54,14 +54,13 @@ export const ThemeProvider: React.FC<ThemeProviderProps> = ({ children }) => {
   const toggleMode = () => {
     setMode((prev) => (prev === "light" ? "dark" : "light"));
   };
-
   const antdTheme = {
     algorithm: mode === "dark" ? theme.darkAlgorithm : theme.defaultAlgorithm,
     token: {
-      colorPrimary: "#3b82f6",
-      colorSuccess: "#10b981",
-      colorWarning: "#f59e0b",
-      colorError: "#ef4444",
+      colorPrimary: "#00B9AE", // Light sea green
+      colorSuccess: "#00B9AE", // Light sea green
+      colorWarning: "#1F2937", // Gunmetal
+      colorError: "#BA1A1A", // Cornell red
       borderRadius: 8,
       borderRadiusLG: 12,
       fontFamily:
@@ -74,9 +73,9 @@ export const ThemeProvider: React.FC<ThemeProviderProps> = ({ children }) => {
     },
     components: {
       Layout: {
-        bodyBg: mode === "dark" ? "#0f172a" : "#ffffff",
-        headerBg: mode === "dark" ? "#1e293b" : "#ffffff",
-        siderBg: mode === "dark" ? "#1e293b" : "#ffffff"
+        bodyBg: mode === "dark" ? "#030712" : "#F0F0F0", // Rich black / Anti-flash white
+        headerBg: mode === "dark" ? "#0F172A" : "#FFFFFF", // Oxford Blue / White
+        siderBg: mode === "dark" ? "#0F172A" : "#FFFFFF" // Oxford Blue / White
       },
       Card: {
         borderRadius: 12,

@@ -1,31 +1,31 @@
 @import "tailwindcss";
 
 :root {
-  /* Light theme */
-  --background: #ffffff;
-  --foreground: #171717;
-  --surface: #f8fafc;
-  --surface-hover: #f1f5f9;
-  --border: #e2e8f0;
-  --border-hover: #cbd5e1;
-  --text-primary: #0f172a;
-  --text-secondary: #64748b;
-  --text-muted: #94a3b8;
+  /* Light theme - Nova paleta */
+  --background: #F0F0F0;     /* Anti-flash white */
+  --foreground: #030712;     /* Rich black */
+  --surface: #FFFFFF;        /* White */
+  --surface-hover: #E5E5E5;  /* Variação do anti-flash white */
+  --border: #D0D0D0;         /* Variação do anti-flash white */
+  --border-hover: #1F2937;   /* Gunmetal */
+  --text-primary: #030712;   /* Rich black */
+  --text-secondary: #0F172A; /* Oxford Blue */
+  --text-muted: #1F2937;     /* Gunmetal */
   --shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
   --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
 }
 
 [data-theme="dark"] {
-  /* Dark theme */
-  --background: #0f172a;
-  --foreground: #f8fafc;
-  --surface: #1e293b;
-  --surface-hover: #334155;
-  --border: #334155;
-  --border-hover: #475569;
-  --text-primary: #f8fafc;
-  --text-secondary: #cbd5e1;
-  --text-muted: #94a3b8;
+  /* Dark theme - Nova paleta */
+  --background: #030712;     /* Rich black */
+  --foreground: #F0F0F0;     /* Anti-flash white */
+  --surface: #0F172A;        /* Oxford Blue */
+  --surface-hover: #1F2937;  /* Gunmetal */
+  --border: #1F2937;         /* Gunmetal */
+  --border-hover: #00B9AE;   /* Light sea green */
+  --text-primary: #F0F0F0;   /* Anti-flash white */
+  --text-secondary: #00B9AE; /* Light sea green */
+  --text-muted: #1F2937;     /* Gunmetal */
   --shadow: 0 1px 3px 0 rgb(0 0 0 / 0.3), 0 1px 2px -1px rgb(0 0 0 / 0.3);
   --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.3), 0 4px 6px -4px rgb(0 0 0 / 0.3);
 }
@@ -100,12 +100,12 @@ body {
 }
 
 .ant-btn-primary {
-  background: linear-gradient(135deg, #3b82f6 0%, #8b5cf6 100%) !important;
+  background: linear-gradient(135deg, #00B9AE 0%, #1F2937 100%) !important;
   border: none !important;
 }
 
 .ant-btn-primary:hover {
-  background: linear-gradient(135deg, #2563eb 0%, #7c3aed 100%) !important;
+  background: linear-gradient(135deg, #00A69B 0%, #0F172A 100%) !important;
   transform: translateY(-1px) !important;
   box-shadow: var(--shadow-lg) !important;
 }
@@ -144,8 +144,8 @@ body {
 
 .ant-input:focus,
 .ant-input:hover {
-  border-color: #3b82f6 !important;
-  box-shadow: 0 0 0 2px rgb(59 130 246 / 0.1) !important;
+  border-color: #00B9AE !important;
+  box-shadow: 0 0 0 2px rgb(0 185 174 / 0.1) !important;
 }
 
 .ant-select-selector {

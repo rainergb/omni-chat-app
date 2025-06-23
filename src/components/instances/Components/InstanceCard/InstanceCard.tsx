@@ -21,7 +21,9 @@ import {
   getStatusColor as getStatusBadgeColor,
   getStatusText
 } from "@/libs/utils";
+import { getStatusColor } from "@/libs/theme";
 import { useTheme } from "@/contexts/ThemeContext";
+import { useThemeColors } from "@/hooks/useThemeColors";
 import { Card } from "@/components/ui";
 import {
   CardContainer,
@@ -38,7 +40,9 @@ import {
   StatItem,
   StatLeft,
   StatIcon,
+  MessageStatIcon,
   StatLabel,
+  MessageStatLabel,
   StatValue,
   StatValueSmall,
   ActionsSection,
@@ -69,6 +73,7 @@ export const InstanceCard: React.FC<InstanceCardProps> = ({
   loading = false
 }) => {
   const { isDark } = useTheme();
+  const colors = useThemeColors();
   const isConnected = instance.status === "connected";
   const isConnecting = instance.status === "connecting";
   const hasError = instance.status === "error";
@@ -123,24 +128,13 @@ export const InstanceCard: React.FC<InstanceCardProps> = ({
       onConnect(instance.id);
     }
   };
-  const getStatusColor = () => {
-    switch (instance.status) {
-      case "connected":
-        return "#10b981"; // green-500
-      case "connecting":
-        return "#f59e0b"; // yellow-500
-      case "error":
-        return "#ef4444"; // red-500
-      default:
-        return "#d1d5db"; // gray-300
-    }
-  };
+
   return (
     <Card
       hover
       loading={loading}
       padding="0"
-      statusColor={getStatusColor()}
+      statusColor={getStatusColor(instance.status)}
       statusHeight="4px"
     >
       <CardContainer>
@@ -148,11 +142,12 @@ export const InstanceCard: React.FC<InstanceCardProps> = ({
           {/* Header */}
           <Header>
             <HeaderLeft>
+              {" "}
               <AvatarContainer>
                 <Avatar
                   size={48}
                   src={instance.avatar}
-                  $isDark={isDark}
+                  $colors={colors}
                   $isConnected={isConnected}
                   $isConnecting={isConnecting}
                   $hasError={hasError}
@@ -161,14 +156,14 @@ export const InstanceCard: React.FC<InstanceCardProps> = ({
                 </Avatar>
               </AvatarContainer>
               <InstanceInfo>
-                <InstanceName $isDark={isDark}>{instance.name}</InstanceName>
+                <InstanceName $colors={colors}>{instance.name}</InstanceName>
                 <StatusContainer>
                   <Badge
                     color={getStatusBadgeColor(instance.status)}
                     text={getStatusText(instance.status)}
                     style={{
                       fontSize: "0.75rem",
-                      color: isDark ? "#d1d5db" : "#4b5563"
+                      color: colors.textSecondary
                     }}
                   />
                 </StatusContainer>
@@ -183,39 +178,39 @@ export const InstanceCard: React.FC<InstanceCardProps> = ({
               <DropdownButton
                 type="text"
                 icon={<MoreVertical size={16} />}
-                $isDark={isDark}
+                $colors={colors}
                 className="dropdown-button"
               />
             </Dropdown>
-          </Header>
-
-          {/* Stats */}
-          <StatsSection>
-            <StatItem $isDark={isDark}>
+          </Header>{" "}
+          {/* Stats */}{" "}
+          <StatsSection $isDark={isDark}>
+            <StatItem $colors={colors} $isDark={isDark}>
               <StatLeft>
-                <StatIcon $isDark={isDark}>
+                <MessageStatIcon $isDark={isDark}>
                   <MessageCircle size={16} />
-                </StatIcon>
-                <StatLabel $isDark={isDark}>Mensagens</StatLabel>
+                </MessageStatIcon>
+                <MessageStatLabel $isDark={isDark}>Mensagens</MessageStatLabel>
               </StatLeft>
-              <StatValue $isDark={isDark}>
+              <StatValue $colors={colors} $isDark={isDark}>
                 {instance.messagesCount.toLocaleString()}
               </StatValue>
             </StatItem>
 
-            <StatItem $isDark={isDark}>
+            <StatItem $colors={colors} $isDark={isDark}>
               <StatLeft>
-                <StatIcon $isDark={isDark}>
+                <StatIcon $colors={colors} $isDark={isDark}>
                   <Clock size={16} />
                 </StatIcon>
-                <StatLabel $isDark={isDark}>Última atividade</StatLabel>
+                <StatLabel $colors={colors} $isDark={isDark}>
+                  Última atividade
+                </StatLabel>
               </StatLeft>
-              <StatValueSmall $isDark={isDark}>
+              <StatValueSmall $colors={colors} $isDark={isDark}>
                 {formatDate(instance.lastActivity)}
               </StatValueSmall>
             </StatItem>
           </StatsSection>
-
           {/* Actions */}
           <ActionsSection>
             <Tooltip title={isConnected ? "Desconectar" : "Conectar"}>
@@ -255,7 +250,6 @@ export const InstanceCard: React.FC<InstanceCardProps> = ({
               />
             </Tooltip>
           </ActionsSection>
-
           {/* Webhook indicator */}
           {instance.webhook && (
             <WebhookIndicator $isDark={isDark}>

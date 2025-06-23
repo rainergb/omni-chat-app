@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
-import { Modal, QRCode, Button, Alert, Spin } from "antd";
+import { QRCode, Button, Alert, Spin } from "antd";
 import { ReloadOutlined, CheckCircleOutlined } from "@ant-design/icons";
+import { Modal } from "@/components/ui/Modal";
 import { useInstanceStore } from "@/store/instanceStore";
 
 interface QRCodeModalProps {
@@ -62,8 +63,7 @@ export const QRCodeModal: React.FC<QRCodeModalProps> = ({
 
   const handleRefresh = () => {
     generateQRCode();
-  };
-  return (
+  };  return (
     <Modal
       title={`Conectar ${instance?.name || "Instância"}`}
       open={open}
@@ -89,13 +89,12 @@ export const QRCodeModal: React.FC<QRCodeModalProps> = ({
           )}
         </div>
       }
-      centered
-      destroyOnClose
+      destroyOnHidden={true}
       width="95%"
-      style={{ maxWidth: 500, margin: "0 auto" }}
+      maxWidth="500px"
       className="responsive-modal"
+      showFooter={true}      showOk={false}
     >
-      {" "}
       <div className="text-center py-2 sm:py-4 px-2 sm:px-0">
         {connected ? (
           <div className="space-y-3 sm:space-y-4">

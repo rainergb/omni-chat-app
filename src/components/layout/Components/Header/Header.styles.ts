@@ -44,17 +44,18 @@ export const LogoContainer = styled.div`
 export const LogoIcon = styled.img<{ $isDark: boolean }>`
   height: 32px;
   width: auto;
-  filter: ${(props) => (props.$isDark 
-    ? "brightness(0) saturate(100%) invert(64%) sepia(11%) saturate(200%) hue-rotate(176deg) brightness(90%) contrast(85%)" 
-    : "brightness(0) saturate(100%) invert(39%) sepia(21%) saturate(245%) hue-rotate(176deg) brightness(94%) contrast(97%)")};
+  filter: ${(props) =>
+    props.$isDark
+      ? "brightness(0) saturate(100%) invert(64%) sepia(11%) saturate(200%) hue-rotate(176deg) brightness(90%) contrast(85%)"
+      : "brightness(0) saturate(100%) invert(39%) sepia(21%) saturate(245%) hue-rotate(176deg) brightness(94%) contrast(97%)"};
   transition: all 0.3s ease;
-  
+
   @media (min-width: 640px) {
     height: 36px;
   }
-  
+
   ${LogoContainer}:hover & {
-    filter: brightness(0) saturate(100%) invert(52%) sepia(96%) saturate(1237%) hue-rotate(88deg) brightness(97%) contrast(101%);
+    filter: none;
   }
 `;
 

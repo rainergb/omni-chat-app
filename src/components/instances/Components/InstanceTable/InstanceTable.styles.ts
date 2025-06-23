@@ -72,17 +72,17 @@ export const EmptyDescription = styled.p<StyledProps>`
 `;
 
 export const CreateButton = styled(AntButton)`
-  background: linear-gradient(to right, #3b82f6, #8b5cf6);
+  background: linear-gradient(to right, #00b9ae, #1f2937);
   border: none;
   box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1),
     0 4px 6px -2px rgba(0, 0, 0, 0.05);
 
   &:hover {
-    background: linear-gradient(to right, #2563eb, #7c3aed) !important;
+    background: linear-gradient(to right, #00a69b, #0f172a) !important;
   }
 
   &:focus {
-    background: linear-gradient(to right, #2563eb, #7c3aed) !important;
+    background: linear-gradient(to right, #00a69b, #0f172a) !important;
   }
 `;
 

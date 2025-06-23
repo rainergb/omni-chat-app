@@ -53,12 +53,11 @@ export const SearchInput = styled.input<{ $isDark: boolean }>`
   &::placeholder {
     color: ${(props) => (props.$isDark ? "#9ca3af" : "#6b7280")};
   }
-
   &:focus {
-    border-color: ${(props) => (props.$isDark ? "#3b82f6" : "#3b82f6")};
+    border-color: ${(props) => (props.$isDark ? "#00B9AE" : "#00B9AE")};
     box-shadow: 0 0 0 3px
       ${(props) =>
-        props.$isDark ? "rgba(59, 130, 246, 0.1)" : "rgba(59, 130, 246, 0.1)"};
+        props.$isDark ? "rgba(0, 185, 174, 0.1)" : "rgba(0, 185, 174, 0.1)"};
   }
 `;
 
@@ -71,7 +70,10 @@ export const SearchIcon = styled.div<{ $isDark: boolean }>`
   pointer-events: none;
 `;
 
-export const ClearButton = styled.button<{ $isDark: boolean; $visible: boolean }>`
+export const ClearButton = styled.button<{
+  $isDark: boolean;
+  $visible: boolean;
+}>`
   position: absolute;
   right: 8px;
   top: 50%;
@@ -133,16 +135,16 @@ export const GradientButton = styled(Button)`
   &.ant-btn {
     height: 40px;
     border-radius: 8px;
-    background: linear-gradient(135deg, #3b82f6 0%, #8b5cf6 100%);
+    background: linear-gradient(135deg, #00b9ae 0%, #1f2937 100%);
     border: none;
     color: white;
-    box-shadow: 0 4px 14px 0 rgba(59, 130, 246, 0.3);
+    box-shadow: 0 4px 14px 0 rgba(0, 185, 174, 0.3);
     transition: all 0.2s ease;
 
     &:hover {
       transform: translateY(-1px);
-      box-shadow: 0 6px 20px 0 rgba(59, 130, 246, 0.4) !important;
-      background: linear-gradient(135deg, #2563eb 0%, #7c3aed 100%) !important;
+      box-shadow: 0 6px 20px 0 rgba(0, 185, 174, 0.4) !important;
+      background: linear-gradient(135deg, #00a69b 0%, #0f172a 100%) !important;
     }
   }
 `;

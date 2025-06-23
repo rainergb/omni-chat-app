@@ -9,9 +9,6 @@ import {
   MessageCircle,
   Settings,
   QrCode,
-  Wifi,
-  WifiOff,
-  AlertCircle,
   Clock,
   Plus,
   Instagram,
@@ -26,7 +23,7 @@ import {
   getStatusText
 } from "@/libs/utils";
 import { useTheme } from "@/contexts/ThemeContext";
-import { QRCodeModal } from "../../QRCodeModal";
+import { QRCodeModal } from "../QRCodeModal/QRCodeModal";
 import {
   ListContainer,
   ListHeader,
@@ -36,7 +33,6 @@ import {
   ListCell,
   InstanceInfo,
   InstanceAvatar,
-  StatusIconContainer,
   InstanceDetails,
   InstanceName,
   InstanceType,
@@ -111,19 +107,6 @@ export const InstanceList: React.FC<InstanceListProps> = ({
 
   const handleOpenChat = (instanceId: string) => {
     onOpenChat?.(instanceId);
-  };
-
-  const getStatusIcon = (status: Instance["status"]) => {
-    switch (status) {
-      case "connected":
-        return <Wifi size={16} className="text-green-500" />;
-      case "connecting":
-        return <RotateCw size={16} className="text-yellow-500 animate-spin" />;
-      case "error":
-        return <AlertCircle size={16} className="text-red-500" />;
-      default:
-        return <WifiOff size={16} className="text-gray-500" />;
-    }
   };
 
   const getMenuItems = (instance: Instance): MenuProps["items"] => [
@@ -257,8 +240,9 @@ export const InstanceList: React.FC<InstanceListProps> = ({
             return (
               <ListRow key={instance.id} $isDark={isDark}>
                 <ListCell>
+                  {" "}
                   <InstanceInfo>
-                    <InstanceAvatar>
+                    <InstanceAvatar $isDark={isDark}>
                       <Avatar
                         size={40}
                         src={instance.avatar}
@@ -268,9 +252,6 @@ export const InstanceList: React.FC<InstanceListProps> = ({
                       >
                         {renderPlatformIcon(instance.type)}
                       </Avatar>
-                      <StatusIconContainer>
-                        {getStatusIcon(instance.status)}
-                      </StatusIconContainer>
                     </InstanceAvatar>
 
                     <InstanceDetails>

@@ -5,7 +5,7 @@ import { Grid3X3, Plus } from "lucide-react";
 import { ViewMode, Instance } from "@/libs/types";
 import { InstanceCard } from "../InstanceCard/InstanceCard";
 import { InstanceList } from "../InstanceList/InstanceList";
-import { QRCodeModal } from "../../QRCodeModal";
+import { QRCodeModal } from "../QRCodeModal/QRCodeModal";
 import { useTheme } from "@/contexts/ThemeContext";
 import {
   Container,

@@ -112,18 +112,19 @@ export const InstanceInfo = styled.div`
   min-width: 0;
 `;
 
-export const InstanceAvatar = styled.div`
+export const InstanceAvatar = styled.div<StyledProps>`
   position: relative;
   flex-shrink: 0;
-`;
 
-export const StatusIconContainer = styled.div`
-  position: absolute;
-  bottom: -0.125rem;
-  right: -0.125rem;
-  background-color: white;
-  border-radius: 50%;
-  padding: 0.125rem;
+  .ant-avatar {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    svg {
+      color: ${({ $isDark }) => ($isDark ? "#d1d5db" : "#374151")} !important;
+    }
+  }
 `;
 
 export const InstanceDetails = styled.div`
@@ -134,7 +135,7 @@ export const InstanceDetails = styled.div`
 export const InstanceName = styled.div<StyledProps>`
   font-weight: 600;
   font-size: 0.875rem;
-  color: ${({ $isDark }) => ($isDark ? '#f3f4f6' : '#111827')};
+  color: ${({ $isDark }) => ($isDark ? "#f3f4f6" : "#111827")};
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -145,7 +146,7 @@ export const InstanceName = styled.div<StyledProps>`
 
 export const InstanceType = styled.div<StyledProps>`
   font-size: 0.75rem;
-  color: ${({ $isDark }) => ($isDark ? '#9ca3af' : '#6b7280')};
+  color: ${({ $isDark }) => ($isDark ? "#9ca3af" : "#6b7280")};
   text-transform: capitalize;
 `;
 
@@ -161,8 +162,8 @@ export const StatsBadge = styled.div<StyledProps>`
   border-radius: 9999px;
   font-size: 0.75rem;
   font-weight: 600;
-  background-color: ${({ $isDark }) => ($isDark ? '#374151' : '#f3f4f6')};
-  color: ${({ $isDark }) => ($isDark ? '#d1d5db' : '#374151')};
+  background-color: ${({ $isDark }) => ($isDark ? "#374151" : "#f3f4f6")};
+  color: ${({ $isDark }) => ($isDark ? "#d1d5db" : "#374151")};
 `;
 
 export const ActionsContainer = styled.div`
@@ -170,7 +171,7 @@ export const ActionsContainer = styled.div`
   align-items: center;
   gap: 0.5rem;
   justify-content: flex-end;
-  
+
   @media (max-width: 768px) {
     justify-content: flex-start;
   }
@@ -181,15 +182,14 @@ export const ActionButton = styled(AntButton)<StyledProps>`
     display: flex;
     align-items: center;
     justify-content: center;
-    
     ${({ $isConnected }) =>
       $isConnected
         ? `
-      color: #2563eb;
+      color: #00B9AE; /* Light sea green */
       
       &:hover {
-        background-color: rgba(59, 130, 246, 0.1) !important;
-        border-color: rgba(59, 130, 246, 0.2) !important;
+        background-color: rgba(0, 185, 174, 0.1) !important;
+        border-color: rgba(0, 185, 174, 0.2) !important;
       }
     `
         : `
@@ -206,20 +206,20 @@ export const ConnectButton = styled(AntButton)<StyledProps>`
   &.ant-btn {
     font-size: 0.75rem;
     height: 28px;
-    
+
     ${({ $isConnected, $isDark }) =>
       $isConnected
         ? `
-      border-color: ${$isDark ? '#4b5563' : '#d1d5db'};
-      color: ${$isDark ? '#d1d5db' : 'inherit'};
-      background-color: ${$isDark ? '#374151' : '#ffffff'};
+      border-color: ${$isDark ? "#4b5563" : "#d1d5db"};
+      color: ${$isDark ? "#d1d5db" : "inherit"};
+      background-color: ${$isDark ? "#374151" : "#ffffff"};
       
       &:hover {
-        background-color: ${$isDark ? '#4b5563' : '#f9fafb'} !important;
-        border-color: ${$isDark ? '#6b7280' : '#9ca3af'} !important;
+        background-color: ${$isDark ? "#4b5563" : "#f9fafb"} !important;
+        border-color: ${$isDark ? "#6b7280" : "#9ca3af"} !important;
       }
     `
-        : ''}
+        : ""}
   }
 `;
 
@@ -228,10 +228,12 @@ export const DropdownButton = styled(AntButton)<StyledProps>`
     display: flex;
     align-items: center;
     justify-content: center;
-    
+
     &:hover {
-      background-color: ${({ $isDark }) => 
-        $isDark ? 'rgba(75, 85, 99, 0.5)' : 'rgba(243, 244, 246, 0.8)'} !important;
+      background-color: ${({ $isDark }) =>
+        $isDark
+          ? "rgba(75, 85, 99, 0.5)"
+          : "rgba(243, 244, 246, 0.8)"} !important;
     }
   }
 `;
@@ -257,33 +259,34 @@ export const EmptyIconContainer = styled.div<StyledProps>`
   display: flex;
   align-items: center;
   justify-content: center;
-  background-color: ${({ $isDark }) => ($isDark ? '#1f2937' : '#f3f4f6')};
+  background-color: ${({ $isDark }) => ($isDark ? "#1f2937" : "#f3f4f6")};
 `;
 
 export const EmptyTitle = styled.h3<StyledProps>`
   font-size: 1.25rem;
   font-weight: 600;
   margin-bottom: 0.5rem;
-  color: ${({ $isDark }) => ($isDark ? '#e5e7eb' : '#374151')};
+  color: ${({ $isDark }) => ($isDark ? "#e5e7eb" : "#374151")};
 `;
 
 export const EmptyDescription = styled.p<StyledProps>`
   margin-bottom: 1.5rem;
-  color: ${({ $isDark }) => ($isDark ? '#9ca3af' : '#6b7280')};
+  color: ${({ $isDark }) => ($isDark ? "#9ca3af" : "#6b7280")};
   line-height: 1.5;
 `;
 
 export const CreateButton = styled(AntButton)`
-  background: linear-gradient(to right, #3b82f6, #8b5cf6);
+  background: linear-gradient(to right, #00b9ae, #1f2937);
   border: none;
-  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
-  
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1),
+    0 4px 6px -2px rgba(0, 0, 0, 0.05);
+
   &:hover {
-    background: linear-gradient(to right, #2563eb, #7c3aed) !important;
+    background: linear-gradient(to right, #00a69b, #0f172a) !important;
   }
-  
+
   &:focus {
-    background: linear-gradient(to right, #2563eb, #7c3aed) !important;
+    background: linear-gradient(to right, #00a69b, #0f172a) !important;
   }
 `;
 
@@ -295,7 +298,7 @@ export const WebhookIndicator = styled.div`
 export const WebhookDot = styled.div`
   width: 0.375rem;
   height: 0.375rem;
-  background-color: #10b981;
+  background-color: #00b9ae; /* Light sea green */
   border-radius: 50%;
   flex-shrink: 0;
 `;
