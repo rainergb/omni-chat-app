@@ -6,7 +6,12 @@ import { useTheme } from "@/contexts/ThemeContext";
 import styled from "styled-components";
 
 const StyledFooter = styled.footer<{ $isDark: boolean }>`
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
   width: 100%;
+  z-index: 10;
   border-top: 1px solid ${(props) => (props.$isDark ? "#374151" : "#e5e7eb")};
   background-color: ${(props) => (props.$isDark ? "#030712" : "#f9fafb")};
   transition: all 0.3s ease;

@@ -1,7 +1,21 @@
-// src/components/instances/CreateInstanceButton.tsx
+// src/components/instances/InstanceHeader.tsx
 import React, { useState } from "react";
-import { Button, Modal, Form, Input, Select, Space, message } from "antd";
 import {
+  Button,
+  Segmented,
+  Input,
+  Select,
+  Tooltip,
+  Modal,
+  Form,
+  message
+} from "antd";
+import {
+  Grid3X3,
+  List,
+  RefreshCw,
+  Search,
+  Filter,
   Plus,
   MessageSquare,
   Instagram,
@@ -10,14 +24,13 @@ import {
   Link,
   Info
 } from "lucide-react";
-import { Instance } from "@/libs/types";
+import { ViewMode, Instance } from "@/libs/types";
 import { useTheme } from "@/contexts/ThemeContext";
 
-interface CreateInstanceButtonProps {
-  onCreate: (instance: Omit<Instance, "id" | "createdAt">) => void;
-  loading?: boolean;
-}
+const { Search: SearchInput } = Input;
+const { Option } = Select;
 
+// Opções de plataforma para o formulário
 const platformOptions = [
   {
     value: "whatsapp",
@@ -45,32 +58,56 @@ const platformOptions = [
   }
 ];
 
-export const CreateInstanceButton: React.FC<CreateInstanceButtonProps> = ({
-  onCreate,
+interface InstanceHeaderProps {
+  searchTerm: string;
+  onSearchChange: (value: string) => void;
+  statusFilter: string;
+  onStatusFilterChange: (value: string) => void;
+  typeFilter: string;
+  onTypeFilterChange: (value: string) => void;
+  viewMode: ViewMode;
+  onViewModeChange: (mode: ViewMode) => void;
+  onCreateInstance: (instance: Omit<Instance, "id" | "createdAt">) => Promise<void>;
+  onRefresh: () => void;
+  loading?: boolean;
+}
+
+export const InstanceHeader: React.FC<InstanceHeaderProps> = ({
+  searchTerm,
+  onSearchChange,
+  statusFilter,
+  onStatusFilterChange,
+  typeFilter,
+  onTypeFilterChange,
+  viewMode,
+  onViewModeChange,
+  onCreateInstance,
+  onRefresh,
   loading = false
 }) => {
   const { isDark } = useTheme();
-  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
   const [form] = Form.useForm();
   const [submitting, setSubmitting] = useState(false);
 
-  const handleCreate = async () => {
+  // Função para criar nova instância
+  const handleCreateInstance = async () => {
     try {
       const values = await form.validateFields();
       setSubmitting(true);
-
       const newInstance: Omit<Instance, "id" | "createdAt"> = {
         name: values.name,
         type: values.type,
         status: "disconnected",
         lastActivity: new Date().toISOString(),
         messagesCount: 0,
-        webhook: values.webhook || undefined
+        webhook: values.webhook || undefined,
+        avatar: undefined
       };
 
-      await onCreate(newInstance);
+      await onCreateInstance(newInstance);
 
-      setIsModalOpen(false);
+      setIsCreateModalOpen(false);
       form.resetFields();
       message.success("Instância criada com sucesso!");
     } catch (error) {
@@ -82,23 +119,110 @@ export const CreateInstanceButton: React.FC<CreateInstanceButtonProps> = ({
     }
   };
 
-  const handleCancel = () => {
-    setIsModalOpen(false);
+  const handleCancelCreate = () => {
+    setIsCreateModalOpen(false);
     form.resetFields();
   };
 
   return (
     <>
-      <Button
-        type="primary"
-        icon={<Plus size={16} />}
-        onClick={() => setIsModalOpen(true)}
-        size="large"
-        loading={loading}
-        className="bg-gradient-to-r from-blue-500 to-purple-600 border-0 hover:from-blue-600 hover:to-purple-700 shadow-lg"
+      <div
+        className={`p-4 rounded-xl ${
+          isDark ? "bg-gray-800" : "bg-white"
+        } shadow-lg border ${isDark ? "border-gray-700" : "border-gray-100"}`}
       >
-        Nova Instância
-      </Button>{" "}
+        <div className="flex flex-wrap items-center justify-between gap-4">
+          {/* Lado esquerdo - Botões de ação */}
+          <div className="flex items-center gap-3">
+            <Button
+              type="primary"
+              icon={<Plus size={16} />}
+              onClick={() => setIsCreateModalOpen(true)}
+              size="large"
+              loading={loading}
+              className="bg-gradient-to-r from-blue-500 to-purple-600 border-0 hover:from-blue-600 hover:to-purple-700 shadow-lg"
+            >
+              Nova Instância
+            </Button>
+
+            <Tooltip title="Atualizar lista">
+              <Button
+                icon={<RefreshCw size={16} />}
+                onClick={onRefresh}
+                loading={loading}
+                size="large"
+                className={isDark ? "border-gray-600" : ""}
+              />
+            </Tooltip>
+          </div>
+
+          {/* Lado direito - Busca, filtros e visualização */}
+          <div className="flex flex-wrap items-center gap-4">
+            {/* Campo de pesquisa */}
+            <div className="min-w-[200px] max-w-md">
+              <SearchInput
+                placeholder="Buscar instâncias..."
+                value={searchTerm}
+                onChange={(e) => onSearchChange(e.target.value)}
+                allowClear
+                size="large"
+                prefix={<Search size={16} />}
+                className="w-full"
+              />
+            </div>
+
+            {/* Filtros */}
+            <Select
+              value={statusFilter}
+              onChange={onStatusFilterChange}
+              className="w-40"
+              size="large"
+              suffixIcon={<Filter size={16} />}
+            >
+              <Option value="all">Todos status</Option>
+              <Option value="connected">Conectado</Option>
+              <Option value="disconnected">Desconectado</Option>
+              <Option value="connecting">Conectando</Option>
+              <Option value="error">Erro</Option>
+            </Select>
+
+            <Select
+              value={typeFilter}
+              onChange={onTypeFilterChange}
+              className="w-44"
+              size="large"
+              suffixIcon={<Filter size={16} />}
+            >
+              <Option value="all">Todas plataformas</Option>
+              <Option value="whatsapp">WhatsApp</Option>
+              <Option value="instagram">Instagram</Option>
+              <Option value="facebook">Facebook</Option>
+              <Option value="telegram">Telegram</Option>
+            </Select>
+
+            {/* Segmented Control para visualização */}
+            <Segmented
+              value={viewMode}
+              onChange={(value) => onViewModeChange(value as ViewMode)}
+              size="large"
+              options={[
+                {
+                  label: "Cards",
+                  value: "cards",
+                  icon: <Grid3X3 size={16} />
+                },
+                {
+                  label: "Lista",
+                  value: "list",
+                  icon: <List size={16} />
+                }
+              ]}
+            />
+          </div>
+        </div>
+      </div>
+
+      {/* Modal de Criação de Instância */}
       <Modal
         title={
           <div className="flex items-center space-x-2">
@@ -110,12 +234,12 @@ export const CreateInstanceButton: React.FC<CreateInstanceButtonProps> = ({
             </span>
           </div>
         }
-        open={isModalOpen}
-        onCancel={handleCancel}
+        open={isCreateModalOpen}
+        onCancel={handleCancelCreate}
         footer={
-          <Space className="w-full flex flex-col sm:flex-row justify-end gap-2">
+          <div className="flex flex-col sm:flex-row justify-end gap-2">
             <Button
-              onClick={handleCancel}
+              onClick={handleCancelCreate}
               className={`w-full sm:w-auto ${
                 isDark ? "border-gray-600 text-gray-300" : ""
               }`}
@@ -125,14 +249,14 @@ export const CreateInstanceButton: React.FC<CreateInstanceButtonProps> = ({
             </Button>
             <Button
               type="primary"
-              onClick={handleCreate}
+              onClick={handleCreateInstance}
               loading={submitting}
               className="w-full sm:w-auto bg-gradient-to-r from-blue-500 to-purple-600 border-0"
               size="large"
             >
               Criar Instância
             </Button>
-          </Space>
+          </div>
         }
         destroyOnClose
         className={isDark ? "dark-modal" : ""}
@@ -217,7 +341,7 @@ export const CreateInstanceButton: React.FC<CreateInstanceButtonProps> = ({
             <div className="flex items-start space-x-3">
               <Info size={16} className="mt-0.5 flex-shrink-0" />
               <div>
-                <p className="font-medium mb-2">Informações importantes:</p>{" "}
+                <p className="font-medium mb-2">Informações importantes:</p>
                 <ul className="text-sm space-y-1">
                   <li>
                     • A instância será criada no status &quot;Desconectado&quot;

@@ -7,13 +7,7 @@ import { useTheme } from "@/contexts/ThemeContext";
 const MainTabs: React.FC = () => {
   const { isDark } = useTheme();
 
-  const handleOpenChat = (instanceId: string) => {
-    console.log("Abrindo chat para instância:", instanceId);
-  };
-
-  const { content } = useInstancesData({
-    onOpenChat: handleOpenChat
-  });
+  const { content } = useInstancesData();
 
   return (
     <div className="h-full flex flex-col bg-gradient-to-br from-blue-50/30 to-purple-50/30 dark:from-gray-900 dark:to-gray-800">

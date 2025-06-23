@@ -1,17 +1,13 @@
 // src/hooks/useInstancesData.tsx
 import React from "react";
 import { Server, Activity, MessageCircle } from "lucide-react";
-import { InstanceList } from "@/components/instances/InstanceList";
-import { useInstanceStore } from "@/store/instanceStore";
+import { InstancesPage } from "@/components/instances/Instance";
+import { useInstances } from "@/hooks/useInstances";
 import { useTheme } from "@/contexts/ThemeContext";
 
-interface UseInstancesDataProps {
-  onOpenChat: (instanceId: string) => void;
-}
-
-export const useInstancesData = ({ onOpenChat }: UseInstancesDataProps) => {
-  const { instances } = useInstanceStore();
+export const useInstancesData = () => {
   const { isDark } = useTheme();
+  const { instances } = useInstances();
 
   const connectedInstances = instances.filter(
     (i) => i.status === "connected"
@@ -19,7 +15,7 @@ export const useInstancesData = ({ onOpenChat }: UseInstancesDataProps) => {
   const totalMessages = instances.reduce((acc, i) => acc + i.messagesCount, 0);
   const totalInstances = instances.length;
 
-  const content = <InstanceList onOpenChat={onOpenChat} />;
+  const content = <InstancesPage />;
 
   const stats = [
     {
