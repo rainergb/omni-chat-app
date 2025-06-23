@@ -13,7 +13,6 @@ export const MainLayout: React.FC = () => {
         isDark ? "bg-gray-900 text-white" : "bg-gray-50 text-gray-900"
       }`}
     >
-      {" "}
       {/* Header */}
       <header
         className={`transition-colors duration-300 border-b sticky top-0 z-10 ${
@@ -44,7 +43,7 @@ export const MainLayout: React.FC = () => {
             </div>
           </div>
         </div>
-      </header>{" "}
+      </header>
       {/* Main Content */}
       <main className="h-[calc(100vh-73px)] sm:h-[calc(100vh-81px)] overflow-hidden">
         <div className="h-full max-w-7xl mx-auto">
