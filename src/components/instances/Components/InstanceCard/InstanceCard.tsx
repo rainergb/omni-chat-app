@@ -236,8 +236,7 @@ export const InstanceCard: React.FC<InstanceCardProps> = ({
                     : "Conectar"}
                 </span>
               </ConnectButton>
-            </Tooltip>
-
+            </Tooltip>{" "}
             <Tooltip title="Abrir Chat">
               <ChatButton
                 type="text"

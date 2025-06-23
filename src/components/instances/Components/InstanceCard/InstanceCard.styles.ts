@@ -227,10 +227,22 @@ export const ConnectButton = styled(AntButton)<StyledProps>`
 export const ChatButton = styled(AntButton)<StyledProps>`
   flex-shrink: 0;
   transition: colors 0.2s;
+
+  &.ant-btn[disabled] {
+    color: #9ca3af !important;
+    cursor: not-allowed !important;
+    background-color: transparent !important;
+
+    &:hover {
+      background-color: transparent !important;
+      color: #9ca3af !important;
+    }
+  }
+
   ${({ $isConnected }) =>
     $isConnected
       ? `
-    color: #00B9AE; /* Light sea green */
+    color: #00B9AE;
     
     &:hover {
       background-color: rgba(0, 185, 174, 0.1);
