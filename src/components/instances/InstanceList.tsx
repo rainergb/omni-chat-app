@@ -184,162 +184,171 @@ export const InstanceList: React.FC<InstanceListProps> = ({ onOpenChat }) => {
 
   return (
     <div className="p-6 space-y-6">
-      {/* Header */}
-      <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between space-y-4 lg:space-y-0">
-        <div>
-          <h1
-            className={`text-3xl font-bold mb-2 ${
-              isDark ? "text-gray-100" : "text-gray-800"
-            }`}
-          >
-            Instâncias
-          </h1>
-          <p className={`${isDark ? "text-gray-400" : "text-gray-600"}`}>
-            Gerencie suas conexões com diferentes plataformas de chat
-          </p>
+      {/* Header - Campo de busca e botões na mesma linha */}
+      <div className="flex items-center justify-between gap-4 flex-wrap">
+        <div className="flex-1 min-w-0 max-w-md">
+          <SearchInput
+            placeholder="Buscar instâncias..."
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            allowClear
+            size="large"
+            prefix={<Search size={16} />}
+            className="w-full"
+          />
         </div>
 
-        <div className="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-3">
+        <div className="flex items-center gap-3 flex-shrink-0">
           <CreateInstanceButton onCreate={createInstance} loading={loading} />
           <Tooltip title="Atualizar lista">
             <Button
               icon={<RefreshCw size={16} />}
               onClick={refreshInstances}
               loading={loading}
+              size="large"
               className={isDark ? "border-gray-600" : ""}
             />
           </Tooltip>
         </div>
       </div>
 
-      {/* Statistics Cards */}
+      {/* Statistics Cards - Layout em linha horizontal */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+        {/* Total */}
         <div
           className={`p-4 rounded-xl ${
             isDark ? "bg-gray-800" : "bg-white"
-          } shadow-lg`}
+          } shadow-lg border ${isDark ? "border-gray-700" : "border-gray-100"}`}
         >
-          <div className="flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            <div
+              className={`p-2 rounded-lg ${
+                isDark ? "bg-gray-700" : "bg-gray-100"
+              }`}
+            >
+              <Grid3X3
+                size={18}
+                className={isDark ? "text-gray-400" : "text-gray-500"}
+              />
+            </div>
             <div>
               <p
-                className={`text-sm ${
+                className={`text-xs font-medium ${
                   isDark ? "text-gray-400" : "text-gray-600"
                 }`}
               >
                 Total
               </p>
               <p
-                className={`text-2xl font-bold ${
+                className={`text-lg font-bold ${
                   isDark ? "text-gray-100" : "text-gray-800"
                 }`}
               >
                 {stats.total}
               </p>
             </div>
-            <Grid3X3
-              size={24}
-              className={isDark ? "text-gray-500" : "text-gray-400"}
-            />
           </div>
         </div>
 
+        {/* Conectadas */}
         <div
           className={`p-4 rounded-xl ${
             isDark ? "bg-gray-800" : "bg-white"
-          } shadow-lg`}
+          } shadow-lg border ${isDark ? "border-gray-700" : "border-gray-100"}`}
         >
-          <div className="flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            <div className="p-2 rounded-lg bg-green-100 dark:bg-green-900/30">
+              <Wifi size={18} className="text-green-500" />
+            </div>
             <div>
               <p
-                className={`text-sm ${
+                className={`text-xs font-medium ${
                   isDark ? "text-gray-400" : "text-gray-600"
                 }`}
               >
                 Conectadas
               </p>
-              <p className="text-2xl font-bold text-green-500">
+              <p className="text-lg font-bold text-green-500">
                 {stats.connected}
               </p>
             </div>
-            <Wifi size={24} className="text-green-500" />
           </div>
         </div>
 
+        {/* Desconectadas */}
         <div
           className={`p-4 rounded-xl ${
             isDark ? "bg-gray-800" : "bg-white"
-          } shadow-lg`}
+          } shadow-lg border ${isDark ? "border-gray-700" : "border-gray-100"}`}
         >
-          <div className="flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            <div className="p-2 rounded-lg bg-red-100 dark:bg-red-900/30">
+              <WifiOff size={18} className="text-red-500" />
+            </div>
             <div>
               <p
-                className={`text-sm ${
+                className={`text-xs font-medium ${
                   isDark ? "text-gray-400" : "text-gray-600"
                 }`}
               >
                 Desconectadas
               </p>
-              <p className="text-2xl font-bold text-red-500">
+              <p className="text-lg font-bold text-red-500">
                 {stats.disconnected}
               </p>
             </div>
-            <WifiOff size={24} className="text-red-500" />
           </div>
         </div>
 
+        {/* Mensagens */}
         <div
           className={`p-4 rounded-xl ${
             isDark ? "bg-gray-800" : "bg-white"
-          } shadow-lg`}
+          } shadow-lg border ${isDark ? "border-gray-700" : "border-gray-100"}`}
         >
-          <div className="flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            <div
+              className={`p-2 rounded-lg ${
+                isDark ? "bg-purple-900/30" : "bg-purple-100"
+              }`}
+            >
+              <TrendingUp
+                size={18}
+                className={isDark ? "text-purple-400" : "text-purple-500"}
+              />
+            </div>
             <div>
               <p
-                className={`text-sm ${
+                className={`text-xs font-medium ${
                   isDark ? "text-gray-400" : "text-gray-600"
                 }`}
               >
                 Mensagens
               </p>
               <p
-                className={`text-2xl font-bold ${
+                className={`text-lg font-bold ${
                   isDark ? "text-gray-100" : "text-gray-800"
                 }`}
               >
                 {stats.totalMessages.toLocaleString()}
               </p>
             </div>
-            <TrendingUp
-              size={24}
-              className={isDark ? "text-gray-500" : "text-gray-400"}
-            />
           </div>
         </div>
       </div>
 
-      {/* Filters and Controls */}
+      {/* Filtros e Controles */}
       <div
-        className={`p-6 rounded-xl ${
+        className={`p-4 rounded-xl ${
           isDark ? "bg-gray-800" : "bg-white"
-        } shadow-lg`}
+        } shadow-lg border ${isDark ? "border-gray-700" : "border-gray-100"}`}
       >
-        <div className="flex flex-col lg:flex-row lg:items-center space-y-4 lg:space-y-0 lg:space-x-4">
-          <div className="flex-1">
-            <SearchInput
-              placeholder="Buscar instâncias..."
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-              allowClear
-              className="max-w-md"
-              prefix={<Search size={16} />}
-            />
-          </div>
-
-          <Space wrap>
+        <div className="flex flex-col lg:flex-row lg:items-center gap-4">
+          <Space wrap className="flex-1">
             <Select
               value={statusFilter}
               onChange={setStatusFilter}
-              className="w-36"
+              className="w-40"
               suffixIcon={<Filter size={16} />}
             >
               <Option value="all">Todos status</Option>
@@ -352,7 +361,7 @@ export const InstanceList: React.FC<InstanceListProps> = ({ onOpenChat }) => {
             <Select
               value={typeFilter}
               onChange={setTypeFilter}
-              className="w-40"
+              className="w-44"
               suffixIcon={<Filter size={16} />}
             >
               <Option value="all">Todas plataformas</Option>
@@ -361,35 +370,35 @@ export const InstanceList: React.FC<InstanceListProps> = ({ onOpenChat }) => {
               <Option value="facebook">Facebook</Option>
               <Option value="telegram">Telegram</Option>
             </Select>
-
-            <Segmented
-              value={viewMode}
-              onChange={(value) => setViewMode(value as ViewMode)}
-              options={[
-                {
-                  label: "Cards",
-                  value: "cards",
-                  icon: <Grid3X3 size={16} />
-                },
-                {
-                  label: "Lista",
-                  value: "list",
-                  icon: <List size={16} />
-                }
-              ]}
-            />
           </Space>
+
+          <Segmented
+            value={viewMode}
+            onChange={(value) => setViewMode(value as ViewMode)}
+            options={[
+              {
+                label: "Cards",
+                value: "cards",
+                icon: <Grid3X3 size={16} />
+              },
+              {
+                label: "Lista",
+                value: "list",
+                icon: <List size={16} />
+              }
+            ]}
+          />
         </div>
       </div>
 
-      {/* Content */}
+      {/* Conteúdo */}
       {loading
         ? renderSkeleton()
         : filteredInstances.length === 0
         ? renderEmpty()
         : renderInstances()}
 
-      {/* QR Modal */}
+      {/* Modal QR Code */}
       <QRCodeModal
         open={qrModalOpen}
         onClose={() => setQrModalOpen(false)}

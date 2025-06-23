@@ -9,7 +9,6 @@ export const useInstances = () => {
     viewMode,
     loading,
     selectedInstance,
-    setInstances,
     addInstance,
     updateInstance,
     deleteInstance,
