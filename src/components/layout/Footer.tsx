@@ -6,7 +6,6 @@ import { useTheme } from "@/contexts/ThemeContext";
 import styled from "styled-components";
 
 const StyledFooter = styled.footer<{ $isDark: boolean }>`
-  position: fixed;
   bottom: 0;
   left: 0;
   right: 0;

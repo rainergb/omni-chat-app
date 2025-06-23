@@ -23,6 +23,10 @@ import {
 interface InstanceHeaderProps {
   searchTerm: string;
   onSearchChange: (value: string) => void;
+  statusFilter: string;
+  onStatusFilterChange: (value: string) => void;
+  typeFilter: string;
+  onTypeFilterChange: (value: string) => void;
   viewMode: ViewMode;
   onViewModeChange: (mode: ViewMode) => void;
   onCreateInstance: (
@@ -35,6 +39,10 @@ interface InstanceHeaderProps {
 export const InstanceHeader: React.FC<InstanceHeaderProps> = ({
   searchTerm,
   onSearchChange,
+  statusFilter, // Pode ser usado para implementar filtros de status no futuro
+  onStatusFilterChange, // Pode ser usado para implementar filtros de status no futuro
+  typeFilter, // Pode ser usado para implementar filtros de tipo no futuro
+  onTypeFilterChange, // Pode ser usado para implementar filtros de tipo no futuro
   viewMode,
   onViewModeChange,
   onCreateInstance,
@@ -43,6 +51,15 @@ export const InstanceHeader: React.FC<InstanceHeaderProps> = ({
 }) => {
   const { isDark } = useTheme();
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
+
+  // Essas props podem ser usadas para implementar filtros no futuro
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const _unusedFilters = {
+    statusFilter,
+    onStatusFilterChange,
+    typeFilter,
+    onTypeFilterChange
+  };
 
   const handleClearSearch = () => {
     onSearchChange("");

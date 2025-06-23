@@ -3,7 +3,7 @@ import React, { useState } from "react";
 import { Row, Col, Button, Skeleton } from "antd";
 import { Grid3X3, List, Plus } from "lucide-react";
 import { ViewMode, Instance } from "@/libs/types";
-import { InstanceCard } from "./InstanceCard";
+import { InstanceCard } from "./Components/InstanceCard/InstanceCard";
 import { QRCodeModal } from "./QRCodeModal";
 import { useTheme } from "@/contexts/ThemeContext";
 
