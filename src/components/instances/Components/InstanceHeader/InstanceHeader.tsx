@@ -4,6 +4,7 @@ import { Tooltip } from "antd";
 import { Grid3X3, List, RefreshCw, Search, Plus } from "lucide-react";
 import { ViewMode, Instance } from "@/libs/types";
 import { useTheme } from "@/contexts/ThemeContext";
+import { Segmented } from "@/components/ui";
 import { CreateInstanceModal } from "../CreateInstanceModal/CreateInstanceModal";
 import {
   HeaderContainer,
@@ -16,8 +17,7 @@ import {
   Spacer,
   RightSection,
   StyledButton,
-  GradientButton,
-  StyledSegmented
+  GradientButton
 } from "./InstanceHeader.styles";
 
 interface InstanceHeaderProps {
@@ -94,9 +94,7 @@ export const InstanceHeader: React.FC<InstanceHeaderProps> = ({
                 loading={loading}
               />
             </Tooltip>
-
-            <StyledSegmented
-              $isDark={isDark}
+            <Segmented
               value={viewMode}
               onChange={(value) => onViewModeChange(value as ViewMode)}
               options={[

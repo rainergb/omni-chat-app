@@ -1,18 +1,30 @@
 // src/components/instances/InstanceHeader/InstanceHeader.styles.ts
 import styled from "styled-components";
-import { Button, Segmented } from "antd";
+import { Button } from "antd";
 
 export const HeaderContainer = styled.div<{ $isDark: boolean }>`
-  padding: 16px;
+  width: 100%;
+  padding: 0.5rem 1rem;
   box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
   border: 1px solid ${(props) => (props.$isDark ? "#374151" : "#f3f4f6")};
   background: ${(props) => (props.$isDark ? "#1f2937" : "#ffffff")};
+
+  @media (min-width: 640px) {
+    padding: 0.75rem 1.5rem;
+  }
+
+  @media (min-width: 1024px) {
+    padding: 0.75rem 2rem;
+  }
 `;
 
 export const ContentWrapper = styled.div`
   display: flex;
   align-items: center;
   gap: 16px;
+  width: 100%;
+  max-width: 112rem;
+  margin: 0 auto;
 `;
 
 export const LeftSection = styled.div`
@@ -131,30 +143,6 @@ export const GradientButton = styled(Button)`
       transform: translateY(-1px);
       box-shadow: 0 6px 20px 0 rgba(59, 130, 246, 0.4) !important;
       background: linear-gradient(135deg, #2563eb 0%, #7c3aed 100%) !important;
-    }
-  }
-`;
-
-export const StyledSegmented = styled(Segmented)<{ $isDark: boolean }>`
-  &.ant-segmented {
-    background: ${(props) => (props.$isDark ? "#374151" : "#f9fafb")};
-    border-radius: 8px;
-    height: 40px;
-
-    .ant-segmented-item {
-      height: 32px;
-      line-height: 32px;
-      ${(props) =>
-        props.$isDark
-          ? `
-        color: #d1d5db;
-        
-        &.ant-segmented-item-selected {
-          background: #4b5563;
-          color: #f9fafb;
-        }
-      `
-          : ""}
     }
   }
 `;

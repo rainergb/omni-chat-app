@@ -1,10 +1,7 @@
-// src/components/layout/Header.tsx
-import React from "react";
-import { useTheme } from "@/contexts/ThemeContext";
-import { ThemeToggle } from "@/components/ui/ThemeToggle";
+// src/components/layout/Components/Header/Header.styles.ts
 import styled from "styled-components";
 
-const StyledHeader = styled.header<{ $isDark: boolean }>`
+export const StyledHeader = styled.header<{ $isDark: boolean }>`
   position: sticky;
   top: 0;
   z-index: 50;
@@ -14,7 +11,7 @@ const StyledHeader = styled.header<{ $isDark: boolean }>`
   transition: all 0.3s ease;
 `;
 
-const HeaderContainer = styled.div`
+export const HeaderContainer = styled.div`
   width: 100%;
   padding: 0.5rem 1rem;
   
@@ -27,7 +24,7 @@ const HeaderContainer = styled.div`
   }
 `;
 
-const HeaderContent = styled.div`
+export const HeaderContent = styled.div`
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -36,7 +33,7 @@ const HeaderContent = styled.div`
   margin: 0 auto;
 `;
 
-const LogoContainer = styled.div`
+export const LogoContainer = styled.div`
   display: flex;
   align-items: center;
   gap: 0.75rem;
@@ -44,7 +41,7 @@ const LogoContainer = styled.div`
   transition: all 0.3s ease;
 `;
 
-const LogoIcon = styled.img<{ $isDark: boolean }>`
+export const LogoIcon = styled.img<{ $isDark: boolean }>`
   height: 32px;
   width: auto;
   filter: ${(props) => (props.$isDark 
@@ -61,8 +58,7 @@ const LogoIcon = styled.img<{ $isDark: boolean }>`
   }
 `;
 
-
-const ThemeToggleContainer = styled.div`
+export const ThemeToggleContainer = styled.div`
   display: flex;
   align-items: center;
   gap: 0.5rem;
@@ -71,21 +67,3 @@ const ThemeToggleContainer = styled.div`
     gap: 0.75rem;
   }
 `;
-
-export const Header: React.FC = () => {
-  const { isDark } = useTheme();
-
-  return (
-    <StyledHeader $isDark={isDark}>
-      <HeaderContainer>        <HeaderContent>
-          <LogoContainer>
-            <LogoIcon src="/icon.svg" alt="Omni Chat" $isDark={isDark} />
-          </LogoContainer>
-          <ThemeToggleContainer>
-            <ThemeToggle />
-          </ThemeToggleContainer>
-        </HeaderContent>
-      </HeaderContainer>
-    </StyledHeader>
-  );
-};
