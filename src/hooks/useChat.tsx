@@ -84,13 +84,10 @@ export const useChat = () => {
   // Total de mensagens não lidas
   const totalUnreadCount = useMemo(() => {
     return filteredChats.reduce((total, chat) => total + chat.unreadCount, 0);
-  }, [filteredChats]);
-
-  // Selecionar chat
+  }, [filteredChats]); // Selecionar chat
   const handleSelectChat = useCallback(
     async (chat: Chat) => {
-      if (selectedChat?.id === chat.id) return;
-
+      // Sempre definir o chat selecionado para garantir re-renderização
       setSelectedChat(chat);
 
       // Carregar mensagens se ainda não foram carregadas
@@ -98,7 +95,7 @@ export const useChat = () => {
         await loadMockMessages(chat.id);
       }
     },
-    [selectedChat, messages, setSelectedChat, loadMockMessages]
+    [messages, setSelectedChat, loadMockMessages]
   );
 
   // Enviar mensagem

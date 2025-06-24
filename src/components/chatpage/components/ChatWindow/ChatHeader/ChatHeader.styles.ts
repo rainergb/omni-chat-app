@@ -11,9 +11,13 @@ export const HeaderContainer = styled.div<StyledProps>`
   border-bottom: 1px solid ${(props) => (props.$isDark ? "#374151" : "#e5e7eb")};
   background: ${(props) => (props.$isDark ? "#0f172a" : "#ffffff")};
   flex-shrink: 0;
+  min-height: 72px;
+  position: relative;
+  z-index: 1;
 
   @media (max-width: 768px) {
     padding: 0.75rem 1rem;
+    min-height: 64px;
   }
 `;
 

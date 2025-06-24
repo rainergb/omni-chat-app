@@ -28,6 +28,10 @@ export const ChatHeader: React.FC<ChatHeaderProps> = ({
 }) => {
   const { isDark } = useTheme();
 
+  if (!chat) {
+    return null;
+  }
+
   const menuItems: MenuProps["items"] = [
     {
       key: "info",

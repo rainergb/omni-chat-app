@@ -12,6 +12,8 @@ export const ChatWindowContainer = styled.div<StyledProps>`
   background: ${(props) => (props.$isDark ? "#030712" : "#f8fafc")};
   position: relative;
   overflow: hidden;
+  height: 100%;
+  min-height: 0;
 `;
 
 export const ChatContent = styled.div`
@@ -20,6 +22,7 @@ export const ChatContent = styled.div`
   flex-direction: column;
   overflow: hidden;
   position: relative;
+  min-height: 0;
 `;
 
 export const InputContainer = styled.div<StyledProps>`

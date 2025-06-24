@@ -21,14 +21,36 @@ export const ChatWindow: React.FC = () => {
     clearSelection
   } = useChat();
 
+  // Se não há chat selecionado, não renderizar nada
   if (!selectedChat) {
+    console.log("ChatWindow: Nenhum chat selecionado");
     return null;
   }
 
+  console.log("ChatWindow: Renderizando com chat:", selectedChat.contactName);
+
+  const handleCall = () => {
+    console.log("Iniciando chamada de áudio para:", selectedChat.contactName);
+  };
+
+  const handleVideoCall = () => {
+    console.log("Iniciando chamada de vídeo para:", selectedChat.contactName);
+  };
+
+  const handleInfo = () => {
+    console.log("Abrindo informações do contato:", selectedChat.contactName);
+  };
+
   return (
     <ChatWindowContainer $isDark={isDark}>
-      {/* Header do Chat */}
-      <ChatHeader chat={selectedChat} onBack={clearSelection} />
+      {/* Header do Chat - sempre presente quando há chat selecionado */}
+      <ChatHeader
+        chat={selectedChat}
+        onBack={clearSelection}
+        onCall={!selectedChat.isGroup ? handleCall : undefined}
+        onVideoCall={!selectedChat.isGroup ? handleVideoCall : undefined}
+        onInfo={handleInfo}
+      />
 
       {/* Conteúdo Principal */}
       <ChatContent>

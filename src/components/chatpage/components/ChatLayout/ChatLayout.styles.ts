@@ -8,12 +8,11 @@ interface StyledProps {
 
 export const LayoutContainer = styled.div<StyledProps>`
   display: flex;
-  height: 100%;
+  height: 100vh;
   width: 100%;
   background: ${(props) => (props.$isDark ? "#030712" : "#f0f0f0")};
   overflow: hidden;
   position: relative;
-  min-height: 100vh;
 `;
 
 export const LeftPanel = styled.div<StyledProps>`
@@ -61,14 +60,15 @@ export const MobileOverlay = styled.div<StyledProps>`
 
   @media (max-width: 768px) {
     display: flex;
-    position: absolute;
+    position: fixed;
     top: 0;
     left: 0;
     right: 0;
     bottom: 0;
     background: ${(props) => (props.$isDark ? "#030712" : "#f8fafc")};
-    z-index: 10;
+    z-index: 1000;
     flex-direction: column;
+    overflow: hidden;
   }
 `;
 
