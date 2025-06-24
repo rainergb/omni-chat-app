@@ -4,7 +4,6 @@ import { Layout } from "antd";
 import { useNavigation } from "@/contexts/NavigationContext";
 import { Chatpage } from "@/components/chatpage/Chatpage";
 import { InstancesPage } from "@/components/instances/Instance";
-import { Footer } from "./Footer";
 
 const { Content } = Layout;
 
@@ -49,9 +48,6 @@ export const MainLayout: React.FC = () => {
           {renderContent()}
         </div>
       </Content>
-
-      {/* Footer apenas aparece quando não está no chat */}
-      {activeTab !== "chat" && <Footer />}
     </Layout>
   );
 };
