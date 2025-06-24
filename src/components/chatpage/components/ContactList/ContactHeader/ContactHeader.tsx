@@ -1,6 +1,6 @@
 // src/components/chatpage/components/ContactList/ContactHeader.tsx
 import React, { useState } from "react";
-import { Button, Dropdown, Badge, Tooltip } from "antd";
+import { Button, Dropdown, Tooltip } from "antd";
 import { Search, Filter, MessageCircle, MoreVertical, X } from "lucide-react";
 import type { MenuProps } from "antd";
 import { useTheme } from "@/contexts/ThemeContext";
@@ -14,7 +14,7 @@ import {
   SearchInput,
   SearchIcon,
   ClearButton,
-  FilterSection,
+  FilterSection
 } from "./ContactHeader.styles";
 
 export const ContactHeader: React.FC = () => {
@@ -23,10 +23,9 @@ export const ContactHeader: React.FC = () => {
     search,
     filter,
     toggleUnreadFilter,
-    totalUnreadCount,
     selectedInstance,
     availableInstances,
-    selectInstance,
+    selectInstance
   } = useChat();
 
   const [searchValue, setSearchValue] = useState(filter.searchTerm || "");
@@ -43,17 +42,19 @@ export const ContactHeader: React.FC = () => {
   };
 
   // Menu do dropdown de instâncias
-  const instanceMenuItems: MenuProps["items"] = availableInstances.map((instance) => ({
-    key: instance.id,
-    label: (
-      <div className="flex items-center space-x-2">
-        <div className="w-2 h-2 bg-green-500 rounded-full"></div>
-        <span>{instance.name}</span>
-        <span className="text-xs text-gray-400">({instance.type})</span>
-      </div>
-    ),
-    onClick: () => selectInstance(instance.id),
-  }));
+  const instanceMenuItems: MenuProps["items"] = availableInstances.map(
+    (instance) => ({
+      key: instance.id,
+      label: (
+        <div className="flex items-center space-x-2">
+          <div className="w-2 h-2 bg-green-500 rounded-full"></div>
+          <span>{instance.name}</span>
+          <span className="text-xs text-gray-400">({instance.type})</span>
+        </div>
+      ),
+      onClick: () => selectInstance(instance.id)
+    })
+  );
 
   // Menu de filtros
   const filterMenuItems: MenuProps["items"] = [
@@ -62,13 +63,15 @@ export const ContactHeader: React.FC = () => {
       label: (
         <div className="flex items-center justify-between w-full">
           <span>Apenas não lidas</span>
-          {filter.unreadOnly && <div className="w-2 h-2 bg-blue-500 rounded-full"></div>}
+          {filter.unreadOnly && (
+            <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
+          )}
         </div>
       ),
-      onClick: toggleUnreadFilter,
+      onClick: toggleUnreadFilter
     },
     {
-      type: "divider",
+      type: "divider"
     },
     {
       key: "all",
@@ -79,11 +82,13 @@ export const ContactHeader: React.FC = () => {
           setSearchValue("");
           search("");
         }
-      },
-    },
+      }
+    }
   ];
 
-  const currentInstance = availableInstances.find((i) => i.id === selectedInstance);
+  const currentInstance = availableInstances.find(
+    (i) => i.id === selectedInstance
+  );
 
   return (
     <HeaderContainer $isDark={isDark}>
@@ -91,18 +96,7 @@ export const ContactHeader: React.FC = () => {
       <HeaderTop>
         <Title $isDark={isDark}>
           <MessageCircle size={20} />
-          Message
-          {totalUnreadCount > 0 && (
-            <Badge
-              count={totalUnreadCount}
-              size="small"
-              style={{
-                backgroundColor: "#00b9ae",
-                color: "white",
-                marginLeft: "8px",
-              }}
-            />
-          )}
+          Messagens
         </Title>
 
         <ActionsContainer>
@@ -117,7 +111,9 @@ export const ContactHeader: React.FC = () => {
                 <Button
                   type="text"
                   size="small"
-                  className={`text-xs ${isDark ? "text-gray-300" : "text-gray-600"}`}
+                  className={`text-xs ${
+                    isDark ? "text-gray-300" : "text-gray-600"
+                  }`}
                 >
                   {currentInstance?.name.slice(0, 8)}...
                 </Button>

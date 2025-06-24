@@ -16,13 +16,7 @@ import {
 
 export const ChatLayout: React.FC = () => {
   const { isDark } = useTheme();
-  const {
-    chats,
-    selectedChat,
-    hasAvailableInstances,
-    selectedInstance,
-    selectInstance,
-  } = useChat();
+  const { selectedChat, hasAvailableInstances, selectInstance } = useChat();
 
   // Se não há instâncias conectadas, mostrar seletor
   if (!hasAvailableInstances) {

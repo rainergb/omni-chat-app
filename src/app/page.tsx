@@ -10,14 +10,23 @@ import { Header } from "@/components/layout/Components/Header/Header";
 
 export default function Home() {
   return (
-    <ThemeProvider>
-      <NavigationProvider>
-        <App>
-          <Header />
-          <MainLayout />
-          <Footer />
-        </App>
-      </NavigationProvider>
-    </ThemeProvider>
+    <div
+      style={{
+        height: "100vh",
+        display: "flex",
+        flexDirection: "column",
+        overflow: "hidden"
+      }}
+    >
+      <ThemeProvider>
+        <NavigationProvider>
+          <App>
+            <Header />
+            <MainLayout />
+            <Footer />
+          </App>
+        </NavigationProvider>
+      </ThemeProvider>
+    </div>
   );
 }
