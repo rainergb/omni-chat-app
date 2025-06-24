@@ -1,7 +1,9 @@
+// src/app/page.tsx
 "use client";
 
 import React from "react";
 import { App } from "antd";
+import { QueryProvider } from "@/providers/QueryProvider";
 import { ThemeProvider } from "@/contexts/ThemeContext";
 import { NavigationProvider } from "@/contexts/NavigationContext";
 import { MainLayout } from "@/components/layout/MainLayout";
@@ -10,24 +12,26 @@ import { Header } from "@/components/layout/Components/Header/Header";
 
 export default function Home() {
   return (
-    <ThemeProvider>
-      <NavigationProvider>
-        <App>
-          <div
-            style={{
-              height: "100vh",
-              display: "flex",
-              flexDirection: "column"
-            }}
-          >
-            <Header />
-            <div style={{ flex: 1, overflow: "hidden" }}>
-              <MainLayout />
+    <QueryProvider>
+      <ThemeProvider>
+        <NavigationProvider>
+          <App>
+            <div
+              style={{
+                height: "100vh",
+                display: "flex",
+                flexDirection: "column"
+              }}
+            >
+              <Header />
+              <div style={{ flex: 1, overflow: "hidden" }}>
+                <MainLayout />
+              </div>
+              <Footer />
             </div>
-            <Footer />
-          </div>
-        </App>
-      </NavigationProvider>
-    </ThemeProvider>
+          </App>
+        </NavigationProvider>
+      </ThemeProvider>
+    </QueryProvider>
   );
 }

@@ -1,28 +1,85 @@
-// src/pages/InstancesPage.tsx (ou onde você usa os componentes)
+// src/components/instances/Instance.tsx (Adaptado para usar modais existentes)
 import React, { useState } from "react";
+import { message } from "antd";
 import { InstanceTable } from "@/components/instances/Components/InstanceTable/InstanceTable";
-import { useInstances } from "@/hooks/useInstances";
 import { InstanceHeader } from "./Components/InstanceHeader/InstanceHeader";
+import { CreateInstanceModal } from "./Components/CreateInstanceModal/CreateInstanceModal";
+import { QRCodeModal } from "./Components/QRCodeModal/QRCodeModal";
+import { useInstances } from "@/hooks/useInstances";
+import {
+  useUnifiedInstances,
+  useDisconnectInstance,
+  useDeleteInstance
+} from "@/hooks/useWhatsAppInstances";
+import { useWhatsAppSocket } from "@/hooks/useWhatsAppSocket";
+import { Instance } from "@/libs/types";
+import { ConnectionStatus, WhatsAppMessage } from "@/types/whatsapp.types";
 
 export const InstancesPage: React.FC = () => {
-  const {
-    instances,
-    viewMode,
-    loading,
-    setViewMode,
-    createInstance,
-    deleteInstance,
-    connectInstance,
-    disconnectInstance,
-    refreshInstances
-  } = useInstances();
-
+  // Estados para UI
   const [searchTerm, setSearchTerm] = useState("");
   const [statusFilter, setStatusFilter] = useState<string>("all");
   const [typeFilter, setTypeFilter] = useState<string>("all");
+  const [createModalOpen, setCreateModalOpen] = useState(false);
+  const [qrModalOpen, setQrModalOpen] = useState(false);
+  const [selectedInstanceForQR, setSelectedInstanceForQR] = useState<{
+    id: string;
+    name: string;
+    isWhatsApp: boolean;
+  } | null>(null);
+
+  // Hooks para instâncias mock (sistema antigo)
+  const {
+    instances: mockInstances,
+    viewMode,
+    loading: mockLoading,
+    setViewMode,
+    createInstance: createMockInstance,
+    deleteInstance: deleteMockInstance,
+    connectInstance: connectMockInstance,
+    disconnectInstance: disconnectMockInstance,
+    refreshInstances: refreshMockInstances
+  } = useInstances();
+
+  // Hooks para instâncias WhatsApp reais
+  const {
+    instances: whatsappInstances,
+    isLoading: whatsappLoading,
+    error: whatsappError,
+    refetch: refetchWhatsApp
+  } = useUnifiedInstances();
+
+  // Hooks para operações WhatsApp
+  const disconnectWhatsAppMutation = useDisconnectInstance();
+  const deleteWhatsAppMutation = useDeleteInstance();
+
+  // Combinar instâncias mock e WhatsApp
+  const allInstances = [...mockInstances, ...whatsappInstances];
+
+  const isLoading = mockLoading || whatsappLoading;
+
+  // WebSocket para monitoramento WhatsApp em tempo real
+  useWhatsAppSocket({
+    onMessage: (message: WhatsAppMessage) => {
+      console.log("Nova mensagem WhatsApp:", message);
+      // Aqui você pode atualizar contadores de mensagem se necessário
+    },
+    onStatusChange: (status: ConnectionStatus) => {
+      console.log("Status da instância WhatsApp alterado:", status);
+      // Refetch instâncias WhatsApp para atualizar status
+      refetchWhatsApp();
+    },
+    onConnect: () => {
+      console.log("WebSocket conectado - monitorando instâncias WhatsApp");
+    },
+    onError: (error) => {
+      console.error("Erro no WebSocket WhatsApp:", error);
+      message.error("Problema na conexão em tempo real com WhatsApp");
+    }
+  });
 
   // Filtros
-  const filteredInstances = instances.filter((instance) => {
+  const filteredInstances = allInstances.filter((instance) => {
     const matchesSearch = instance.name
       .toLowerCase()
       .includes(searchTerm.toLowerCase());
@@ -33,18 +90,123 @@ export const InstancesPage: React.FC = () => {
     return matchesSearch && matchesStatus && matchesType;
   });
 
-  const handleOpenCreateModal = () => {
-    // Esta função é chamada quando clica no botão "Nova Instância" no estado empty
-    // Você pode passar uma referência para abrir o modal do InstanceHeader
+  // Verificar se é instância WhatsApp
+  const isWhatsAppInstance = (instance: Instance): boolean => {
+    return (
+      instance.type === "whatsapp" &&
+      whatsappInstances.some((wInstance) => wInstance.id === instance.id)
+    );
+  };
+
+  // Handlers
+  const handleCreateInstance = async (
+    instanceData: Omit<Instance, "id" | "createdAt">
+  ) => {
+    // Sistema mock para outras plataformas
+    await createMockInstance(instanceData);
+  };
+
+  const handleWhatsAppInstanceCreated = (instanceId: string) => {
+    message.success("Instância WhatsApp criada! Gerando QR Code...");
+
+    // Abrir modal de QR Code para WhatsApp
+    setSelectedInstanceForQR({
+      id: instanceId,
+      name: `WhatsApp ${instanceId}`,
+      isWhatsApp: true
+    });
+    setQrModalOpen(true);
+
+    // Refetch para atualizar lista
+    refetchWhatsApp();
+  };
+
+  const handleConnect = async (instanceId: string) => {
+    const instance = allInstances.find((i) => i.id === instanceId);
+    if (!instance) return;
+
+    try {
+      if (isWhatsAppInstance(instance)) {
+        // Para WhatsApp, abrir modal de QR Code
+        setSelectedInstanceForQR({
+          id: instanceId,
+          name: instance.name,
+          isWhatsApp: true
+        });
+        setQrModalOpen(true);
+      } else {
+        // Para outras plataformas, usar sistema mock
+        await connectMockInstance(instanceId);
+
+        // Abrir modal de QR Code mock
+        setSelectedInstanceForQR({
+          id: instanceId,
+          name: instance.name,
+          isWhatsApp: false
+        });
+        setQrModalOpen(true);
+      }
+    } catch {
+      message.error("Erro ao conectar instância");
+    }
+  };
+
+  const handleDisconnect = async (instanceId: string) => {
+    const instance = allInstances.find((i) => i.id === instanceId);
+    if (!instance) return;
+
+    try {
+      if (isWhatsAppInstance(instance)) {
+        await disconnectWhatsAppMutation.mutateAsync(instanceId);
+      } else {
+        await disconnectMockInstance(instanceId);
+      }
+    } catch {
+      // Erro já tratado nos hooks
+    }
+  };
+
+  const handleDelete = async (instanceId: string) => {
+    const instance = allInstances.find((i) => i.id === instanceId);
+    if (!instance) return;
+
+    try {
+      if (isWhatsAppInstance(instance)) {
+        await deleteWhatsAppMutation.mutateAsync(instanceId);
+      } else {
+        await deleteMockInstance(instanceId);
+      }
+    } catch {
+      // Erro já tratado nos hooks
+    }
   };
 
   const handleOpenChat = (instanceId: string) => {
-    // Lógica para abrir o chat
-    console.log("Abrir chat para instância:", instanceId);
+    const instance = allInstances.find((i) => i.id === instanceId);
+    if (!instance) return;
+
+    if (instance.status === "connected") {
+      message.info(`Abrindo chat para ${instance.name}`);
+      // Aqui você implementaria a navegação para o chat
+      // Por exemplo: router.push(`/chat/${instanceId}`) ou setActiveTab('chat')
+    } else {
+      message.warning("Instância deve estar conectada para abrir chat");
+    }
   };
 
+  const handleRefresh = () => {
+    refreshMockInstances();
+    refetchWhatsApp();
+    message.info("Atualizando lista de instâncias...");
+  };
+
+  // Mostrar erro do WhatsApp se houver
+  if (whatsappError) {
+    console.error("Erro ao carregar instâncias WhatsApp:", whatsappError);
+  }
+
   return (
-    <div className="p-6 space-y-6">
+    <div className="space-y-6">
       <InstanceHeader
         searchTerm={searchTerm}
         onSearchChange={setSearchTerm}
@@ -54,25 +216,49 @@ export const InstancesPage: React.FC = () => {
         onTypeFilterChange={setTypeFilter}
         viewMode={viewMode}
         onViewModeChange={setViewMode}
-        onCreateInstance={createInstance}
-        onRefresh={refreshInstances}
-        loading={loading}
+        onCreateInstance={async () => {
+          setCreateModalOpen(true);
+          return Promise.resolve();
+        }}
+        onRefresh={handleRefresh}
+        loading={isLoading}
       />
 
       <InstanceTable
-        instances={instances}
+        instances={allInstances}
         filteredInstances={filteredInstances}
         viewMode={viewMode}
-        loading={loading}
+        loading={isLoading}
         searchTerm={searchTerm}
         statusFilter={statusFilter}
         typeFilter={typeFilter}
-        onConnect={connectInstance}
-        onDisconnect={disconnectInstance}
-        onDelete={deleteInstance}
+        onConnect={handleConnect}
+        onDisconnect={handleDisconnect}
+        onDelete={handleDelete}
         onOpenChat={handleOpenChat}
-        onCreateInstance={handleOpenCreateModal}
+        onCreateInstance={() => setCreateModalOpen(true)}
       />
+
+      {/* Modal de Criação - Adaptado para WhatsApp */}
+      <CreateInstanceModal
+        open={createModalOpen}
+        onCancel={() => setCreateModalOpen(false)}
+        onCreateInstance={handleCreateInstance}
+        onWhatsAppInstanceCreated={handleWhatsAppInstanceCreated}
+      />
+
+      {/* Modal de QR Code - Adaptado para WhatsApp */}
+      {selectedInstanceForQR && (
+        <QRCodeModal
+          open={qrModalOpen}
+          onClose={() => {
+            setQrModalOpen(false);
+            setSelectedInstanceForQR(null);
+          }}
+          instanceId={selectedInstanceForQR.id}
+          isWhatsApp={selectedInstanceForQR.isWhatsApp}
+        />
+      )}
     </div>
   );
 };

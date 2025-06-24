@@ -4,7 +4,7 @@ import { Avatar, Badge, Tooltip } from "antd";
 import { Pin, VolumeX, Users } from "lucide-react";
 import { useTheme } from "@/contexts/ThemeContext";
 import { formatDate } from "@/libs/utils";
-import { ContactItemProps } from "../../types/chat.types";
+import { ContactItemProps } from "@/components/chatpage/types/chat.types";
 import {
   ContactItemContainer,
   ContactContent,
