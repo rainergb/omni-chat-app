@@ -1,4 +1,4 @@
-// src/components/chatpage/hooks/useChat.ts
+// src/hooks/useChat.tsx
 import { useCallback, useEffect, useMemo } from "react";
 import { message } from "antd";
 import { useChatStore } from "@/store/chatStore";
@@ -7,7 +7,7 @@ import {
   Chat,
   ChatFilter,
   MessageType
-} from "../components/chatpage/types/chat.types";
+} from "@/components/chatpage/types/chat.types";
 
 export const useChat = () => {
   const {
@@ -23,14 +23,9 @@ export const useChat = () => {
     setSelectedChat,
     setSelectedInstance,
     setFilter,
-    setLoading,
-    setLoadingMessages,
-    addMessage,
     markAsRead,
-    updateMessageStatus,
     addTypingIndicator,
     removeTypingIndicator,
-    loadMockChats,
     loadMockMessages,
     sendMockMessage
   } = useChatStore();
