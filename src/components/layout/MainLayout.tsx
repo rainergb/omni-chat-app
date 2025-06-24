@@ -27,7 +27,7 @@ export const MainLayout: React.FC = () => {
     >
       {/* Main Content */}
       <Content className="flex-1 overflow-hidden">
-        <div className="h-full max-w-7xl mx-auto">{renderContent()}</div>
+        <div className="h-full w-full">{renderContent()}</div>
       </Content>
     </Layout>
   );
