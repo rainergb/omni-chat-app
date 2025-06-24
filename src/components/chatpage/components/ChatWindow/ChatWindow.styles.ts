@@ -8,9 +8,10 @@ interface StyledProps {
 export const ChatWindowContainer = styled.div<StyledProps>`
   display: flex;
   flex-direction: column;
-  height: 100%;
+  flex: 1;
   background: ${(props) => (props.$isDark ? "#030712" : "#f8fafc")};
   position: relative;
+  overflow: hidden;
 `;
 
 export const ChatContent = styled.div`

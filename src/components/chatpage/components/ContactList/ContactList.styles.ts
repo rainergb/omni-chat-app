@@ -8,8 +8,9 @@ interface StyledProps {
 export const ContactListContainer = styled.div<StyledProps>`
   display: flex;
   flex-direction: column;
-  height: 100%;
+  flex: 1;
   background: ${(props) => (props.$isDark ? "#0f172a" : "#ffffff")};
+  overflow: hidden;
 `;
 
 export const ContactsContainer = styled.div<StyledProps>`
@@ -17,7 +18,7 @@ export const ContactsContainer = styled.div<StyledProps>`
   overflow-y: auto;
   overflow-x: hidden;
   padding: 0.5rem;
-  
+
   /* Custom scrollbar */
   &::-webkit-scrollbar {
     width: 6px;
@@ -31,7 +32,7 @@ export const ContactsContainer = styled.div<StyledProps>`
   &::-webkit-scrollbar-thumb {
     background: ${(props) => (props.$isDark ? "#4b5563" : "#d1d5db")};
     border-radius: 3px;
-    
+
     &:hover {
       background: ${(props) => (props.$isDark ? "#6b7280" : "#9ca3af")};
     }
@@ -48,6 +49,7 @@ export const LoadingContainer = styled.div`
   align-items: center;
   justify-content: center;
   padding: 3rem 1rem;
+  flex: 1;
 `;
 
 export const EmptyState = styled.div`
@@ -57,7 +59,7 @@ export const EmptyState = styled.div`
   justify-content: center;
   padding: 3rem 2rem;
   text-align: center;
-  height: 100%;
+  flex: 1;
 `;
 
 export const EmptyIcon = styled.div<StyledProps>`

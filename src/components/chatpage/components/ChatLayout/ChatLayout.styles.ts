@@ -9,11 +9,11 @@ interface StyledProps {
 export const LayoutContainer = styled.div<StyledProps>`
   display: flex;
   height: 100%;
-  min-height: 100%;
   width: 100%;
   background: ${(props) => (props.$isDark ? "#030712" : "#f0f0f0")};
   overflow: hidden;
   position: relative;
+  min-height: 100vh;
 `;
 
 export const LeftPanel = styled.div<StyledProps>`

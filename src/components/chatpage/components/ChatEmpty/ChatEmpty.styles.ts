@@ -9,7 +9,7 @@ export const EmptyContainer = styled.div<StyledProps>`
   display: flex;
   align-items: center;
   justify-content: center;
-  height: 100%;
+  flex: 1;
   width: 100%;
   background: ${(props) => (props.$isDark ? "#030712" : "#f8fafc")};
   padding: 2rem;

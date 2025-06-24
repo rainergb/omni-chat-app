@@ -4,6 +4,7 @@ import { Layout } from "antd";
 import { useNavigation } from "@/contexts/NavigationContext";
 import { Chatpage } from "@/components/chatpage/Chatpage";
 import { InstancesPage } from "@/components/instances/Instance";
+import { Footer } from "./Footer";
 
 const { Content } = Layout;
 
@@ -20,15 +21,37 @@ export const MainLayout: React.FC = () => {
         return <InstancesPage />;
     }
   };
+
   return (
     <Layout
-      className="flex-1"
-      style={{ overflow: "hidden", display: "flex", flexDirection: "column" }}
+      className="min-h-screen"
+      style={{
+        height: "100%",
+        display: "flex",
+        flexDirection: "column"
+      }}
     >
       {/* Main Content */}
-      <Content className="flex-1 overflow-hidden">
-        <div className="h-full w-full">{renderContent()}</div>
+      <Content
+        className="flex-1 overflow-hidden"
+        style={{
+          height: activeTab === "chat" ? "100%" : "auto",
+          padding: activeTab === "chat" ? "0" : "1.5rem",
+          flex: 1
+        }}
+      >
+        <div
+          className={
+            activeTab === "chat" ? "h-full" : "h-full max-w-7xl mx-auto"
+          }
+          style={{ height: "100%" }}
+        >
+          {renderContent()}
+        </div>
       </Content>
+
+      {/* Footer apenas aparece quando não está no chat */}
+      {activeTab !== "chat" && <Footer />}
     </Layout>
   );
 };

@@ -1,4 +1,4 @@
-// src/components/chatpage/components/ChatWindow/MessageList.styles.ts
+// src/components/chatpage/components/ChatWindow/MessageList/MessageList.styles.ts
 import styled from "styled-components";
 
 interface StyledProps {
@@ -10,7 +10,9 @@ export const MessageListContainer = styled.div<StyledProps>`
   overflow-y: auto;
   overflow-x: hidden;
   background: ${(props) => (props.$isDark ? "#030712" : "#f8fafc")};
-  
+  display: flex;
+  flex-direction: column;
+
   /* Custom scrollbar */
   &::-webkit-scrollbar {
     width: 6px;
@@ -23,7 +25,7 @@ export const MessageListContainer = styled.div<StyledProps>`
   &::-webkit-scrollbar-thumb {
     background: ${(props) => (props.$isDark ? "#4b5563" : "#d1d5db")};
     border-radius: 3px;
-    
+
     &:hover {
       background: ${(props) => (props.$isDark ? "#6b7280" : "#9ca3af")};
     }
@@ -37,7 +39,8 @@ export const MessageListContainer = styled.div<StyledProps>`
 
 export const MessageListContent = styled.div`
   padding: 1rem 1.5rem;
-  
+  flex-grow: 1;
+
   @media (max-width: 768px) {
     padding: 0.75rem 1rem;
   }
@@ -47,7 +50,7 @@ export const LoadingContainer = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-  height: 100%;
+  flex: 1;
   padding: 3rem 1rem;
 `;
 
@@ -56,7 +59,7 @@ export const EmptyState = styled.div`
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  height: 100%;
+  flex: 1;
   padding: 3rem 2rem;
   text-align: center;
 `;
@@ -87,9 +90,9 @@ export const DateSeparator = styled.div`
   justify-content: center;
   margin: 1.5rem 0;
   position: relative;
-  
+
   &::before {
-    content: '';
+    content: "";
     position: absolute;
     top: 50%;
     left: 0;
