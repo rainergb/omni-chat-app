@@ -99,7 +99,8 @@ export const CreateInstanceModal: React.FC<CreateInstanceModalProps> = ({
       okButtonProps={{
         loading: submitting,
         onClick: handleCreateInstance,
-        className: "bg-gradient-to-r from-blue-500 to-purple-600 border-0"
+        className:
+          "bg-gradient-to-r from-teal-500 to-slate-800 hover:from-teal-600 hover:to-slate-900 border-0 shadow-lg hover:shadow-xl transition-all duration-200"
       }}
     >
       <Form form={form} layout="vertical" className="mt-6">
@@ -125,7 +126,6 @@ export const CreateInstanceModal: React.FC<CreateInstanceModalProps> = ({
             }
           />
         </Form.Item>
-
         <Form.Item
           name="type"
           label={
@@ -150,7 +150,6 @@ export const CreateInstanceModal: React.FC<CreateInstanceModalProps> = ({
             ))}
           </Select>
         </Form.Item>
-
         <Form.Item
           name="webhook"
           label={
@@ -168,13 +167,12 @@ export const CreateInstanceModal: React.FC<CreateInstanceModalProps> = ({
               isDark ? "bg-gray-700 border-gray-600 text-gray-100" : ""
             }
           />
-        </Form.Item>
-
+        </Form.Item>{" "}
         <div
           className={`p-4 rounded-lg border ${
             isDark
-              ? "bg-blue-900/20 border-blue-700 text-blue-300"
-              : "bg-blue-50 border-blue-200 text-blue-700"
+              ? "bg-teal-900/20 border-teal-700 text-teal-300"
+              : "bg-teal-50 border-teal-200 text-teal-700"
           }`}
         >
           <div className="flex items-start space-x-3">

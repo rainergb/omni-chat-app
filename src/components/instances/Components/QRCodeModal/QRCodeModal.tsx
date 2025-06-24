@@ -75,7 +75,7 @@ export const QRCodeModal: React.FC<QRCodeModalProps> = ({
             className="w-full sm:w-auto order-2 sm:order-1"
           >
             Fechar
-          </Button>
+          </Button>{" "}
           {!connected && (
             <Button
               type="primary"
@@ -83,6 +83,11 @@ export const QRCodeModal: React.FC<QRCodeModalProps> = ({
               onClick={handleRefresh}
               loading={loading}
               className="w-full sm:w-auto order-1 sm:order-2 sm:ml-2"
+              style={{
+                background: "linear-gradient(135deg, #00b9ae 0%, #1f2937 100%)",
+                borderColor: "transparent",
+                boxShadow: "0 4px 14px 0 rgba(0, 185, 174, 0.3)"
+              }}
             >
               Gerar Novo QR
             </Button>
@@ -93,7 +98,8 @@ export const QRCodeModal: React.FC<QRCodeModalProps> = ({
       width="95%"
       maxWidth="500px"
       className="responsive-modal"
-      showFooter={true}      showOk={false}
+      showFooter={true}
+      showOk={false}
     >
       <div className="text-center py-2 sm:py-4 px-2 sm:px-0">
         {connected ? (

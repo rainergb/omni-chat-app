@@ -46,23 +46,33 @@ export const Modal: React.FC<ModalProps> = ({
   ...props
 }) => {
   const { isDark } = useTheme();
-
-  const defaultFooter = showFooter && !footer ? (
-    <div className="flex flex-col sm:flex-row justify-end m-4 gap-2">      {showOk && (
-        <Button
-          type="primary"
-          size="large"
-          className={`w-full sm:w-auto mt-2 ${
-            okButtonProps?.className || 
-            "bg-gradient-to-r from-blue-500 to-purple-600 border-0"
-          }`}
-          {...okButtonProps}
-        >
-          {okText}
-        </Button>
-      )}
-    </div>
-  ) : footer;
+  const defaultFooter =
+    showFooter && !footer ? (
+      <div className="flex flex-col sm:flex-row justify-end m-4 gap-2">
+        {showOk && (
+          <Button
+            type="primary"
+            size="large"
+            className={`w-full sm:w-auto mt-2 ${
+              okButtonProps?.className ||
+              "bg-gradient-to-r from-teal-500 to-slate-800 hover:from-teal-600 hover:to-slate-900 border-0 shadow-lg hover:shadow-xl transition-all duration-200"
+            }`}
+            style={{
+              background: okButtonProps?.className
+                ? undefined
+                : "linear-gradient(135deg, #00b9ae 0%, #1f2937 100%)",
+              borderColor: "transparent",
+              boxShadow: "0 4px 14px 0 rgba(0, 185, 174, 0.3)"
+            }}
+            {...okButtonProps}
+          >
+            {okText}
+          </Button>
+        )}
+      </div>
+    ) : (
+      footer
+    );
 
   const modalTitle = typeof title === 'string' ? (
     <div className="flex items-center space-x-2">

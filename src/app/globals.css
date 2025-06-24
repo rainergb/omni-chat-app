@@ -183,6 +183,58 @@ body {
   padding: 16px !important;
 }
 
+/* Alert customizations in modals */
+.ant-modal .ant-alert-info {
+  background-color: rgba(0, 185, 174, 0.1) !important;
+  border: 1px solid rgba(0, 185, 174, 0.3) !important;
+}
+
+.ant-modal .ant-alert-info .ant-alert-icon {
+  color: #00b9ae !important;
+}
+
+.ant-modal .ant-alert-warning {
+  background-color: rgba(251, 191, 36, 0.1) !important;
+  border: 1px solid rgba(251, 191, 36, 0.3) !important;
+}
+
+.ant-modal .ant-alert-success {
+  background-color: rgba(34, 197, 94, 0.1) !important;
+  border: 1px solid rgba(34, 197, 94, 0.3) !important;
+}
+
+/* Form labels in dark mode */
+[data-theme="dark"] .ant-form-item-label > label {
+  color: #f9fafb !important;
+}
+
+/* Select dropdown in dark mode */
+[data-theme="dark"] .ant-select-dropdown {
+  background: #374151 !important;
+  border-color: #4b5563 !important;
+}
+
+[data-theme="dark"] .ant-select-item {
+  color: #f9fafb !important;
+}
+
+[data-theme="dark"] .ant-select-item:hover {
+  background: #4b5563 !important;
+}
+
+/* Input styling in dark mode */
+[data-theme="dark"] .ant-input {
+  background: #374151 !important;
+  border-color: #4b5563 !important;
+  color: #f9fafb !important;
+}
+
+[data-theme="dark"] .ant-input:focus,
+[data-theme="dark"] .ant-input:hover {
+  border-color: #00b9ae !important;
+  background: #374151 !important;
+}
+
 /* Custom utility classes */
 .surface {
   background: var(--surface);
@@ -239,6 +291,25 @@ body {
     opacity: 1;
     transform: translateY(0);
   }
+}
+
+/* Custom button styles for modals */
+.bg-gradient-to-r.from-teal-500.to-slate-800 {
+  background: linear-gradient(135deg, #00b9ae 0%, #1f2937 100%) !important;
+  border: none !important;
+  box-shadow: 0 4px 14px 0 rgba(0, 185, 174, 0.3) !important;
+  transition: all 0.2s ease !important;
+}
+
+.bg-gradient-to-r.from-teal-500.to-slate-800:hover {
+  background: linear-gradient(135deg, #00a69b 0%, #0f172a 100%) !important;
+  box-shadow: 0 6px 20px 0 rgba(0, 185, 174, 0.4) !important;
+  transform: translateY(-1px) !important;
+}
+
+.bg-gradient-to-r.from-teal-500.to-slate-800:active {
+  transform: translateY(0) !important;
+  box-shadow: 0 4px 14px 0 rgba(0, 185, 174, 0.3) !important;
 }
 
 /* Responsive improvements */
