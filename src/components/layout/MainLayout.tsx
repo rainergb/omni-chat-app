@@ -20,9 +20,11 @@ export const MainLayout: React.FC = () => {
         return <InstancesPage />;
     }
   };
-
   return (
-    <Layout className="min-h-screen" style={{ paddingBottom: "80px" }}>
+    <Layout
+      className="flex-1"
+      style={{ overflow: "hidden", display: "flex", flexDirection: "column" }}
+    >
       {/* Main Content */}
       <Content className="flex-1 overflow-hidden">
         <div className="h-full max-w-7xl mx-auto">{renderContent()}</div>
