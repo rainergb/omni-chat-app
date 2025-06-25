@@ -27,7 +27,6 @@ export function formatDate(date: string | Date): string {
   return targetDate.toLocaleDateString("pt-BR");
 }
 
-// Re-exporta as funções do sistema de tema
 export { getStatusColor, getStatusText, getStatusBadgeColor };
 
 export function getPlatformIcon(type: string): string {

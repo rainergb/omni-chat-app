@@ -1,4 +1,3 @@
-// src/components/layout/Header.tsx
 import React from "react";
 import { MessageOutlined, SettingOutlined } from "@ant-design/icons";
 import { useTheme } from "@/contexts/ThemeContext";

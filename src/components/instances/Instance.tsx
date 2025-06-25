@@ -1,4 +1,3 @@
-// src/components/instances/Instance.tsx (Adaptado para usar modais existentes)
 import React, { useState } from "react";
 import { message } from "antd";
 import { InstanceTable } from "@/components/instances/Components/InstanceTable/InstanceTable";
@@ -16,7 +15,6 @@ import { Instance } from "@/libs/types";
 import { ConnectionStatus, WhatsAppMessage } from "@/types/whatsapp.types";
 
 export const InstancesPage: React.FC = () => {
-  // Estados para UI
   const [searchTerm, setSearchTerm] = useState("");
   const [statusFilter, setStatusFilter] = useState<string>("all");
   const [typeFilter, setTypeFilter] = useState<string>("all");
@@ -28,7 +26,6 @@ export const InstancesPage: React.FC = () => {
     isWhatsApp: boolean;
   } | null>(null);
 
-  // Hooks para instâncias mock (sistema antigo)
   const {
     instances: mockInstances,
     viewMode,
@@ -41,7 +38,6 @@ export const InstancesPage: React.FC = () => {
     refreshInstances: refreshMockInstances
   } = useInstances();
 
-  // Hooks para instâncias WhatsApp reais
   const {
     instances: whatsappInstances,
     isLoading: whatsappLoading,
@@ -49,24 +45,19 @@ export const InstancesPage: React.FC = () => {
     refetch: refetchWhatsApp
   } = useUnifiedInstances();
 
-  // Hooks para operações WhatsApp
   const disconnectWhatsAppMutation = useDisconnectInstance();
   const deleteWhatsAppMutation = useDeleteInstance();
 
-  // Combinar instâncias mock e WhatsApp
   const allInstances = [...mockInstances, ...whatsappInstances];
 
   const isLoading = mockLoading || whatsappLoading;
 
-  // WebSocket para monitoramento WhatsApp em tempo real
   useWhatsAppSocket({
     onMessage: (message: WhatsAppMessage) => {
       console.log("Nova mensagem WhatsApp:", message);
-      // Aqui você pode atualizar contadores de mensagem se necessário
     },
     onStatusChange: (status: ConnectionStatus) => {
       console.log("Status da instância WhatsApp alterado:", status);
-      // Refetch instâncias WhatsApp para atualizar status
       refetchWhatsApp();
     },
     onConnect: () => {
@@ -78,7 +69,6 @@ export const InstancesPage: React.FC = () => {
     }
   });
 
-  // Filtros
   const filteredInstances = allInstances.filter((instance) => {
     const matchesSearch = instance.name
       .toLowerCase()
@@ -98,18 +88,15 @@ export const InstancesPage: React.FC = () => {
     );
   };
 
-  // Handlers
   const handleCreateInstance = async (
     instanceData: Omit<Instance, "id" | "createdAt">
   ) => {
-    // Sistema mock para outras plataformas
     await createMockInstance(instanceData);
   };
 
   const handleWhatsAppInstanceCreated = (instanceId: string) => {
     message.success("Instância WhatsApp criada! Gerando QR Code...");
 
-    // Abrir modal de QR Code para WhatsApp
     setSelectedInstanceForQR({
       id: instanceId,
       name: `WhatsApp ${instanceId}`,
@@ -117,7 +104,6 @@ export const InstancesPage: React.FC = () => {
     });
     setQrModalOpen(true);
 
-    // Refetch para atualizar lista
     refetchWhatsApp();
   };
 
@@ -127,7 +113,6 @@ export const InstancesPage: React.FC = () => {
 
     try {
       if (isWhatsAppInstance(instance)) {
-        // Para WhatsApp, abrir modal de QR Code
         setSelectedInstanceForQR({
           id: instanceId,
           name: instance.name,
@@ -239,7 +224,6 @@ export const InstancesPage: React.FC = () => {
         onCreateInstance={() => setCreateModalOpen(true)}
       />
 
-      {/* Modal de Criação - Adaptado para WhatsApp */}
       <CreateInstanceModal
         open={createModalOpen}
         onCancel={() => setCreateModalOpen(false)}
@@ -247,7 +231,6 @@ export const InstancesPage: React.FC = () => {
         onWhatsAppInstanceCreated={handleWhatsAppInstanceCreated}
       />
 
-      {/* Modal de QR Code - Adaptado para WhatsApp */}
       {selectedInstanceForQR && (
         <QRCodeModal
           open={qrModalOpen}

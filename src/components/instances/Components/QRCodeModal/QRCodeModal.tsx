@@ -269,7 +269,6 @@ export const QRCodeModal: React.FC<QRCodeModalProps> = ({
       onCancel={onClose}
       footer={
         <div className="flex flex-col sm:flex-row gap-2 sm:gap-0 sm:justify-between">
-          {/* Status da conexão WebSocket (apenas para WhatsApp) */}
           {isWhatsApp && (
             <div className="flex items-center space-x-2">
               <div
@@ -320,7 +319,6 @@ export const QRCodeModal: React.FC<QRCodeModalProps> = ({
       className={`${isWhatsApp ? "whatsapp-qr-modal" : "qr-modal"}`}
     >
       <div className="space-y-6">
-        {/* Status de Conexão com Progress (apenas para WhatsApp ou quando há progresso) */}
         {(isWhatsApp || connectionProgress > 0) && (
           <div className="space-y-3">
             <div className="flex items-center justify-between">
@@ -345,7 +343,6 @@ export const QRCodeModal: React.FC<QRCodeModalProps> = ({
           </div>
         )}
 
-        {/* Estado de Sucesso */}
         {connected ? (
           <div className="text-center space-y-4 py-6">
             <CheckCircleOutlined

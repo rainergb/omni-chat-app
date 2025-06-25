@@ -1,4 +1,3 @@
-// src/hooks/useInstancesData.tsx
 import React from "react";
 import { Server, Activity, MessageCircle } from "lucide-react";
 import { InstancesPage } from "@/components/instances/Instance";

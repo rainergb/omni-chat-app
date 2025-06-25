@@ -1,5 +1,3 @@
-// src/types/whatsapp.types.ts
-
 export interface WhatsAppInstance {
   id: string;
   canal: string;
@@ -43,14 +41,14 @@ export interface WhatsAppMessage {
   from: string;
   to: string;
   body: string;
-  type: 'text' | 'image' | 'audio' | 'video' | 'document';
+  type: "text" | "image" | "audio" | "video" | "document";
   timestamp: number;
   messageId: string;
 }
 
 export interface ConnectionStatus {
   instanceId: string;
-  status: 'connected' | 'disconnected' | 'connecting' | 'error';
+  status: "connected" | "disconnected" | "connecting" | "error";
   timestamp: number;
 }
 
@@ -61,22 +59,23 @@ export interface WebSocketEvents {
   statusSession: ConnectionStatus;
 }
 
-// Mapeamento do status da API para o frontend
-export const mapWhatsAppStatusToFrontend = (status?: string): 'connected' | 'disconnected' | 'connecting' | 'error' => {
+export const mapWhatsAppStatusToFrontend = (
+  status?: string
+): "connected" | "disconnected" | "connecting" | "error" => {
   switch (status?.toLowerCase()) {
-    case 'connected':
-    case 'open':
-      return 'connected';
-    case 'connecting':
-    case 'initializing':
-      return 'connecting';
-    case 'disconnected':
-    case 'closed':
-      return 'disconnected';
-    case 'error':
-    case 'failed':
-      return 'error';
+    case "connected":
+    case "open":
+      return "connected";
+    case "connecting":
+    case "initializing":
+      return "connecting";
+    case "disconnected":
+    case "closed":
+      return "disconnected";
+    case "error":
+    case "failed":
+      return "error";
     default:
-      return 'disconnected';
+      return "disconnected";
   }
 };

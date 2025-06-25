@@ -1,4 +1,3 @@
-// src/components/ui/Modal.tsx
 import React, { ReactNode } from "react";
 import { Modal as AntModal, Button } from "antd";
 import { useTheme } from "@/contexts/ThemeContext";
@@ -74,13 +73,16 @@ export const Modal: React.FC<ModalProps> = ({
       footer
     );
 
-  const modalTitle = typeof title === 'string' ? (
-    <div className="flex items-center space-x-2">
-      <span className={isDark ? "text-gray-100" : "text-gray-800"}>
-        {title}
-      </span>
-    </div>
-  ) : title;
+  const modalTitle =
+    typeof title === "string" ? (
+      <div className="flex items-center space-x-2">
+        <span className={isDark ? "text-gray-100" : "text-gray-800"}>
+          {title}
+        </span>
+      </div>
+    ) : (
+      title
+    );
 
   return (
     <AntModal
@@ -91,10 +93,10 @@ export const Modal: React.FC<ModalProps> = ({
       destroyOnHidden={destroyOnHidden}
       className={`${isDark ? "dark-modal" : ""} ${className}`.trim()}
       width={width}
-      style={{ 
-        maxWidth, 
+      style={{
+        maxWidth,
         top: "10vh",
-        ...style 
+        ...style
       }}
       {...props}
     >

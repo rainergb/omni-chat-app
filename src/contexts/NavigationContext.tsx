@@ -1,4 +1,3 @@
-// src/contexts/NavigationContext.tsx
 import React, { createContext, useContext, useState, ReactNode } from "react";
 
 export type NavigationTab = "chat" | "instances";
@@ -8,13 +7,17 @@ interface NavigationContextType {
   setActiveTab: (tab: NavigationTab) => void;
 }
 
-const NavigationContext = createContext<NavigationContextType | undefined>(undefined);
+const NavigationContext = createContext<NavigationContextType | undefined>(
+  undefined
+);
 
 interface NavigationProviderProps {
   children: ReactNode;
 }
 
-export const NavigationProvider: React.FC<NavigationProviderProps> = ({ children }) => {
+export const NavigationProvider: React.FC<NavigationProviderProps> = ({
+  children
+}) => {
   const [activeTab, setActiveTab] = useState<NavigationTab>("instances");
 
   return (

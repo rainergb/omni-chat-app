@@ -1,32 +1,33 @@
-// src/components/ui/Card.tsx
 import React, { ReactNode } from "react";
 import styled from "styled-components";
 import { useTheme } from "@/contexts/ThemeContext";
 
-const StyledCard = styled.div<{ 
-  $isDark: boolean; 
-  $hover?: boolean; 
+const StyledCard = styled.div<{
+  $isDark: boolean;
+  $hover?: boolean;
   $padding?: string;
   $borderRadius?: string;
 }>`
   background: ${(props) => (props.$isDark ? "#1f2937" : "#ffffff")};
   border-radius: ${(props) => props.$borderRadius || "12px"};
-  box-shadow: ${(props) => 
-    props.$isDark 
-      ? "0 4px 6px -1px rgba(0, 0, 0, 0.3), 0 2px 4px -1px rgba(0, 0, 0, 0.2)" 
-      : "0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)"
-  };
+  box-shadow: ${(props) =>
+    props.$isDark
+      ? "0 4px 6px -1px rgba(0, 0, 0, 0.3), 0 2px 4px -1px rgba(0, 0, 0, 0.2)"
+      : "0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)"};
   border: 1px solid ${(props) => (props.$isDark ? "#374151" : "#e5e7eb")};
   transition: all 0.3s ease;
   overflow: hidden;
   height: 100%;
-  
-  ${(props) => props.$hover && `
+
+  ${(props) =>
+    props.$hover &&
+    `
     &:hover {
       transform: translateY(-2px);
-      box-shadow: ${props.$isDark 
-        ? "0 20px 25px -5px rgba(0, 0, 0, 0.4), 0 10px 10px -5px rgba(0, 0, 0, 0.3)" 
-        : "0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)"
+      box-shadow: ${
+        props.$isDark
+          ? "0 20px 25px -5px rgba(0, 0, 0, 0.4), 0 10px 10px -5px rgba(0, 0, 0, 0.3)"
+          : "0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)"
       };
     }
   `}
@@ -35,7 +36,7 @@ const StyledCard = styled.div<{
 const CardHeader = styled.div<{ $isDark: boolean; $padding?: string }>`
   padding: ${(props) => props.$padding || "1rem 1.5rem"};
   border-bottom: 1px solid ${(props) => (props.$isDark ? "#374151" : "#e5e7eb")};
-  
+
   @media (min-width: 640px) {
     padding: ${(props) => props.$padding || "1.5rem 2rem"};
   }
@@ -43,7 +44,7 @@ const CardHeader = styled.div<{ $isDark: boolean; $padding?: string }>`
 
 const CardBody = styled.div<{ $padding?: string }>`
   padding: ${(props) => props.$padding || "1rem 1.5rem"};
-  
+
   @media (min-width: 640px) {
     padding: ${(props) => props.$padding || "1.5rem 2rem"};
   }
@@ -53,7 +54,7 @@ const CardFooter = styled.div<{ $isDark: boolean; $padding?: string }>`
   padding: ${(props) => props.$padding || "1rem 1.5rem"};
   border-top: 1px solid ${(props) => (props.$isDark ? "#374151" : "#e5e7eb")};
   background: ${(props) => (props.$isDark ? "#111827" : "#f9fafb")};
-  
+
   @media (min-width: 640px) {
     padding: ${(props) => props.$padding || "1.5rem 2rem"};
   }
@@ -101,8 +102,8 @@ export const Card: React.FC<CardProps> = ({
 
   if (loading) {
     return (
-      <StyledCard 
-        $isDark={isDark} 
+      <StyledCard
+        $isDark={isDark}
         $hover={hover}
         $padding={padding}
         $borderRadius={borderRadius}
@@ -110,16 +111,28 @@ export const Card: React.FC<CardProps> = ({
         onClick={onClick}
         {...props}
       >
-        <div className={`h-4 ${isDark ? "bg-gray-700" : "bg-gray-200"} rounded w-3/4 mb-4`}></div>
-        <div className={`h-4 ${isDark ? "bg-gray-700" : "bg-gray-200"} rounded w-1/2 mb-2`}></div>
-        <div className={`h-4 ${isDark ? "bg-gray-700" : "bg-gray-200"} rounded w-full`}></div>
+        <div
+          className={`h-4 ${
+            isDark ? "bg-gray-700" : "bg-gray-200"
+          } rounded w-3/4 mb-4`}
+        ></div>
+        <div
+          className={`h-4 ${
+            isDark ? "bg-gray-700" : "bg-gray-200"
+          } rounded w-1/2 mb-2`}
+        ></div>
+        <div
+          className={`h-4 ${
+            isDark ? "bg-gray-700" : "bg-gray-200"
+          } rounded w-full`}
+        ></div>
       </StyledCard>
     );
   }
 
   return (
-    <StyledCard 
-      $isDark={isDark} 
+    <StyledCard
+      $isDark={isDark}
       $hover={hover}
       $padding={padding}
       $borderRadius={borderRadius}
@@ -130,17 +143,15 @@ export const Card: React.FC<CardProps> = ({
       {statusColor && (
         <StatusIndicator $color={statusColor} $height={statusHeight} />
       )}
-      
+
       {header && (
         <CardHeader $isDark={isDark} $padding={headerPadding}>
           {header}
         </CardHeader>
       )}
-      
-      <CardBody $padding={padding}>
-        {children}
-      </CardBody>
-      
+
+      <CardBody $padding={padding}>{children}</CardBody>
+
       {footer && (
         <CardFooter $isDark={isDark} $padding={footerPadding}>
           {footer}

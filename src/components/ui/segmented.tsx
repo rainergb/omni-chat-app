@@ -1,4 +1,3 @@
-// src/components/ui/Segmented.tsx
 import React from "react";
 import { Segmented as AntSegmented, SegmentedProps } from "antd";
 import styled from "styled-components";

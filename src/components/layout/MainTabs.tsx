@@ -1,4 +1,3 @@
-// src/components/layout/MainTabs.tsx
 import React from "react";
 import { TabContent } from "./TabContent";
 import { useInstancesData } from "@/hooks/useInstancesData";
@@ -11,7 +10,6 @@ const MainTabs: React.FC = () => {
 
   return (
     <div className="h-full flex flex-col bg-gradient-to-br from-blue-50/30 to-purple-50/30 dark:from-gray-900 dark:to-gray-800">
-      {/* Header com título */}
       <div
         className={`
         border-b backdrop-blur-sm sticky top-0 z-40
@@ -23,7 +21,6 @@ const MainTabs: React.FC = () => {
       `}
       ></div>
 
-      {/* Content */}
       <TabContent>{content}</TabContent>
     </div>
   );

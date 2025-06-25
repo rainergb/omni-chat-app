@@ -1,9 +1,8 @@
-// src/hooks/useWhatsAppSocket.ts
-import { useEffect, useRef, useState } from 'react';
-import { io, Socket } from 'socket.io-client';
-import { message } from 'antd';
-import { whatsappConfig } from '@/config/whatsapp.config';
-import { WhatsAppMessage, ConnectionStatus } from '@/types/whatsapp.types';
+import { useEffect, useRef, useState } from "react";
+import { io, Socket } from "socket.io-client";
+import { message } from "antd";
+import { whatsappConfig } from "@/config/whatsapp.config";
+import { WhatsAppMessage, ConnectionStatus } from "@/types/whatsapp.types";
 
 interface UseWhatsAppSocketProps {
   onMessage?: (message: WhatsAppMessage) => void;
@@ -30,50 +29,50 @@ export const useWhatsAppSocket = ({
     socketRef.current = socket;
 
     // Event listeners
-    socket.on('connect', () => {
-      console.log('🔌 WebSocket conectado ao WhatsApp API');
+    socket.on("connect", () => {
+      console.log("🔌 WebSocket conectado ao WhatsApp API");
       setIsConnected(true);
       setConnectionError(null);
       onConnect?.();
     });
 
-    socket.on('disconnect', (reason) => {
-      console.log('🔌 WebSocket desconectado:', reason);
+    socket.on("disconnect", (reason) => {
+      console.log("🔌 WebSocket desconectado:", reason);
       setIsConnected(false);
       onDisconnect?.();
-      
-      if (reason === 'io server disconnect') {
+
+      if (reason === "io server disconnect") {
         // Servidor desconectou, tentar reconectar
         socket.connect();
       }
     });
 
-    socket.on('connect_error', (error) => {
-      console.error('❌ Erro de conexão WebSocket:', error);
+    socket.on("connect_error", (error) => {
+      console.error("❌ Erro de conexão WebSocket:", error);
       setConnectionError(error.message);
       onError?.(error);
     });
 
     // Eventos específicos do WhatsApp
-    socket.on('mensagem', (data: WhatsAppMessage) => {
-      console.log('📨 Nova mensagem recebida:', data);
+    socket.on("mensagem", (data: WhatsAppMessage) => {
+      console.log("📨 Nova mensagem recebida:", data);
       onMessage?.(data);
     });
 
-    socket.on('conectado', (data: ConnectionStatus) => {
-      console.log('🟢 Instância conectada:', data);
+    socket.on("conectado", (data: ConnectionStatus) => {
+      console.log("🟢 Instância conectada:", data);
       onStatusChange?.(data);
       message.success(`Instância ${data.instanceId} conectada!`);
     });
 
-    socket.on('desconectado', (data: ConnectionStatus) => {
-      console.log('🔴 Instância desconectada:', data);
+    socket.on("desconectado", (data: ConnectionStatus) => {
+      console.log("🔴 Instância desconectada:", data);
       onStatusChange?.(data);
       message.warning(`Instância ${data.instanceId} desconectada!`);
     });
 
-    socket.on('statusSession', (data: ConnectionStatus) => {
-      console.log('📊 Status da sessão alterado:', data);
+    socket.on("statusSession", (data: ConnectionStatus) => {
+      console.log("📊 Status da sessão alterado:", data);
       onStatusChange?.(data);
     });
 
@@ -110,7 +109,7 @@ export const useWhatsAppSocket = ({
     if (socketRef.current && isConnected) {
       socketRef.current.emit(event, data);
     } else {
-      console.warn('🚨 WebSocket não conectado. Evento não enviado:', event);
+      console.warn("🚨 WebSocket não conectado. Evento não enviado:", event);
     }
   };
 

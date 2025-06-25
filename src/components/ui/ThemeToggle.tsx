@@ -1,8 +1,7 @@
-// src/components/ui/ThemeToggle.tsx
-import React from 'react';
-import { Button, Tooltip } from 'antd';
-import { Sun, Moon } from 'lucide-react';
-import { useTheme } from '@/contexts/ThemeContext';
+import React from "react";
+import { Button, Tooltip } from "antd";
+import { Sun, Moon } from "lucide-react";
+import { useTheme } from "@/contexts/ThemeContext";
 
 export const ThemeToggle: React.FC = () => {
   const { toggleMode, isDark } = useTheme();

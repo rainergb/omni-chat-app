@@ -1,4 +1,3 @@
-// src/store/chatStore.ts
 import { create } from "zustand";
 import {
   Chat,
@@ -10,7 +9,6 @@ import {
 import { generateId } from "@/libs/utils";
 
 interface ChatStore {
-  // Estado
   chats: Chat[];
   messages: Record<string, Message[]>;
   selectedChat: Chat | null;
@@ -20,7 +18,6 @@ interface ChatStore {
   typingIndicators: TypingIndicator[];
   filter: ChatFilter;
 
-  // Ações para chats
   setChats: (chats: Chat[]) => void;
   setSelectedChat: (chat: Chat | null) => void;
   setSelectedInstance: (instanceId: string | null) => void;
@@ -28,7 +25,6 @@ interface ChatStore {
   setLoading: (loading: boolean) => void;
   setLoadingMessages: (loading: boolean) => void;
 
-  // Ações para mensagens
   setMessages: (chatId: string, messages: Message[]) => void;
   addMessage: (
     chatId: string,
@@ -37,11 +33,9 @@ interface ChatStore {
   markAsRead: (chatId: string) => void;
   updateMessageStatus: (messageId: string, status: Message["status"]) => void;
 
-  // Ações para indicadores de digitação
   addTypingIndicator: (indicator: TypingIndicator) => void;
   removeTypingIndicator: (chatId: string, userId: string) => void;
 
-  // Ações de mock data
   loadMockChats: (instanceId?: string) => void;
   loadMockMessages: (chatId: string) => Promise<void>;
   sendMockMessage: (
@@ -51,11 +45,10 @@ interface ChatStore {
   ) => Promise<void>;
 }
 
-// Mock data
 const mockChats: Chat[] = [
   {
     id: "chat-1",
-    instanceId: "1", // WhatsApp Principal
+    instanceId: "1",
     contactName: "Darshan Zalavadiya",
     contactPhone: "+55 11 99999-0001",
     contactAvatar:
@@ -111,7 +104,7 @@ const mockChats: Chat[] = [
   },
   {
     id: "chat-5",
-    instanceId: "2", // Instagram Business
+    instanceId: "2",
     contactName: "Cliente Instagram",
     contactPhone: "@cliente_insta",
     lastMessage: "Adorei os produtos!",
@@ -297,7 +290,6 @@ export const useChatStore = create<ChatStore>((set, get) => ({
       return { messages: newMessages };
     }),
 
-  // Ações para indicadores de digitação
   addTypingIndicator: (indicator) =>
     set((state) => ({
       typingIndicators: [

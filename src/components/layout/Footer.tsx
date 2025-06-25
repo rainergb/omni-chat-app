@@ -1,7 +1,3 @@
-// src/components/layout/Footer.tsx
-// import React from "react";
-// import { Button, Tooltip } from "antd";
-// import { Github, Globe, HelpCircle } from "lucide-react";
 import { useTheme } from "@/contexts/ThemeContext";
 import styled from "styled-components";
 
@@ -19,11 +15,11 @@ const StyledFooter = styled.footer<{ $isDark: boolean }>`
 const FooterContainer = styled.div`
   width: 100%;
   padding: 0.5rem 1rem;
-  
+
   @media (min-width: 640px) {
     padding: 0.75rem 1.5rem;
   }
-  
+
   @media (min-width: 1024px) {
     padding: 0.75rem 2rem;
   }
@@ -37,13 +33,6 @@ const CenteredContainer = styled.div`
   width: 100%;
   gap: 0.5rem;
 `;
-
-// const LinksContainer = styled.div`
-//   display: flex;
-//   align-items: center;
-//   justify-content: center;
-//   gap: 1rem;
-// `;
 
 const BadgeContainer = styled.div`
   display: flex;
@@ -61,7 +50,8 @@ const VersionBadge = styled.div<{ $isDark: boolean }>`
   background-color: ${(props) => (props.$isDark ? "#374151" : "#ffffff")};
   color: ${(props) => (props.$isDark ? "#d1d5db" : "#4b5563")};
   border: 1px solid ${(props) => (props.$isDark ? "#4b5563" : "#d1d5db")};
-  box-shadow: ${(props) => (props.$isDark ? "none" : "0 1px 2px 0 rgba(0, 0, 0, 0.05)")};
+  box-shadow: ${(props) =>
+    props.$isDark ? "none" : "0 1px 2px 0 rgba(0, 0, 0, 0.05)"};
 `;
 
 export const Footer: React.FC = () => {
@@ -70,7 +60,6 @@ export const Footer: React.FC = () => {
     <StyledFooter $isDark={isDark}>
       <FooterContainer>
         <CenteredContainer>
-          {/* Links úteis - centralizados e sempre visíveis */}
           {/* <LinksContainer>
             <Tooltip title="Documentação">
               <Button
@@ -110,7 +99,6 @@ export const Footer: React.FC = () => {
           </LinksContainer> 
            */}
 
-          {/* Badge de versão - centralizado */}
           <BadgeContainer>
             <VersionBadge $isDark={isDark}>v1.0.0</VersionBadge>
           </BadgeContainer>

@@ -8,7 +8,6 @@ interface InstanceStore {
   loading: boolean;
   selectedInstance: Instance | null;
 
-  // Actions
   setInstances: (instances: Instance[]) => void;
   addInstance: (instance: Omit<Instance, "id" | "createdAt">) => void;
   updateInstance: (id: string, updates: Partial<Instance>) => void;
@@ -17,7 +16,6 @@ interface InstanceStore {
   setLoading: (loading: boolean) => void;
   setSelectedInstance: (instance: Instance | null) => void;
 
-  // Mock data actions
   loadMockInstances: () => void;
 }
 
@@ -117,7 +115,6 @@ export const useInstanceStore = create<InstanceStore>((set) => ({
 
   loadMockInstances: () => {
     set({ loading: true });
-    // Simula carregamento da API
     setTimeout(() => {
       set({ instances: mockInstances, loading: false });
     }, 1000);

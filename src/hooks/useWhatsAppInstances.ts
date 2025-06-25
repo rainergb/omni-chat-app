@@ -1,19 +1,18 @@
-// src/hooks/useWhatsAppInstances.ts
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { message } from 'antd';
-import { whatsappApiService } from '@/services/whatsapp.api';
-import { whatsappConfig } from '@/config/whatsapp.config';
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { message } from "antd";
+import { whatsappApiService } from "@/services/whatsapp.api";
+import { whatsappConfig } from "@/config/whatsapp.config";
 import {
   WhatsAppInstance,
   CreateInstanceRequest,
   mapWhatsAppStatusToFrontend
-} from '@/types/whatsapp.types';
-import { Instance } from '@/libs/types';
+} from "@/types/whatsapp.types";
+import { Instance } from "@/libs/types";
 
 // Query keys
 export const WHATSAPP_QUERY_KEYS = {
-  instances: ['whatsapp', 'instances'] as const,
-  qrcode: (instanceId: string) => ['whatsapp', 'qrcode', instanceId] as const,
+  instances: ["whatsapp", "instances"] as const,
+  qrcode: (instanceId: string) => ["whatsapp", "qrcode", instanceId] as const
 };
 
 // Hook para listar instâncias
@@ -24,7 +23,7 @@ export const useWhatsAppInstances = () => {
     refetchInterval: 30000, // Refetch a cada 30 segundos
     staleTime: 10000, // Considerar dados frescos por 10 segundos
     retry: 3,
-    retryDelay: (attemptIndex) => Math.min(1000 * 2 ** attemptIndex, 30000),
+    retryDelay: (attemptIndex) => Math.min(1000 * 2 ** attemptIndex, 30000)
   });
 };
 
@@ -33,25 +32,35 @@ export const useCreateWhatsAppInstance = () => {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: async (data: Omit<CreateInstanceRequest, 'webHookMensagem' | 'webHookStatusChat' | 'webHookConectado' | 'webHookDesconectado'>) => {
+    mutationFn: async (
+      data: Omit<
+        CreateInstanceRequest,
+        | "webHookMensagem"
+        | "webHookStatusChat"
+        | "webHookConectado"
+        | "webHookDesconectado"
+      >
+    ) => {
       const instanceData: CreateInstanceRequest = {
         ...data,
         webHookMensagem: `${whatsappConfig.apiUrl}/mensagem`,
         webHookStatusChat: `${whatsappConfig.apiUrl}/statuschat`,
         webHookConectado: `${whatsappConfig.apiUrl}/conectado`,
-        webHookDesconectado: `${whatsappConfig.apiUrl}/desconectado`,
+        webHookDesconectado: `${whatsappConfig.apiUrl}/desconectado`
       };
-      
+
       return whatsappApiService.createInstance(instanceData);
     },
     onSuccess: (data) => {
       // Invalidar cache das instâncias para refetch
-      queryClient.invalidateQueries({ queryKey: WHATSAPP_QUERY_KEYS.instances });
+      queryClient.invalidateQueries({
+        queryKey: WHATSAPP_QUERY_KEYS.instances
+      });
       message.success(`Instância ${data.id} criada com sucesso!`);
     },
     onError: (error: Error) => {
       message.error(`Erro ao criar instância: ${error.message}`);
-    },
+    }
   });
 };
 
@@ -63,7 +72,7 @@ export const useGetQRCode = (instanceId: string, enabled: boolean = true) => {
     enabled: enabled && !!instanceId,
     refetchInterval: 30000, // Refetch QR Code a cada 30 segundos
     staleTime: 20000, // QR Code é válido por 20 segundos
-    retry: 2,
+    retry: 2
   });
 };
 
@@ -74,12 +83,14 @@ export const useDisconnectInstance = () => {
   return useMutation({
     mutationFn: whatsappApiService.disconnectInstance,
     onSuccess: (data, instanceId) => {
-      queryClient.invalidateQueries({ queryKey: WHATSAPP_QUERY_KEYS.instances });
+      queryClient.invalidateQueries({
+        queryKey: WHATSAPP_QUERY_KEYS.instances
+      });
       message.info(`Instância ${instanceId} desconectada.`);
     },
     onError: (error: Error) => {
       message.error(`Erro ao desconectar: ${error.message}`);
-    },
+    }
   });
 };
 
@@ -90,12 +101,14 @@ export const useReloadInstance = () => {
   return useMutation({
     mutationFn: whatsappApiService.reloadInstance,
     onSuccess: (data, instanceId) => {
-      queryClient.invalidateQueries({ queryKey: WHATSAPP_QUERY_KEYS.instances });
+      queryClient.invalidateQueries({
+        queryKey: WHATSAPP_QUERY_KEYS.instances
+      });
       message.success(`Instância ${instanceId} recarregada!`);
     },
     onError: (error: Error) => {
       message.error(`Erro ao recarregar: ${error.message}`);
-    },
+    }
   });
 };
 
@@ -106,12 +119,14 @@ export const useDeleteInstance = () => {
   return useMutation({
     mutationFn: whatsappApiService.deleteInstance,
     onSuccess: (data, instanceId) => {
-      queryClient.invalidateQueries({ queryKey: WHATSAPP_QUERY_KEYS.instances });
+      queryClient.invalidateQueries({
+        queryKey: WHATSAPP_QUERY_KEYS.instances
+      });
       message.success(`Instância ${instanceId} removida!`);
     },
     onError: (error: Error) => {
       message.error(`Erro ao remover: ${error.message}`);
-    },
+    }
   });
 };
 
@@ -120,40 +135,57 @@ export const useUpdateInstance = () => {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: ({ instanceId, data }: { instanceId: string; data: Partial<WhatsAppInstance> }) =>
-      whatsappApiService.updateInstance(instanceId, data),
+    mutationFn: ({
+      instanceId,
+      data
+    }: {
+      instanceId: string;
+      data: Partial<WhatsAppInstance>;
+    }) => whatsappApiService.updateInstance(instanceId, data),
     onSuccess: (data, variables) => {
-      queryClient.invalidateQueries({ queryKey: WHATSAPP_QUERY_KEYS.instances });
+      queryClient.invalidateQueries({
+        queryKey: WHATSAPP_QUERY_KEYS.instances
+      });
       message.success(`Instância ${variables.instanceId} atualizada!`);
     },
     onError: (error: Error) => {
       message.error(`Erro ao atualizar: ${error.message}`);
-    },
+    }
   });
 };
 
 // Função helper para converter WhatsAppInstance para Instance (frontend)
-export const mapWhatsAppInstanceToFrontend = (whatsappInstance: WhatsAppInstance): Instance => {
+export const mapWhatsAppInstanceToFrontend = (
+  whatsappInstance: WhatsAppInstance
+): Instance => {
   return {
     id: whatsappInstance.id,
     name: `WhatsApp ${whatsappInstance.id}`,
-    type: 'whatsapp',
+    type: "whatsapp",
     status: mapWhatsAppStatusToFrontend(whatsappInstance.statusSession),
-    lastActivity: whatsappInstance.updatedAt?.toString() || new Date().toISOString(),
+    lastActivity:
+      whatsappInstance.updatedAt?.toString() || new Date().toISOString(),
     messagesCount: 0, // Será atualizado via WebSocket ou API separada
-    createdAt: whatsappInstance.createdAt?.toString() || new Date().toISOString(),
+    createdAt:
+      whatsappInstance.createdAt?.toString() || new Date().toISOString(),
     webhook: whatsappInstance.webHookMensagem,
-    avatar: whatsappInstance.foto || undefined,
+    avatar: whatsappInstance.foto || undefined
   };
 };
 
 // Hook principal que combina dados WhatsApp com dados mock
 export const useUnifiedInstances = () => {
-  const { data: whatsappInstances = [], isLoading, error } = useWhatsAppInstances();
-  
+  const {
+    data: whatsappInstances = [],
+    isLoading,
+    error
+  } = useWhatsAppInstances();
+
   // Converter instâncias WhatsApp para formato do frontend
-  const unifiedInstances: Instance[] = whatsappInstances.map(mapWhatsAppInstanceToFrontend);
-  
+  const unifiedInstances: Instance[] = whatsappInstances.map(
+    mapWhatsAppInstanceToFrontend
+  );
+
   return {
     instances: unifiedInstances,
     isLoading,

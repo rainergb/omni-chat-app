@@ -1,18 +1,17 @@
-// src/config/whatsapp.config.ts
 export const whatsappConfig = {
   apiUrl: process.env.NEXT_PUBLIC_WHATSAPP_API,
   endpoints: {
-    instances: '/instancia',
-    qrcode: '/instancia/qrcode',
-    disconnect: '/instancia/disconnect',
-    reload: '/instancia/reload',
-    delete: '/instancia',
-    update: '/instancia',
+    instances: "/instancia",
+    qrcode: "/instancia/qrcode",
+    disconnect: "/instancia/disconnect",
+    reload: "/instancia/reload",
+    delete: "/instancia",
+    update: "/instancia"
   },
   websocket: {
-    transports: ['websocket', 'polling'] as const,
+    transports: ["websocket", "polling"] as const,
     timeout: 20000,
-    forceNew: true,
+    forceNew: true
   }
 } as const;
 

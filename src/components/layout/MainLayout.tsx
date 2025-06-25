@@ -1,4 +1,3 @@
-// src/components/layout/MainLayout.tsx
 import React from "react";
 import { Layout } from "antd";
 import { useNavigation } from "@/contexts/NavigationContext";
@@ -30,7 +29,6 @@ export const MainLayout: React.FC = () => {
         flexDirection: "column"
       }}
     >
-      {/* Main Content */}
       <Content
         className="flex-1 overflow-hidden"
         style={{

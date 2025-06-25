@@ -1,4 +1,3 @@
-// src/components/layout/StatsBar.tsx
 import React from "react";
 import { Clock } from "lucide-react";
 import { useTheme } from "@/contexts/ThemeContext";
@@ -46,9 +45,7 @@ export const StatsBar: React.FC<StatsBarProps> = ({ stats }) => {
         </div>
         <div
           className={`text-xs px-2 py-1 rounded-full ${
-            isDark
-              ? "bg-gray-800 text-gray-400"
-              : "bg-gray-100 text-gray-500"
+            isDark ? "bg-gray-800 text-gray-400" : "bg-gray-100 text-gray-500"
           }`}
         >
           <Clock size={12} className="inline mr-1" />

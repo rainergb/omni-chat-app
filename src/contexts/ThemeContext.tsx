@@ -1,8 +1,7 @@
-// src/contexts/ThemeContext.tsx
-import React, { createContext, useContext, useState, useEffect } from 'react';
-import { ConfigProvider, theme } from 'antd';
+import React, { createContext, useContext, useState, useEffect } from "react";
+import { ConfigProvider, theme } from "antd";
 
-type ThemeMode = 'light' | 'dark';
+type ThemeMode = "light" | "dark";
 
 interface ThemeContextType {
   mode: ThemeMode;
@@ -15,7 +14,7 @@ const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
 export const useTheme = () => {
   const context = useContext(ThemeContext);
   if (!context) {
-    throw new Error('useTheme must be used within a ThemeProvider');
+    throw new Error("useTheme must be used within a ThemeProvider");
   }
   return context;
 };
@@ -25,15 +24,17 @@ interface ThemeProviderProps {
 }
 
 export const ThemeProvider: React.FC<ThemeProviderProps> = ({ children }) => {
-  const [mode, setMode] = useState<ThemeMode>('light');
+  const [mode, setMode] = useState<ThemeMode>("light");
 
   useEffect(() => {
-    const savedMode = localStorage.getItem('theme-mode') as ThemeMode;
+    const savedMode = localStorage.getItem("theme-mode") as ThemeMode;
     if (savedMode) {
       setMode(savedMode);
     } else {
-      const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-      setMode(prefersDark ? 'dark' : 'light');
+      const prefersDark = window.matchMedia(
+        "(prefers-color-scheme: dark)"
+      ).matches;
+      setMode(prefersDark ? "dark" : "light");
     }
   }, []);
 

@@ -1,4 +1,3 @@
-// src/components/layout/TabContent.tsx
 import React from "react";
 
 interface TabContentProps {
