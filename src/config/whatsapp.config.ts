@@ -15,7 +15,6 @@ export const whatsappConfig = {
   }
 } as const;
 
-// Helper para construir URLs das APIs
 export const buildApiUrl = (endpoint: string, params?: string) => {
   const baseUrl = whatsappConfig.apiUrl + endpoint;
   return params ? `${baseUrl}/${params}` : baseUrl;

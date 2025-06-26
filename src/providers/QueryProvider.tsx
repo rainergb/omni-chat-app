@@ -8,8 +8,9 @@ const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
       refetchOnWindowFocus: false,
-      refetchOnMount: true,
+      refetchOnMount: false, // Mudado para false para evitar refetch desnecessário
       refetchOnReconnect: true,
+      refetchInterval: false, // Garantir que não há refetch automático por intervalo
       retry: (
         failureCount,
         error: Error & { response?: { status: number } }

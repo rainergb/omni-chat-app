@@ -10,9 +10,7 @@ import {
   useDisconnectInstance,
   useDeleteInstance
 } from "@/hooks/useWhatsAppInstances";
-import { useWhatsAppSocket } from "@/hooks/useWhatsAppSocket";
 import { Instance } from "@/libs/types";
-import { ConnectionStatus, WhatsAppMessage } from "@/types/whatsapp.types";
 
 export const InstancesPage: React.FC = () => {
   const [searchTerm, setSearchTerm] = useState("");
@@ -42,7 +40,6 @@ export const InstancesPage: React.FC = () => {
     instances: whatsappInstances,
     isLoading: whatsappLoading,
     error: whatsappError,
-    refetch: refetchWhatsApp
   } = useUnifiedInstances();
 
   const disconnectWhatsAppMutation = useDisconnectInstance();
@@ -52,22 +49,7 @@ export const InstancesPage: React.FC = () => {
 
   const isLoading = mockLoading || whatsappLoading;
 
-  useWhatsAppSocket({
-    onMessage: (message: WhatsAppMessage) => {
-      console.log("Nova mensagem WhatsApp:", message);
-    },
-    onStatusChange: (status: ConnectionStatus) => {
-      console.log("Status da instância WhatsApp alterado:", status);
-      refetchWhatsApp();
-    },
-    onConnect: () => {
-      console.log("WebSocket conectado - monitorando instâncias WhatsApp");
-    },
-    onError: (error) => {
-      console.error("Erro no WebSocket WhatsApp:", error);
-      message.error("Problema na conexão em tempo real com WhatsApp");
-    }
-  });
+
 
   const filteredInstances = allInstances.filter((instance) => {
     const matchesSearch = instance.name
@@ -104,7 +86,6 @@ export const InstancesPage: React.FC = () => {
     });
     setQrModalOpen(true);
 
-    refetchWhatsApp();
   };
 
   const handleConnect = async (instanceId: string) => {
@@ -181,7 +162,6 @@ export const InstancesPage: React.FC = () => {
 
   const handleRefresh = () => {
     refreshMockInstances();
-    refetchWhatsApp();
     message.info("Atualizando lista de instâncias...");
   };
 

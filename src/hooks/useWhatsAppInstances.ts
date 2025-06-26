@@ -20,10 +20,13 @@ export const useWhatsAppInstances = () => {
   return useQuery({
     queryKey: WHATSAPP_QUERY_KEYS.instances,
     queryFn: whatsappApiService.listInstances,
-    refetchInterval: 30000, // Refetch a cada 30 segundos
-    staleTime: 10000, // Considerar dados frescos por 10 segundos
-    retry: 3,
-    retryDelay: (attemptIndex) => Math.min(1000 * 2 ** attemptIndex, 30000)
+    staleTime: 5 * 60 * 1000, // 5 minutos - dados considerados frescos por mais tempo
+    gcTime: 10 * 60 * 1000, // 10 minutos - cache mantido por mais tempo
+    refetchOnWindowFocus: false, // Não refetch ao focar na janela
+    refetchOnMount: false, // Não refetch desnecessário no mount
+    refetchOnReconnect: true, // Manter refetch apenas na reconexão
+    refetchInterval: false, // Desabilitar refetch automático por intervalo
+    retry: 0,
   });
 };
 
@@ -52,7 +55,6 @@ export const useCreateWhatsAppInstance = () => {
       return whatsappApiService.createInstance(instanceData);
     },
     onSuccess: (data) => {
-      // Invalidar cache das instâncias para refetch
       queryClient.invalidateQueries({
         queryKey: WHATSAPP_QUERY_KEYS.instances
       });
@@ -70,7 +72,6 @@ export const useGetQRCode = (instanceId: string, enabled: boolean = true) => {
     queryKey: WHATSAPP_QUERY_KEYS.qrcode(instanceId),
     queryFn: () => whatsappApiService.getQRCode(instanceId),
     enabled: enabled && !!instanceId,
-    refetchInterval: 30000, // Refetch QR Code a cada 30 segundos
     staleTime: 20000, // QR Code é válido por 20 segundos
     retry: 2
   });
@@ -190,8 +191,5 @@ export const useUnifiedInstances = () => {
     instances: unifiedInstances,
     isLoading,
     error,
-    refetch: () => {
-      // Implementar refetch se necessário
-    }
   };
 };

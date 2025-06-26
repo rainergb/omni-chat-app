@@ -10,8 +10,6 @@ import { Smartphone } from "lucide-react";
 import { Modal } from "@/components/ui/Modal";
 import { useInstanceStore } from "@/store/instanceStore";
 import { useGetQRCode } from "@/hooks/useWhatsAppInstances";
-import { useWhatsAppSocket } from "@/hooks/useWhatsAppSocket";
-import { ConnectionStatus } from "@/types/whatsapp.types";
 
 interface QRCodeModalProps {
   open: boolean;
@@ -44,48 +42,7 @@ export const QRCodeModal: React.FC<QRCodeModalProps> = ({
   } = useGetQRCode(instanceId, open && isWhatsApp);
 
   // WebSocket para WhatsApp real - só conecta se isWhatsApp = true
-  const { isConnected: socketConnected, connectionError } = useWhatsAppSocket({
-    onStatusChange: (status: ConnectionStatus) => {
-      if (isWhatsApp && status.instanceId === instanceId) {
-        switch (status.status) {
-          case "connecting":
-            setStatusMessage("Conectando...");
-            setConnectionProgress(50);
-            break;
-          case "connected":
-            setStatusMessage("Conectado com sucesso!");
-            setConnectionProgress(100);
-            setConnected(true);
 
-            // Atualizar store local também
-            updateInstance(instanceId, {
-              status: "connected",
-              lastActivity: new Date().toISOString()
-            });
-
-            // Fechar modal após 2 segundos
-            setTimeout(() => {
-              onClose();
-            }, 2000);
-            break;
-          case "disconnected":
-            setStatusMessage("Desconectado");
-            setConnectionProgress(0);
-            setConnected(false);
-            break;
-          case "error":
-            setStatusMessage("Erro na conexão");
-            setConnectionProgress(0);
-            break;
-        }
-      }
-    },
-    onConnect: () => {
-      if (isWhatsApp) {
-        console.log("WebSocket conectado para monitoramento WhatsApp");
-      }
-    }
-  });
 
   // Função para gerar QR Code mock (sistema antigo)
   const generateMockQRCode = React.useCallback(async () => {
@@ -269,18 +226,7 @@ export const QRCodeModal: React.FC<QRCodeModalProps> = ({
       onCancel={onClose}
       footer={
         <div className="flex flex-col sm:flex-row gap-2 sm:gap-0 sm:justify-between">
-          {isWhatsApp && (
-            <div className="flex items-center space-x-2">
-              <div
-                className={`w-2 h-2 rounded-full ${
-                  socketConnected ? "bg-green-500" : "bg-red-500"
-                }`}
-              />
-              <span className="text-xs text-gray-500">
-                {socketConnected ? "Monitoramento ativo" : "Desconectado"}
-              </span>
-            </div>
-          )}
+
 
           <div className="flex gap-2">
             <Button onClick={onClose}>Fechar</Button>
@@ -294,17 +240,17 @@ export const QRCodeModal: React.FC<QRCodeModalProps> = ({
                 style={
                   isWhatsApp
                     ? {
-                        background:
-                          "linear-gradient(135deg, #25D366 0%, #128C7E 100%)",
-                        borderColor: "transparent",
-                        boxShadow: "0 4px 14px 0 rgba(37, 211, 102, 0.3)"
-                      }
+                      background:
+                        "linear-gradient(135deg, #25D366 0%, #128C7E 100%)",
+                      borderColor: "transparent",
+                      boxShadow: "0 4px 14px 0 rgba(37, 211, 102, 0.3)"
+                    }
                     : {
-                        background:
-                          "linear-gradient(135deg, #00b9ae 0%, #1f2937 100%)",
-                        borderColor: "transparent",
-                        boxShadow: "0 4px 14px 0 rgba(0, 185, 174, 0.3)"
-                      }
+                      background:
+                        "linear-gradient(135deg, #00b9ae 0%, #1f2937 100%)",
+                      borderColor: "transparent",
+                      boxShadow: "0 4px 14px 0 rgba(0, 185, 174, 0.3)"
+                    }
                 }
               >
                 {isWhatsApp ? "Atualizar QR WhatsApp" : "Gerar Novo QR"}
@@ -333,8 +279,8 @@ export const QRCodeModal: React.FC<QRCodeModalProps> = ({
                 connected
                   ? "success"
                   : connectionProgress > 0
-                  ? "active"
-                  : "normal"
+                    ? "active"
+                    : "normal"
               }
               showInfo={false}
               strokeColor={isWhatsApp ? "#25D366" : "#00b9ae"}
@@ -346,15 +292,13 @@ export const QRCodeModal: React.FC<QRCodeModalProps> = ({
         {connected ? (
           <div className="text-center space-y-4 py-6">
             <CheckCircleOutlined
-              className={`text-6xl animate-pulse ${
-                isWhatsApp ? "text-green-500" : "text-blue-500"
-              }`}
+              className={`text-6xl animate-pulse ${isWhatsApp ? "text-green-500" : "text-blue-500"
+                }`}
             />
             <div>
               <h3
-                className={`text-lg font-semibold mb-2 ${
-                  isWhatsApp ? "text-green-600" : "text-blue-600"
-                }`}
+                className={`text-lg font-semibold mb-2 ${isWhatsApp ? "text-green-600" : "text-blue-600"
+                  }`}
               >
                 Conectado com sucesso!
               </h3>
@@ -385,25 +329,13 @@ export const QRCodeModal: React.FC<QRCodeModalProps> = ({
 
             {/* QR Code */}
             <div
-              className={`bg-white dark:bg-gray-800 p-6 rounded-lg border text-center ${
-                isWhatsApp
-                  ? "border-green-200 dark:border-green-800"
-                  : "border-gray-200 dark:border-gray-700"
-              }`}
+              className={`bg-white dark:bg-gray-800 p-6 rounded-lg border text-center ${isWhatsApp
+                ? "border-green-200 dark:border-green-800"
+                : "border-gray-200 dark:border-gray-700"
+                }`}
             >
               {getQRCodeDisplay()}
             </div>
-
-            {/* Avisos de erro específicos */}
-            {isWhatsApp && connectionError && (
-              <Alert
-                message="Problema de Conexão WebSocket"
-                description={`Erro na conexão em tempo real: ${connectionError}. As atualizações automáticas podem não funcionar.`}
-                type="warning"
-                showIcon
-                closable
-              />
-            )}
 
             {isWhatsApp && whatsappQrError && (
               <Alert
@@ -418,9 +350,8 @@ export const QRCodeModal: React.FC<QRCodeModalProps> = ({
             {/* Status de aguardo */}
             <Alert
               message="Aguardando conexão..."
-              description={`O QR Code foi gerado. Escaneie com ${
-                isWhatsApp ? "seu WhatsApp" : "seu dispositivo"
-              } para conectar a instância.`}
+              description={`O QR Code foi gerado. Escaneie com ${isWhatsApp ? "seu WhatsApp" : "seu dispositivo"
+                } para conectar a instância.`}
               type="warning"
               showIcon
               className="animate-pulse"
