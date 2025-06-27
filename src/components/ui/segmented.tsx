@@ -30,14 +30,9 @@ const SegmentedWrapper = styled.div<{ $isDark: boolean }>`
 
       /* Responsive adjustments */
       @media (max-width: 870px) {
-        padding: 0 12px;
+        padding: 0 8px;
         gap: 0;
-        
-        .ant-segmented-item-label {
-          span:not(.anticon) {
-            display: none;
-          }
-        }
+        min-width: 40px;
       }
 
       ${(props) =>
@@ -96,9 +91,20 @@ const SegmentedWrapper = styled.div<{ $isDark: boolean }>`
         align-items: center;
         gap: 6px;
 
-        /* Responsive gap adjustment */
+        /* Responsive adjustments - hide text but keep icons */
         @media (max-width: 870px) {
           gap: 0;
+          justify-content: center;
+          
+          /* Hide text spans but keep SVG icons */
+          > span {
+            display: none;
+          }
+          
+          /* Keep SVG icons visible */
+          > svg {
+            display: block !important;
+          }
         }
       }
       

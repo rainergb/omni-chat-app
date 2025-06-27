@@ -116,14 +116,22 @@ export const InstanceHeader: React.FC<InstanceHeaderProps> = ({
               onChange={(value) => onViewModeChange(value as ViewMode)}
               options={[
                 {
-                  label: "Cards",
-                  value: "cards",
-                  icon: <Grid3X3 size={16} />
+                  label: (
+                    <>
+                      <Grid3X3 size={16} />
+                      <span>Cards</span>
+                    </>
+                  ),
+                  value: "cards"
                 },
                 {
-                  label: "Lista",
-                  value: "list",
-                  icon: <List size={16} />
+                  label: (
+                    <>
+                      <List size={16} />
+                      <span>Lista</span>
+                    </>
+                  ),
+                  value: "list"
                 }
               ]}
             />
