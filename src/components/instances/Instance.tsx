@@ -4,18 +4,40 @@ import { InstanceTable } from "@/components/instances/Components/InstanceTable/I
 import { InstanceHeader } from "./Components/InstanceHeader/InstanceHeader";
 import { CreateInstanceModal } from "./Components/CreateInstanceModal/CreateInstanceModal";
 import { QRCodeModal } from "./Components/QRCodeModal/QRCodeModal";
-import { useInstances } from "@/hooks/useInstances";
 import {
-  useUnifiedInstances,
+  useWhatsAppInstances,
+  useCreateWhatsAppInstance,
   useDisconnectInstance,
   useDeleteInstance
 } from "@/hooks/useWhatsAppInstances";
-import { Instance } from "@/libs/types";
+import { ViewMode, Instance } from "@/libs/types";
+import {
+  WhatsAppInstance,
+  CreateInstanceRequest
+} from "@/types/whatsapp.types";
+
+const mapWhatsAppToInstance = (whatsapp: WhatsAppInstance): Instance => ({
+  id: whatsapp.id,
+  name: whatsapp.canal,
+  type: "whatsapp",
+  status:
+    whatsapp.status === "open"
+      ? "connected"
+      : whatsapp.status === "connecting"
+      ? "connecting"
+      : "disconnected",
+  lastActivity: whatsapp.updatedAt?.toISOString() || new Date().toISOString(),
+  messagesCount: 0,
+  createdAt: whatsapp.createdAt?.toISOString() || new Date().toISOString(),
+  webhook: whatsapp.webHookMensagem,
+  avatar: whatsapp.foto || undefined
+});
 
 export const InstancesPage: React.FC = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [statusFilter, setStatusFilter] = useState<string>("all");
   const [typeFilter, setTypeFilter] = useState<string>("all");
+  const [viewMode, setViewMode] = useState<ViewMode>("cards");
   const [createModalOpen, setCreateModalOpen] = useState(false);
   const [qrModalOpen, setQrModalOpen] = useState(false);
   const [selectedInstanceForQR, setSelectedInstanceForQR] = useState<{
@@ -25,33 +47,23 @@ export const InstancesPage: React.FC = () => {
   } | null>(null);
 
   const {
-    instances: mockInstances,
-    viewMode,
-    loading: mockLoading,
-    setViewMode,
-    createInstance: createMockInstance,
-    deleteInstance: deleteMockInstance,
-    connectInstance: connectMockInstance,
-    disconnectInstance: disconnectMockInstance,
-    refreshInstances: refreshMockInstances
-  } = useInstances();
-
-  const {
-    instances: whatsappInstances,
+    data: whatsappInstances,
     isLoading: whatsappLoading,
     error: whatsappError,
-  } = useUnifiedInstances();
+    refetch: refetchWhatsApp
+  } = useWhatsAppInstances();
 
+  const createWhatsAppMutation = useCreateWhatsAppInstance();
   const disconnectWhatsAppMutation = useDisconnectInstance();
   const deleteWhatsAppMutation = useDeleteInstance();
 
-  const allInstances = [...mockInstances, ...whatsappInstances];
+  // Garantir que whatsappInstances seja sempre um array
+  const safeInstances = Array.isArray(whatsappInstances)
+    ? whatsappInstances
+    : [];
+  const mappedInstances = safeInstances.map(mapWhatsAppToInstance);
 
-  const isLoading = mockLoading || whatsappLoading;
-
-
-
-  const filteredInstances = allInstances.filter((instance) => {
+  const filteredInstances = mappedInstances.filter((instance) => {
     const matchesSearch = instance.name
       .toLowerCase()
       .includes(searchTerm.toLowerCase());
@@ -62,18 +74,29 @@ export const InstancesPage: React.FC = () => {
     return matchesSearch && matchesStatus && matchesType;
   });
 
-  // Verificar se é instância WhatsApp
-  const isWhatsAppInstance = (instance: Instance): boolean => {
-    return (
-      instance.type === "whatsapp" &&
-      whatsappInstances.some((wInstance) => wInstance.id === instance.id)
-    );
-  };
-
   const handleCreateInstance = async (
     instanceData: Omit<Instance, "id" | "createdAt">
   ) => {
-    await createMockInstance(instanceData);
+    try {
+      const whatsappData: CreateInstanceRequest = {
+        canal: instanceData.name,
+        tempoEnvio: 1000,
+        webHookMensagem: instanceData.webhook,
+        webHookStatusChat: instanceData.webhook,
+        webHookConectado: instanceData.webhook,
+        webHookDesconectado: instanceData.webhook
+      };
+
+      const result = await createWhatsAppMutation.mutateAsync(whatsappData);
+      message.success("Instância WhatsApp criada com sucesso!");
+      setCreateModalOpen(false);
+
+      if (result.id) {
+        handleWhatsAppInstanceCreated(result.id);
+      }
+    } catch {
+      message.error("Erro ao criar instância WhatsApp");
+    }
   };
 
   const handleWhatsAppInstanceCreated = (instanceId: string) => {
@@ -85,87 +108,58 @@ export const InstancesPage: React.FC = () => {
       isWhatsApp: true
     });
     setQrModalOpen(true);
-
   };
 
   const handleConnect = async (instanceId: string) => {
-    const instance = allInstances.find((i) => i.id === instanceId);
+    const instance = mappedInstances.find((i) => i.id === instanceId);
     if (!instance) return;
 
     try {
-      if (isWhatsAppInstance(instance)) {
-        setSelectedInstanceForQR({
-          id: instanceId,
-          name: instance.name,
-          isWhatsApp: true
-        });
-        setQrModalOpen(true);
-      } else {
-        // Para outras plataformas, usar sistema mock
-        await connectMockInstance(instanceId);
-
-        // Abrir modal de QR Code mock
-        setSelectedInstanceForQR({
-          id: instanceId,
-          name: instance.name,
-          isWhatsApp: false
-        });
-        setQrModalOpen(true);
-      }
+      setSelectedInstanceForQR({
+        id: instanceId,
+        name: instance.name,
+        isWhatsApp: true
+      });
+      setQrModalOpen(true);
     } catch {
       message.error("Erro ao conectar instância");
     }
   };
 
   const handleDisconnect = async (instanceId: string) => {
-    const instance = allInstances.find((i) => i.id === instanceId);
-    if (!instance) return;
-
     try {
-      if (isWhatsAppInstance(instance)) {
-        await disconnectWhatsAppMutation.mutateAsync(instanceId);
-      } else {
-        await disconnectMockInstance(instanceId);
-      }
+      await disconnectWhatsAppMutation.mutateAsync(instanceId);
+      message.success("Instância desconectada com sucesso!");
     } catch {
-      // Erro já tratado nos hooks
+      message.error("Erro ao desconectar instância");
     }
   };
 
   const handleDelete = async (instanceId: string) => {
-    const instance = allInstances.find((i) => i.id === instanceId);
-    if (!instance) return;
-
     try {
-      if (isWhatsAppInstance(instance)) {
-        await deleteWhatsAppMutation.mutateAsync(instanceId);
-      } else {
-        await deleteMockInstance(instanceId);
-      }
+      await deleteWhatsAppMutation.mutateAsync(instanceId);
+      message.success("Instância deletada com sucesso!");
     } catch {
-      // Erro já tratado nos hooks
+      message.error("Erro ao deletar instância");
     }
   };
 
   const handleOpenChat = (instanceId: string) => {
-    const instance = allInstances.find((i) => i.id === instanceId);
+    const instance = mappedInstances.find((i) => i.id === instanceId);
     if (!instance) return;
 
     if (instance.status === "connected") {
       message.info(`Abrindo chat para ${instance.name}`);
-      // Aqui você implementaria a navegação para o chat
-      // Por exemplo: router.push(`/chat/${instanceId}`) ou setActiveTab('chat')
     } else {
       message.warning("Instância deve estar conectada para abrir chat");
     }
   };
 
   const handleRefresh = () => {
-    refreshMockInstances();
+    refetchWhatsApp();
     message.info("Atualizando lista de instâncias...");
   };
 
-  // Mostrar erro do WhatsApp se houver
   if (whatsappError) {
     console.error("Erro ao carregar instâncias WhatsApp:", whatsappError);
   }
@@ -186,14 +180,14 @@ export const InstancesPage: React.FC = () => {
           return Promise.resolve();
         }}
         onRefresh={handleRefresh}
-        loading={isLoading}
+        loading={whatsappLoading}
       />
 
       <InstanceTable
-        instances={allInstances}
+        instances={mappedInstances}
         filteredInstances={filteredInstances}
         viewMode={viewMode}
-        loading={isLoading}
+        loading={whatsappLoading}
         searchTerm={searchTerm}
         statusFilter={statusFilter}
         typeFilter={typeFilter}

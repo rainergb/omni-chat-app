@@ -52,7 +52,21 @@ export const whatsappApiService = {
       const response = await whatsappApi.get<WhatsAppInstance[]>(
         whatsappConfig.endpoints.instances
       );
-      return response.data;
+
+      // Garantir que sempre retornamos um array
+      const data = response.data;
+      if (Array.isArray(data)) {
+        return data;
+      } else if (data && typeof data === "object") {
+        // Se a API retorna um objeto com uma propriedade que contém o array
+        const possibleArrays = Object.values(data).filter(Array.isArray);
+        if (possibleArrays.length > 0) {
+          return possibleArrays[0] as WhatsAppInstance[];
+        }
+      }
+
+      console.warn("API não retornou um array válido:", data);
+      return [];
     } catch (error) {
       console.error("Erro ao listar instâncias:", error);
       throw new Error("Falha ao carregar instâncias WhatsApp");

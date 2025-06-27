@@ -27,6 +27,10 @@ export const useWhatsAppInstances = () => {
     refetchOnReconnect: true, // Manter refetch apenas na reconexão
     refetchInterval: false, // Desabilitar refetch automático por intervalo
     retry: 0,
+    select: (data) => {
+      // Garantir que sempre retornamos um array
+      return Array.isArray(data) ? data : [];
+    }
   });
 };
 
@@ -176,20 +180,10 @@ export const mapWhatsAppInstanceToFrontend = (
 
 // Hook principal que combina dados WhatsApp com dados mock
 export const useUnifiedInstances = () => {
-  const {
-    data: whatsappInstances = [],
-    isLoading,
-    error
-  } = useWhatsAppInstances();
-
-  // Converter instâncias WhatsApp para formato do frontend
-  const unifiedInstances: Instance[] = whatsappInstances.map(
-    mapWhatsAppInstanceToFrontend
-  );
+  const { isLoading, error } = useWhatsAppInstances();
 
   return {
-    instances: unifiedInstances,
     isLoading,
-    error,
+    error
   };
 };
