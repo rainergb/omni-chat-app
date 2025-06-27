@@ -8,6 +8,27 @@ interface StyledProps {
   $loading?: boolean;
 }
 
+export const Container = styled.div`
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  margin-top: 1.5rem;
+
+  @media (min-width: 640px) {
+    padding: 0 1.5rem;
+  }
+
+  @media (min-width: 1024px) {
+    padding: 0 2rem;
+  }
+`;
+
+export const ContentWrapper = styled.div`
+  width: 100%;
+  max-width: 112rem;
+  margin: 0 auto;
+`;
+
 export const ListContainer = styled.div<StyledProps>`
   border-radius: 0.75rem;
   overflow: hidden;
@@ -20,7 +41,7 @@ export const ListHeader = styled.div<StyledProps>`
   display: grid;
   grid-template-columns: 2fr 1fr 1fr 1.5fr 1.5fr;
   gap: 1rem;
-  padding: 1rem 1.5rem;
+  padding: 1rem 1rem;
   background-color: ${({ $isDark }) => ($isDark ? '#111827' : '#f9fafb')};
   border-bottom: 1px solid ${({ $isDark }) => ($isDark ? '#374151' : '#e5e7eb')};
   font-weight: 600;

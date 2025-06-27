@@ -26,7 +26,21 @@ const SegmentedWrapper = styled.div<{ $isDark: boolean }>`
       padding: 0 20px;
       font-weight: 500;
       font-size: 14px;
-      transition: all 0.2s ease;      ${(props) =>
+      transition: all 0.2s ease;
+
+      /* Responsive adjustments */
+      @media (max-width: 870px) {
+        padding: 0 12px;
+        gap: 0;
+        
+        .ant-segmented-item-label {
+          span:not(.anticon) {
+            display: none;
+          }
+        }
+      }
+
+      ${(props) =>
         props.$isDark
           ? `
         color: #d1d5db;
@@ -81,6 +95,11 @@ const SegmentedWrapper = styled.div<{ $isDark: boolean }>`
         display: flex;
         align-items: center;
         gap: 6px;
+
+        /* Responsive gap adjustment */
+        @media (max-width: 870px) {
+          gap: 0;
+        }
       }
       
       .anticon {

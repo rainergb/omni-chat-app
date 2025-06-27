@@ -9,10 +9,8 @@ interface StyledProps {
 export const Container = styled.div`
   display: flex;
   flex-direction: column;
-  gap: 1.5rem;
   width: 100%;
   margin-top: 1.5rem;
-  padding: 0 1rem;
 
   @media (min-width: 640px) {
     padding: 0 1.5rem;

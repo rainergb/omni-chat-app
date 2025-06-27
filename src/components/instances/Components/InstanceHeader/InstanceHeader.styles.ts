@@ -4,10 +4,10 @@ import { Button } from "antd";
 
 export const HeaderContainer = styled.div<{ $isDark: boolean }>`
   width: 100%;
-  padding: 0.5rem 1rem;
   box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
   border: 1px solid ${(props) => (props.$isDark ? "#374151" : "#f3f4f6")};
   background: ${(props) => (props.$isDark ? "#1f2937" : "#ffffff")};
+  border-radius: 8px;
 
   @media (min-width: 640px) {
     padding: 0.75rem 1.5rem;
@@ -15,6 +15,16 @@ export const HeaderContainer = styled.div<{ $isDark: boolean }>`
 
   @media (min-width: 1024px) {
     padding: 0.75rem 2rem;
+  }
+
+  /* Responsive adjustments for screens less than 870px */
+  @media (max-width: 870px) {
+    padding: 0.5rem 0.75rem;
+  }
+
+  /* Mobile adjustments */
+  @media (max-width: 600px) {
+    padding: 0.5rem;
   }
 `;
 
@@ -25,17 +35,54 @@ export const ContentWrapper = styled.div`
   width: 100%;
   max-width: 112rem;
   margin: 0 auto;
+
+  /* Responsive gap adjustment */
+  @media (max-width: 870px) {
+    gap: 8px;
+  }
+
+  /* Mobile layout - stack on very small screens */
+  @media (max-width: 600px) {
+    flex-direction: column;
+    gap: 12px;
+  }
 `;
 
 export const LeftSection = styled.div`
   display: flex;
   align-items: center;
   gap: 12px;
+
+  /* Responsive gap adjustment */
+  @media (max-width: 870px) {
+    gap: 8px;
+  }
+
+  /* Mobile layout adjustments */
+  @media (max-width: 600px) {
+    width: 100%;
+    justify-content: space-between;
+  }
 `;
 
 export const SearchContainer = styled.div<{ $isDark: boolean }>`
   position: relative;
   width: 320px;
+
+  /* Responsive width adjustment */
+  @media (max-width: 870px) {
+    width: 200px;
+  }
+
+  @media (max-width: 640px) {
+    width: 150px;
+  }
+
+  /* Mobile - full width */
+  @media (max-width: 600px) {
+    width: 100%;
+    order: 1;
+  }
 `;
 
 export const SearchInput = styled.input<{ $isDark: boolean }>`
@@ -58,6 +105,12 @@ export const SearchInput = styled.input<{ $isDark: boolean }>`
     box-shadow: 0 0 0 3px
       ${(props) =>
         props.$isDark ? "rgba(0, 185, 174, 0.1)" : "rgba(0, 185, 174, 0.1)"};
+  }
+
+  /* Mobile adjustments */
+  @media (max-width: 600px) {
+    height: 36px;
+    font-size: 16px; /* Prevents zoom on iOS */
   }
 `;
 
@@ -95,12 +148,29 @@ export const ClearButton = styled.button<{
 
 export const Spacer = styled.div`
   flex: 1;
+
+  /* Hide spacer on mobile */
+  @media (max-width: 600px) {
+    display: none;
+  }
 `;
 
 export const RightSection = styled.div`
   display: flex;
   align-items: center;
   gap: 12px;
+
+  /* Responsive gap adjustment */
+  @media (max-width: 870px) {
+    gap: 8px;
+  }
+
+  /* Mobile layout adjustments */
+  @media (max-width: 600px) {
+    width: 100%;
+    justify-content: center;
+    gap: 16px;
+  }
 `;
 
 export const StyledButton = styled(Button)<{ $isDark: boolean }>`
@@ -128,6 +198,12 @@ export const StyledButton = styled(Button)<{ $isDark: boolean }>`
         border-color: #9ca3af !important;
       }
     `}
+
+    /* Mobile adjustments */
+    @media (max-width: 600px) {
+      height: 36px;
+      padding: 0 8px;
+    }
   }
 `;
 
@@ -145,6 +221,22 @@ export const GradientButton = styled(Button)`
       transform: translateY(-1px);
       box-shadow: 0 6px 20px 0 rgba(0, 185, 174, 0.4) !important;
       background: linear-gradient(135deg, #00a69b 0%, #0f172a 100%) !important;
+    }
+
+    /* Hide text on small screens */
+    @media (max-width: 870px) {
+      padding: 0 12px;
+      
+      .ant-btn-icon + span {
+        display: none;
+      }
+    }
+
+    /* Mobile adjustments */
+    @media (max-width: 600px) {
+      height: 36px;
+      padding: 0 8px;
+      min-width: 36px;
     }
   }
 `;
