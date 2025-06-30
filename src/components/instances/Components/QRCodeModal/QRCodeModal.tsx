@@ -53,18 +53,6 @@ export default function QrCodeModal({
 
   const isLoadingQR = externalLoading || isLoading;
 
-  console.log(
-    "QRCodeModal - isOpen:",
-    isOpen,
-    "id:",
-    id,
-    "data:",
-    data,
-    "isLoading:",
-    isLoading,
-    "error:",
-    error
-  );
 
   return (
     <Modal

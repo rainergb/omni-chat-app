@@ -18,9 +18,6 @@ const whatsappApi = axios.create({
 
 whatsappApi.interceptors.request.use(
   (config) => {
-    console.log(
-      `🚀 WhatsApp API Request: ${config.method?.toUpperCase()} ${config.url}`
-    );
     return config;
   },
   (error) => {
@@ -31,9 +28,6 @@ whatsappApi.interceptors.request.use(
 
 whatsappApi.interceptors.response.use(
   (response) => {
-    console.log(
-      `✅ WhatsApp API Response: ${response.status} ${response.config.url}`
-    );
     return response;
   },
   (error) => {

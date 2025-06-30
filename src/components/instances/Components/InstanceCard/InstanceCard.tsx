@@ -72,7 +72,7 @@ export const InstanceCard: React.FC<InstanceCardProps> = ({
   const { isDark } = useTheme();
   const colors = useThemeColors();
   const isConnected = instance.status === "CONNECTED";
-  const isConnecting = instance.status === "connecting";
+  const isConnecting = instance.status === "CONNECTING";
   const hasError = instance.status === "error";
 
   // Helper function to render platform icons

@@ -34,7 +34,7 @@ const mockInstances: Instance[] = [
     id: "2",
     name: "Instagram Business",
     type: "instagram",
-    status: "connecting",
+    status: "CONNECTING",
     lastActivity: new Date(Date.now() - 15 * 60 * 1000).toISOString(),
     messagesCount: 89,
     createdAt: new Date(Date.now() - 3 * 24 * 60 * 60 * 1000).toISOString(),

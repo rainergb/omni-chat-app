@@ -101,7 +101,7 @@ export const InstanceList: React.FC<InstanceListProps> = ({
 
   const handleShowQR = (instanceId: string) => {
     setSelectedInstanceId(instanceId);
-    setTimeout(() => setQrModalOpen(true), 100); // Delay para evitar conflito com Dropdown
+    setTimeout(() => setQrModalOpen(true), 100);
   };
 
   const handleOpenChat = (instanceId: string) => {
@@ -134,7 +134,8 @@ export const InstanceList: React.FC<InstanceListProps> = ({
   ];
 
   const handleConnectionToggle = (instance: Instance) => {
-    if (instance.status === "CONNECTED") {
+    console.log("handleConnectionToggle instance:", instance);
+    if (instance.status === "DISCONNECTED") {
       onDisconnect(instance.id);
     } else {
       onConnect(instance.id);
@@ -229,7 +230,7 @@ export const InstanceList: React.FC<InstanceListProps> = ({
         <ListContent>
           {filteredInstances.map((instance) => {
             const isConnected = instance.status === "CONNECTED";
-            const isConnecting = instance.status === "connecting";
+            const isConnecting = instance.status === "CONNECTING";
 
             return (
               <ListRow key={instance.id} $isDark={isDark}>

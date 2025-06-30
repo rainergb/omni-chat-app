@@ -17,34 +17,46 @@ import {
   CreateInstanceRequest
 } from "@/types/whatsapp.types";
 
-const mapWhatsAppToInstance = (whatsapp: WhatsAppInstance): Instance => ({
-  id: whatsapp.id,
-  name: whatsapp.canal,
-  type: "whatsapp",
-  status:
-    whatsapp.status?.toLowerCase?.() === "open"
-      ? "CONNECTED"
-      : whatsapp.status?.toLowerCase?.() === "connecting"
-      ? "connecting"
-      : whatsapp.status?.toLowerCase?.() === "CONNECTED"
-      ? "CONNECTED"
-      : whatsapp.status?.toLowerCase?.() === "error"
-      ? "error"
-      : "DISCONNECTED",
-  lastActivity: whatsapp.updatedAt
-    ? typeof whatsapp.updatedAt === "string"
-      ? whatsapp.updatedAt
-      : new Date(whatsapp.updatedAt).toISOString()
-    : new Date().toISOString(),
-  messagesCount: 0,
-  createdAt: whatsapp.createdAt
-    ? typeof whatsapp.createdAt === "string"
-      ? whatsapp.createdAt
-      : new Date(whatsapp.createdAt).toISOString()
-    : new Date().toISOString(),
-  webhook: whatsapp.webHookMensagem,
-  avatar: whatsapp.foto || undefined
-});
+const mapWhatsAppToInstance = (whatsapp: WhatsAppInstance): Instance => {
+  // Normaliza o status para minúsculo para comparação
+  const normalizedStatus = whatsapp.status?.toLowerCase?.() || "";
+
+  let mappedStatus: string;
+  switch (normalizedStatus) {
+    case "open":
+    case "connected":
+      mappedStatus = "CONNECTED";
+      break;
+    case "CONNECTING":
+      mappedStatus = "CONNECTING";
+      break;
+    case "error":
+      mappedStatus = "error";
+      break;
+    default:
+      mappedStatus = "DISCONNECTED";
+  }
+
+  return {
+    id: whatsapp.id,
+    name: whatsapp.canal,
+    type: "whatsapp",
+    status: mappedStatus,
+    lastActivity: whatsapp.updatedAt
+      ? typeof whatsapp.updatedAt === "string"
+        ? whatsapp.updatedAt
+        : new Date(whatsapp.updatedAt).toISOString()
+      : new Date().toISOString(),
+    messagesCount: 0,
+    createdAt: whatsapp.createdAt
+      ? typeof whatsapp.createdAt === "string"
+        ? whatsapp.createdAt
+        : new Date(whatsapp.createdAt).toISOString()
+      : new Date().toISOString(),
+    webhook: whatsapp.webHookMensagem,
+    avatar: whatsapp.foto || undefined
+  };
+};
 
 export const InstancesPage: React.FC = () => {
   const [searchTerm, setSearchTerm] = useState("");
@@ -196,13 +208,6 @@ export const InstancesPage: React.FC = () => {
     console.error("Erro ao carregar instâncias WhatsApp:", whatsappError);
   }
 
-  console.log(
-    "Render - qrModalOpen:",
-    qrModalOpen,
-    "selectedInstanceId:",
-    selectedInstanceId
-  );
-
   return (
     <div className="space-y-6">
       <InstanceHeader
@@ -244,7 +249,6 @@ export const InstancesPage: React.FC = () => {
         onWhatsAppInstanceCreated={handleWhatsAppInstanceCreated}
       />
 
-      {/* Modal QR Code - sempre renderizado, controlado apenas pelo isOpen */}
       <QRCodeModal
         isOpen={qrModalOpen}
         onClose={handleCloseQRModal}
