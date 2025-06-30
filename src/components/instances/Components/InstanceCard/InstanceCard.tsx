@@ -40,10 +40,7 @@ import {
   StatItem,
   StatLeft,
   StatIcon,
-  MessageStatIcon,
   StatLabel,
-  MessageStatLabel,
-  StatValue,
   StatValueSmall,
   ActionsSection,
   ConnectButton,
@@ -184,18 +181,6 @@ export const InstanceCard: React.FC<InstanceCardProps> = ({
           </Header>
           {/* Stats */}
           <StatsSection $isDark={isDark}>
-            <StatItem $colors={colors} $isDark={isDark}>
-              <StatLeft>
-                <MessageStatIcon $isDark={isDark}>
-                  <MessageCircle size={16} />
-                </MessageStatIcon>
-                <MessageStatLabel $isDark={isDark}>Mensagens</MessageStatLabel>
-              </StatLeft>
-              <StatValue $colors={colors} $isDark={isDark}>
-                {instance.messagesCount.toLocaleString()}
-              </StatValue>
-            </StatItem>
-
             <StatItem $colors={colors} $isDark={isDark}>
               <StatLeft>
                 <StatIcon $colors={colors} $isDark={isDark}>

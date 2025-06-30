@@ -15,26 +15,22 @@ export const WHATSAPP_QUERY_KEYS = {
   qrcode: (instanceId: string) => ["whatsapp", "qrcode", instanceId] as const
 };
 
-// Hook para listar instâncias
 export const useWhatsAppInstances = () => {
   return useQuery({
     queryKey: WHATSAPP_QUERY_KEYS.instances,
     queryFn: whatsappApiService.listInstances,
-    staleTime: 5 * 60 * 1000, // 5 minutos - dados considerados frescos por mais tempo
-    gcTime: 10 * 60 * 1000, // 10 minutos - cache mantido por mais tempo
-    refetchOnWindowFocus: false, // Não refetch ao focar na janela
-    refetchOnMount: false, // Não refetch desnecessário no mount
-    refetchOnReconnect: true, // Manter refetch apenas na reconexão
-    refetchInterval: false, // Desabilitar refetch automático por intervalo
+    staleTime: 5 * 60 * 1000,
+    gcTime: 10 * 60 * 1000,
+    refetchOnWindowFocus: false,
+    refetchOnReconnect: true,
+    refetchInterval: false,
     retry: 0,
     select: (data) => {
-      // Garantir que sempre retornamos um array
       return Array.isArray(data) ? data : [];
     }
   });
 };
 
-// Hook para criar instância
 export const useCreateWhatsAppInstance = () => {
   const queryClient = useQueryClient();
 
@@ -62,26 +58,29 @@ export const useCreateWhatsAppInstance = () => {
       queryClient.invalidateQueries({
         queryKey: WHATSAPP_QUERY_KEYS.instances
       });
-      message.success(`Instância ${data.id} criada com sucesso!`);
+      message.success(`Instância ${data?.id || "nova"} criada com sucesso!`);
     },
-    onError: (error: Error) => {
-      message.error(`Erro ao criar instância: ${error.message}`);
+    onError: (error: unknown) => {
+      console.error("Erro ao criar instância:", error);
+      const errorMessage =
+        error instanceof Error
+          ? error.message
+          : "Erro desconhecido ao criar instância";
+      message.error(`Erro ao criar instância: ${errorMessage}`);
     }
   });
 };
 
-// Hook para obter QR Code
 export const useGetQRCode = (instanceId: string, enabled: boolean = true) => {
   return useQuery({
     queryKey: WHATSAPP_QUERY_KEYS.qrcode(instanceId),
     queryFn: () => whatsappApiService.getQRCode(instanceId),
     enabled: enabled && !!instanceId,
-    staleTime: 20000, // QR Code é válido por 20 segundos
+    staleTime: 20000,
     retry: 2
   });
 };
 
-// Hook para desconectar instância
 export const useDisconnectInstance = () => {
   const queryClient = useQueryClient();
 
@@ -99,7 +98,6 @@ export const useDisconnectInstance = () => {
   });
 };
 
-// Hook para recarregar instância
 export const useReloadInstance = () => {
   const queryClient = useQueryClient();
 
@@ -117,7 +115,6 @@ export const useReloadInstance = () => {
   });
 };
 
-// Hook para deletar instância
 export const useDeleteInstance = () => {
   const queryClient = useQueryClient();
 
@@ -135,7 +132,6 @@ export const useDeleteInstance = () => {
   });
 };
 
-// Hook para atualizar instância
 export const useUpdateInstance = () => {
   const queryClient = useQueryClient();
 
@@ -159,7 +155,6 @@ export const useUpdateInstance = () => {
   });
 };
 
-// Função helper para converter WhatsAppInstance para Instance (frontend)
 export const mapWhatsAppInstanceToFrontend = (
   whatsappInstance: WhatsAppInstance
 ): Instance => {
@@ -170,7 +165,7 @@ export const mapWhatsAppInstanceToFrontend = (
     status: mapWhatsAppStatusToFrontend(whatsappInstance.statusSession),
     lastActivity:
       whatsappInstance.updatedAt?.toString() || new Date().toISOString(),
-    messagesCount: 0, // Será atualizado via WebSocket ou API separada
+    messagesCount: 0,
     createdAt:
       whatsappInstance.createdAt?.toString() || new Date().toISOString(),
     webhook: whatsappInstance.webHookMensagem,
@@ -178,7 +173,6 @@ export const mapWhatsAppInstanceToFrontend = (
   };
 };
 
-// Hook principal que combina dados WhatsApp com dados mock
 export const useUnifiedInstances = () => {
   const { isLoading, error } = useWhatsAppInstances();
 

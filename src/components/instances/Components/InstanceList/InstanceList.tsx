@@ -37,7 +37,6 @@ import {
   InstanceName,
   InstanceType,
   StatusContainer,
-  StatsBadge,
   ActionsContainer,
   ActionButton,
   ConnectButton,
@@ -148,7 +147,6 @@ export const InstanceList: React.FC<InstanceListProps> = ({
         <ListHeader $isDark={isDark}>
           <HeaderCell>Instância</HeaderCell>
           <HeaderCell>Status</HeaderCell>
-          <HeaderCell>Mensagens</HeaderCell>
           <HeaderCell>Última Atividade</HeaderCell>
           <HeaderCell>Ações</HeaderCell>
         </ListHeader>
@@ -166,9 +164,6 @@ export const InstanceList: React.FC<InstanceListProps> = ({
               </ListCell>
               <ListCell>
                 <div className="animate-pulse h-6 bg-gray-300 rounded w-20"></div>
-              </ListCell>
-              <ListCell>
-                <div className="animate-pulse h-4 bg-gray-300 rounded w-16"></div>
               </ListCell>
               <ListCell>
                 <div className="animate-pulse h-4 bg-gray-300 rounded w-24"></div>
@@ -227,7 +222,6 @@ export const InstanceList: React.FC<InstanceListProps> = ({
         <ListHeader $isDark={isDark}>
           <HeaderCell>Instância</HeaderCell>
           <HeaderCell>Status</HeaderCell>
-          <HeaderCell>Mensagens</HeaderCell>
           <HeaderCell>Última Atividade</HeaderCell>
           <HeaderCell>Ações</HeaderCell>
         </ListHeader>
@@ -281,12 +275,6 @@ export const InstanceList: React.FC<InstanceListProps> = ({
                       }}
                     />
                   </StatusContainer>
-                </ListCell>
-
-                <ListCell>
-                  <StatsBadge $isDark={isDark}>
-                    {instance.messagesCount.toLocaleString()}
-                  </StatsBadge>
                 </ListCell>
 
                 <ListCell>

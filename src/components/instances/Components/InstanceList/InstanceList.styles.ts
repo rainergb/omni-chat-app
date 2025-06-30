@@ -39,19 +39,19 @@ export const ListContainer = styled.div<StyledProps>`
 
 export const ListHeader = styled.div<StyledProps>`
   display: grid;
-  grid-template-columns: 2fr 1fr 1fr 1.5fr 1.5fr;
+  grid-template-columns: 2fr 1fr 1.5fr 1.5fr;
   gap: 1rem;
   padding: 1rem 1rem;
-  background-color: ${({ $isDark }) => ($isDark ? '#111827' : '#f9fafb')};
-  border-bottom: 1px solid ${({ $isDark }) => ($isDark ? '#374151' : '#e5e7eb')};
+  background-color: ${({ $isDark }) => ($isDark ? "#111827" : "#f9fafb")};
+  border-bottom: 1px solid ${({ $isDark }) => ($isDark ? "#374151" : "#e5e7eb")};
   font-weight: 600;
   font-size: 0.875rem;
-  color: ${({ $isDark }) => ($isDark ? '#d1d5db' : '#374151')};
-  
+  color: ${({ $isDark }) => ($isDark ? "#d1d5db" : "#374151")};
+
   @media (max-width: 768px) {
     grid-template-columns: 1fr;
     gap: 0.5rem;
-    
+
     & > *:not(:first-child) {
       display: none;
     }
@@ -72,27 +72,29 @@ export const ListContent = styled.div`
 
 export const ListRow = styled.div<StyledProps>`
   display: grid;
-  grid-template-columns: 2fr 1fr 1fr 1.5fr 1.5fr;
+  grid-template-columns: 2fr 1fr 1.5fr 1.5fr;
   gap: 1rem;
   padding: 1rem 1.5rem;
-  border-bottom: 1px solid ${({ $isDark }) => ($isDark ? '#374151' : '#e5e7eb')};
+  border-bottom: 1px solid ${({ $isDark }) => ($isDark ? "#374151" : "#e5e7eb")};
   transition: background-color 0.2s;
-  
+
   &:hover {
-    background-color: ${({ $isDark }) => ($isDark ? '#374151' : '#f9fafb')};
+    background-color: ${({ $isDark }) => ($isDark ? "#374151" : "#f9fafb")};
   }
-  
+
   &:last-child {
     border-bottom: none;
   }
-  
+
   @media (max-width: 768px) {
     grid-template-columns: 1fr;
     gap: 0.75rem;
     padding: 1rem;
   }
-  
-  ${({ $loading }) => $loading && `
+
+  ${({ $loading }) =>
+    $loading &&
+    `
     opacity: 0.7;
     pointer-events: none;
   `}

@@ -7,15 +7,12 @@ import {
   Facebook,
   Send,
   Link,
-  Info,
-  Clock,
-  Webhook
+  Clock
 } from "lucide-react";
 import { Instance } from "@/libs/types";
 import { useTheme } from "@/contexts/ThemeContext";
 import { Modal } from "@/components/ui/Modal";
 import { useCreateWhatsAppInstance } from "@/hooks/useWhatsAppInstances";
-import { whatsappConfig } from "@/config/whatsapp.config";
 
 const platformOptions = [
   {
@@ -50,7 +47,7 @@ interface CreateInstanceModalProps {
   onCreateInstance: (
     instance: Omit<Instance, "id" | "createdAt">
   ) => Promise<void>;
-  onWhatsAppInstanceCreated?: (instanceId: string) => void; // Nova prop para WhatsApp
+  onWhatsAppInstanceCreated?: (instanceId: string) => void;
 }
 
 export const CreateInstanceModal: React.FC<CreateInstanceModalProps> = ({
@@ -64,7 +61,6 @@ export const CreateInstanceModal: React.FC<CreateInstanceModalProps> = ({
   const [submitting, setSubmitting] = useState(false);
   const [selectedPlatform, setSelectedPlatform] = useState<string>("");
 
-  // Hook para criar instância WhatsApp real
   const createWhatsAppMutation = useCreateWhatsAppInstance();
 
   const handleCreateInstance = async () => {
@@ -72,7 +68,6 @@ export const CreateInstanceModal: React.FC<CreateInstanceModalProps> = ({
       const values = await form.validateFields();
       setSubmitting(true);
 
-      // Se for WhatsApp, usar API real
       if (values.type === "whatsapp") {
         const result = await createWhatsAppMutation.mutateAsync({
           canal: "whatsapp",
@@ -82,7 +77,6 @@ export const CreateInstanceModal: React.FC<CreateInstanceModalProps> = ({
         form.resetFields();
         message.success("Instância WhatsApp criada com sucesso!");
 
-        // Callback específico para WhatsApp com o ID da instância
         if (onWhatsAppInstanceCreated) {
           onWhatsAppInstanceCreated(result.id);
         }
@@ -91,7 +85,6 @@ export const CreateInstanceModal: React.FC<CreateInstanceModalProps> = ({
         return;
       }
 
-      // Para outras plataformas, usar sistema mock existente
       const newInstance: Omit<Instance, "id" | "createdAt"> = {
         name: values.name,
         type: values.type,
@@ -151,7 +144,6 @@ export const CreateInstanceModal: React.FC<CreateInstanceModalProps> = ({
       maxWidth="600px"
     >
       <Form form={form} layout="vertical" className="mt-6">
-        {/* Seleção de Plataforma */}
         <Form.Item
           name="type"
           label={
@@ -178,7 +170,6 @@ export const CreateInstanceModal: React.FC<CreateInstanceModalProps> = ({
           </Select>
         </Form.Item>
 
-        {/* Campo de Nome - apenas para outras plataformas */}
         {!isWhatsApp && (
           <Form.Item
             name="name"
@@ -204,7 +195,6 @@ export const CreateInstanceModal: React.FC<CreateInstanceModalProps> = ({
           </Form.Item>
         )}
 
-        {/* Tempo de envio - apenas para WhatsApp */}
         {isWhatsApp && (
           <Form.Item
             name="tempoEnvio"
@@ -235,7 +225,6 @@ export const CreateInstanceModal: React.FC<CreateInstanceModalProps> = ({
           </Form.Item>
         )}
 
-        {/* Webhook - apenas para outras plataformas */}
         {!isWhatsApp && (
           <Form.Item
             name="webhook"
@@ -255,101 +244,6 @@ export const CreateInstanceModal: React.FC<CreateInstanceModalProps> = ({
               }
             />
           </Form.Item>
-        )}
-
-        {/* Informações específicas do WhatsApp */}
-        {isWhatsApp && (
-          <>
-            {/* Informações sobre webhooks automáticos */}
-            <div
-              className={`p-4 rounded-lg border ${
-                isDark
-                  ? "bg-blue-900/20 border-blue-700 text-blue-300"
-                  : "bg-blue-50 border-blue-200 text-blue-700"
-              }`}
-            >
-              <div className="flex items-start space-x-3">
-                <Webhook size={16} className="mt-0.5 flex-shrink-0" />
-                <div className="space-y-2">
-                  <p className="font-medium">Webhooks Automáticos:</p>
-                  <ul className="text-sm space-y-1 list-disc list-inside ml-2">
-                    <li>Mensagens recebidas</li>
-                    <li>Status de chat</li>
-                    <li>Eventos de conexão</li>
-                    <li>Eventos de desconexão</li>
-                  </ul>
-                  <p className="text-xs opacity-75">
-                    Os webhooks serão configurados automaticamente para:{" "}
-                    {whatsappConfig.apiUrl}
-                  </p>
-                </div>
-              </div>
-            </div>
-
-            {/* Próximos passos para WhatsApp */}
-            <div
-              className={`p-4 rounded-lg border ${
-                isDark
-                  ? "bg-green-900/20 border-green-700 text-green-300"
-                  : "bg-green-50 border-green-200 text-green-700"
-              }`}
-            >
-              <div className="flex items-start space-x-3">
-                <MessageSquare size={16} className="mt-0.5 flex-shrink-0" />
-                <div>
-                  <p className="font-medium mb-2">Próximos passos:</p>
-                  <ol className="text-sm space-y-1 list-decimal list-inside ml-2">
-                    <li>A instância será criada no servidor</li>
-                    <li>Um QR Code será gerado automaticamente</li>
-                    <li>Escaneie o QR Code com seu WhatsApp</li>
-                    <li>A instância estará pronta para uso!</li>
-                  </ol>
-                </div>
-              </div>
-            </div>
-          </>
-        )}
-
-        {/* Informações gerais para outras plataformas */}
-        {!isWhatsApp && selectedPlatform && (
-          <div
-            className={`p-4 rounded-lg border ${
-              isDark
-                ? "bg-teal-900/20 border-teal-700 text-teal-300"
-                : "bg-teal-50 border-teal-200 text-teal-700"
-            }`}
-          >
-            <div className="flex items-start space-x-3">
-              <Info size={16} className="mt-0.5 flex-shrink-0" />
-              <div>
-                <p className="font-medium mb-2">Informações importantes:</p>
-                <ul className="text-sm space-y-1">
-                  <li>• A instância será criada no status Desconectado</li>
-                  <li>• Você precisará configurar a conexão</li>
-                  <li>• O webhook é opcional e pode ser configurado depois</li>
-                  <li>• Cada instância permite conexão com uma conta única</li>
-                </ul>
-              </div>
-            </div>
-          </div>
-        )}
-
-        {/* Mostrar erro se houver */}
-        {createWhatsAppMutation.error && (
-          <div className="mt-4">
-            <div
-              className={`p-3 rounded-lg border ${
-                isDark
-                  ? "bg-red-900/20 border-red-700 text-red-300"
-                  : "bg-red-50 border-red-200 text-red-700"
-              }`}
-            >
-              <p className="text-sm">
-                <strong>Erro ao criar instância WhatsApp:</strong>{" "}
-                {createWhatsAppMutation.error.message}
-              </p>
-            </div>
-          </div>
         )}
       </Form>
     </Modal>

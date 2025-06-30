@@ -26,9 +26,17 @@ const mapWhatsAppToInstance = (whatsapp: WhatsAppInstance): Instance => ({
       : whatsapp.status === "connecting"
       ? "connecting"
       : "disconnected",
-  lastActivity: whatsapp.updatedAt?.toISOString() || new Date().toISOString(),
+  lastActivity: whatsapp.updatedAt
+    ? typeof whatsapp.updatedAt === "string"
+      ? whatsapp.updatedAt
+      : new Date(whatsapp.updatedAt).toISOString()
+    : new Date().toISOString(),
   messagesCount: 0,
-  createdAt: whatsapp.createdAt?.toISOString() || new Date().toISOString(),
+  createdAt: whatsapp.createdAt
+    ? typeof whatsapp.createdAt === "string"
+      ? whatsapp.createdAt
+      : new Date(whatsapp.createdAt).toISOString()
+    : new Date().toISOString(),
   webhook: whatsapp.webHookMensagem,
   avatar: whatsapp.foto || undefined
 });

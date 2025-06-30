@@ -18,7 +18,6 @@ export const useInstances = () => {
     loadMockInstances
   } = useInstanceStore();
 
-  // Carrega instâncias na inicialização
   useEffect(() => {
     if (instances.length === 0) {
       loadMockInstances();
@@ -30,7 +29,6 @@ export const useInstances = () => {
       try {
         setLoading(true);
 
-        // Simula delay da API
         await new Promise((resolve) => setTimeout(resolve, 1500));
 
         addInstance(instanceData);
@@ -50,7 +48,6 @@ export const useInstances = () => {
       try {
         setLoading(true);
 
-        // Simula delay da API
         await new Promise((resolve) => setTimeout(resolve, 800));
 
         updateInstance(id, updates);
@@ -70,7 +67,6 @@ export const useInstances = () => {
       try {
         setLoading(true);
 
-        // Simula delay da API
         await new Promise((resolve) => setTimeout(resolve, 1000));
 
         deleteInstance(id);
@@ -96,9 +92,8 @@ export const useInstances = () => {
           lastActivity: new Date().toISOString()
         });
 
-        // Simula processo de conexão
         setTimeout(async () => {
-          const success = Math.random() > 0.3; // 70% de chance de sucesso
+          const success = Math.random() > 0.3;
 
           if (success) {
             await handleUpdateInstance(id, {
