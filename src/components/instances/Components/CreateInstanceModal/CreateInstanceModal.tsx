@@ -1,4 +1,3 @@
-// src/components/instances/Components/CreateInstanceModal/CreateInstanceModal.tsx (Adaptado)
 import React, { useState } from "react";
 import { Form, Input, Select, message, InputNumber } from "antd";
 import {
@@ -11,8 +10,20 @@ import {
 } from "lucide-react";
 import { Instance } from "@/libs/types";
 import { useTheme } from "@/contexts/ThemeContext";
-import { Modal } from "@/components/ui/Modal";
+import { Modal } from "@/components/ui/Modal/Modal";
 import { useCreateWhatsAppInstance } from "@/hooks/useWhatsAppInstances";
+import {
+  TitleContainer,
+  StyledForm,
+  FormLabel,
+  PlatformOptionContainer,
+  StyledInput,
+  StyledSelect,
+  StyledInputNumber,
+  TimeInputLabel,
+  WebhookInputContainer,
+  GlobalButtonStyles
+} from "./CreateInstanceModal.styles";
 
 const platformOptions = [
   {
@@ -88,7 +99,7 @@ export const CreateInstanceModal: React.FC<CreateInstanceModalProps> = ({
       const newInstance: Omit<Instance, "id" | "createdAt"> = {
         name: values.name,
         type: values.type,
-        status: "disconnected",
+        status: "DISCONNECTED",
         lastActivity: new Date().toISOString(),
         messagesCount: 0,
         webhook: values.webhook || undefined,
@@ -123,129 +134,149 @@ export const CreateInstanceModal: React.FC<CreateInstanceModalProps> = ({
   const isLoading = submitting || createWhatsAppMutation.isPending;
 
   return (
-    <Modal
-      title={
-        <div className="flex items-center space-x-2">
-          {isWhatsApp && <MessageSquare size={20} className="text-green-500" />}
-          <span>Criar Nova Instância{isWhatsApp ? " WhatsApp" : ""}</span>
-        </div>
-      }
-      open={open}
-      onCancel={handleCancel}
-      okText="Criar Instância"
-      okButtonProps={{
-        loading: isLoading,
-        onClick: handleCreateInstance,
-        className: isWhatsApp
-          ? "bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 border-0 shadow-lg hover:shadow-xl transition-all duration-200"
-          : "bg-gradient-to-r from-teal-500 to-slate-800 hover:from-teal-600 hover:to-slate-900 border-0 shadow-lg hover:shadow-xl transition-all duration-200"
-      }}
-      width="90%"
-      maxWidth="600px"
-    >
-      <Form form={form} layout="vertical" className="mt-6">
-        <Form.Item
-          name="type"
-          label={
-            <span className={isDark ? "text-gray-200" : "text-gray-700"}>
-              Plataforma
-            </span>
-          }
-          rules={[{ required: true, message: "Selecione uma plataforma" }]}
-        >
-          <Select
-            placeholder="Selecione a plataforma"
-            size="large"
-            className={isDark ? "dark-select" : ""}
-            onChange={handlePlatformChange}
+    <GlobalButtonStyles>
+      <Modal
+        title={
+          <TitleContainer>
+            {isWhatsApp && <MessageSquare size={20} color="#22c55e" />}
+            <span>Criar Nova Instância{isWhatsApp ? " WhatsApp" : ""}</span>
+          </TitleContainer>
+        }
+        open={open}
+        onCancel={handleCancel}
+        showFooter={false}
+        width="90%"
+        maxWidth="600px"
+        footer={
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "flex-end",
+              padding: "16px 0"
+            }}
           >
-            {platformOptions.map((option) => (
-              <Select.Option key={option.value} value={option.value}>
-                <div className="flex items-center space-x-2">
-                  <span style={{ color: option.color }}>{option.icon}</span>
-                  <span>{option.label}</span>
-                </div>
-              </Select.Option>
-            ))}
-          </Select>
-        </Form.Item>
+            <button
+              className={`ant-btn ant-btn-primary ant-btn-lg ${
+                isWhatsApp ? "whatsapp-button" : "default-button"
+              }`}
+              onClick={handleCreateInstance}
+              disabled={isLoading}
+              style={{
+                background: isWhatsApp
+                  ? "linear-gradient(135deg, #22c55e 0%, #16a34a 100%)"
+                  : "linear-gradient(135deg, #00b9ae 0%, #1f2937 100%)",
+                border: "0",
+                boxShadow: isWhatsApp
+                  ? "0 4px 14px 0 rgba(34, 197, 94, 0.3)"
+                  : "0 4px 14px 0 rgba(0, 185, 174, 0.3)",
+                borderColor: "transparent",
+                color: "white",
+                fontWeight: "500"
+              }}
+            >
+              {isLoading ? "Criando..." : "Criar Instância"}
+            </button>
+          </div>
+        }
+      >
+        <StyledForm>
+          <Form form={form} layout="vertical">
+            <Form.Item
+              name="type"
+              label={<FormLabel $isDark={isDark}>Plataforma</FormLabel>}
+              rules={[{ required: true, message: "Selecione uma plataforma" }]}
+            >
+              <StyledSelect $isDark={isDark}>
+                <Select
+                  placeholder="Selecione a plataforma"
+                  size="large"
+                  onChange={handlePlatformChange}
+                >
+                  {platformOptions.map((option) => (
+                    <Select.Option key={option.value} value={option.value}>
+                      <PlatformOptionContainer>
+                        <span style={{ color: option.color }}>
+                          {option.icon}
+                        </span>
+                        <span>{option.label}</span>
+                      </PlatformOptionContainer>
+                    </Select.Option>
+                  ))}
+                </Select>
+              </StyledSelect>
+            </Form.Item>
 
-        {!isWhatsApp && (
-          <Form.Item
-            name="name"
-            label={
-              <span className={isDark ? "text-gray-200" : "text-gray-700"}>
-                Nome da Instância
-              </span>
-            }
-            rules={[
-              { required: true, message: "Nome é obrigatório" },
-              { min: 3, message: "Nome deve ter pelo menos 3 caracteres" },
-              { max: 50, message: "Nome deve ter no máximo 50 caracteres" }
-            ]}
-          >
-            <Input
-              placeholder="Ex: Instagram Principal"
-              autoFocus
-              size="large"
-              className={
-                isDark ? "bg-gray-700 border-gray-600 text-gray-100" : ""
-              }
-            />
-          </Form.Item>
-        )}
+            {!isWhatsApp && (
+              <Form.Item
+                name="name"
+                label={
+                  <FormLabel $isDark={isDark}>Nome da Instância</FormLabel>
+                }
+                rules={[
+                  { required: true, message: "Nome é obrigatório" },
+                  { min: 3, message: "Nome deve ter pelo menos 3 caracteres" },
+                  { max: 50, message: "Nome deve ter no máximo 50 caracteres" }
+                ]}
+              >
+                <StyledInput $isDark={isDark}>
+                  <Input
+                    placeholder="Ex: Instagram Principal"
+                    autoFocus
+                    size="large"
+                  />
+                </StyledInput>
+              </Form.Item>
+            )}
 
-        {isWhatsApp && (
-          <Form.Item
-            name="tempoEnvio"
-            label={
-              <div className="flex items-center space-x-2">
-                <Clock size={16} />
-                <span className={isDark ? "text-gray-200" : "text-gray-700"}>
-                  Tempo de Envio (ms)
-                </span>
-              </div>
-            }
-            rules={[
-              { required: true, message: "Tempo de envio é obrigatório" },
-              { type: "number", min: 1000, message: "Mínimo de 1000ms" },
-              { type: "number", max: 30000, message: "Máximo de 30000ms" }
-            ]}
-            initialValue={3000}
-          >
-            <InputNumber
-              placeholder="3000"
-              size="large"
-              className="w-full"
-              min={1000}
-              max={30000}
-              step={500}
-              addonAfter="ms"
-            />
-          </Form.Item>
-        )}
+            {isWhatsApp && (
+              <Form.Item
+                name="tempoEnvio"
+                label={
+                  <TimeInputLabel>
+                    <Clock size={16} />
+                    <FormLabel $isDark={isDark}>Tempo de Envio (ms)</FormLabel>
+                  </TimeInputLabel>
+                }
+                rules={[
+                  { required: true, message: "Tempo de envio é obrigatório" },
+                  { type: "number", min: 1000, message: "Mínimo de 1000ms" },
+                  { type: "number", max: 30000, message: "Máximo de 30000ms" }
+                ]}
+                initialValue={3000}
+              >
+                <StyledInputNumber>
+                  <InputNumber
+                    placeholder="3000"
+                    size="large"
+                    min={1000}
+                    max={30000}
+                    step={500}
+                    addonAfter="ms"
+                  />
+                </StyledInputNumber>
+              </Form.Item>
+            )}
 
-        {!isWhatsApp && (
-          <Form.Item
-            name="webhook"
-            label={
-              <span className={isDark ? "text-gray-200" : "text-gray-700"}>
-                Webhook URL (Opcional)
-              </span>
-            }
-            rules={[{ type: "url", message: "Digite uma URL válida" }]}
-          >
-            <Input
-              placeholder="https://seu-webhook.com/endpoint"
-              addonBefore={<Link size={16} />}
-              size="large"
-              className={
-                isDark ? "bg-gray-700 border-gray-600 text-gray-100" : ""
-              }
-            />
-          </Form.Item>
-        )}
-      </Form>
-    </Modal>
+            {!isWhatsApp && (
+              <Form.Item
+                name="webhook"
+                label={
+                  <FormLabel $isDark={isDark}>Webhook URL (Opcional)</FormLabel>
+                }
+                rules={[{ type: "url", message: "Digite uma URL válida" }]}
+              >
+                <WebhookInputContainer $isDark={isDark}>
+                  <Input
+                    placeholder="https://seu-webhook.com/endpoint"
+                    addonBefore={<Link size={16} />}
+                    size="large"
+                  />
+                </WebhookInputContainer>
+              </Form.Item>
+            )}
+          </Form>
+        </StyledForm>
+      </Modal>
+    </GlobalButtonStyles>
   );
 };

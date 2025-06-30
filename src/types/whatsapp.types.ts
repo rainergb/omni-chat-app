@@ -48,7 +48,7 @@ export interface WhatsAppMessage {
 
 export interface ConnectionStatus {
   instanceId: string;
-  status: "connected" | "disconnected" | "connecting" | "error";
+  status: "CONNECTED" | "DISCONNECTED" | "connecting" | "error";
   timestamp: number;
 }
 
@@ -61,21 +61,21 @@ export interface WebSocketEvents {
 
 export const mapWhatsAppStatusToFrontend = (
   status?: string
-): "connected" | "disconnected" | "connecting" | "error" => {
+): "CONNECTED" | "DISCONNECTED" | "connecting" | "error" => {
   switch (status?.toLowerCase()) {
-    case "connected":
+    case "CONNECTED":
     case "open":
-      return "connected";
+      return "CONNECTED";
     case "connecting":
     case "initializing":
       return "connecting";
-    case "disconnected":
+    case "DISCONNECTED":
     case "closed":
-      return "disconnected";
+      return "DISCONNECTED";
     case "error":
     case "failed":
       return "error";
     default:
-      return "disconnected";
+      return "DISCONNECTED";
   }
 };

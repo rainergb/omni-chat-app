@@ -95,9 +95,9 @@ export const getThemeColors = (isDark: boolean): ThemeColors => {
 
 // Cores específicas para status (usando a nova paleta)
 export const statusColors = {
-  connected: "#00B9AE", // Light sea green
+  CONNECTED: "#00B9AE", // Light sea green
   connecting: "#1F2937", // Gunmetal
-  disconnected: "#BA1A1A", // Cornell red
+  DISCONNECTED: "#BA1A1A", // Cornell red
   error: "#BA1A1A", // Cornell red
   default: "#0F172A" // Oxford Blue
 } as const;
@@ -112,8 +112,8 @@ export const getStatusColor = (status: string): string => {
 // Função helper para obter texto de status
 export const getStatusText = (status: string): string => {
   const texts = {
-    connected: "Conectado",
-    disconnected: "Desconectado",
+    CONNECTED: "Conectado",
+    DISCONNECTED: "Desconectado",
     connecting: "Conectando...",
     error: "Erro"
   };
@@ -123,9 +123,9 @@ export const getStatusText = (status: string): string => {
 // Badge colors para status
 export const getStatusBadgeColor = (status: string): string => {
   const colors = {
-    connected: "green", // Manteremos verde para compatibilidade com Ant Design
+    CONNECTED: "green", // Manteremos verde para compatibilidade com Ant Design
     connecting: "orange",
-    disconnected: "red",
+    DISCONNECTED: "red",
     error: "red"
   };
   return colors[status as keyof typeof colors] || "default";

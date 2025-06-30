@@ -26,7 +26,7 @@ export const useChat = () => {
   const { instances } = useInstanceStore();
 
   const availableInstances = useMemo(() => {
-    return instances.filter((instance) => instance.status === "connected");
+    return instances.filter((instance) => instance.status === "CONNECTED");
   }, [instances]);
 
   // Chats filtrados

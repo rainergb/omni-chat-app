@@ -1,3 +1,4 @@
+// src/components/instances/Instance.tsx (trecho relevante corrigido)
 import React, { useState } from "react";
 import { message } from "antd";
 import { InstanceTable } from "@/components/instances/Components/InstanceTable/InstanceTable";
@@ -21,11 +22,15 @@ const mapWhatsAppToInstance = (whatsapp: WhatsAppInstance): Instance => ({
   name: whatsapp.canal,
   type: "whatsapp",
   status:
-    whatsapp.status === "open"
-      ? "connected"
-      : whatsapp.status === "connecting"
+    whatsapp.status?.toLowerCase?.() === "open"
+      ? "CONNECTED"
+      : whatsapp.status?.toLowerCase?.() === "connecting"
       ? "connecting"
-      : "disconnected",
+      : whatsapp.status?.toLowerCase?.() === "CONNECTED"
+      ? "CONNECTED"
+      : whatsapp.status?.toLowerCase?.() === "error"
+      ? "error"
+      : "DISCONNECTED",
   lastActivity: whatsapp.updatedAt
     ? typeof whatsapp.updatedAt === "string"
       ? whatsapp.updatedAt
@@ -47,12 +52,10 @@ export const InstancesPage: React.FC = () => {
   const [typeFilter, setTypeFilter] = useState<string>("all");
   const [viewMode, setViewMode] = useState<ViewMode>("cards");
   const [createModalOpen, setCreateModalOpen] = useState(false);
+
+  // Estados do QR Modal - simplificados
   const [qrModalOpen, setQrModalOpen] = useState(false);
-  const [selectedInstanceForQR, setSelectedInstanceForQR] = useState<{
-    id: string;
-    name: string;
-    isWhatsApp: boolean;
-  } | null>(null);
+  const [selectedInstanceId, setSelectedInstanceId] = useState<string>("");
 
   const {
     data: whatsappInstances,
@@ -110,26 +113,36 @@ export const InstancesPage: React.FC = () => {
   const handleWhatsAppInstanceCreated = (instanceId: string) => {
     message.success("Instância WhatsApp criada! Gerando QR Code...");
 
-    setSelectedInstanceForQR({
-      id: instanceId,
-      name: `WhatsApp ${instanceId}`,
-      isWhatsApp: true
-    });
+    // Abrir o modal QR imediatamente
+    setSelectedInstanceId(instanceId);
     setQrModalOpen(true);
   };
 
   const handleConnect = async (instanceId: string) => {
+    console.log("handleConnect called with instanceId:", instanceId);
+
     const instance = mappedInstances.find((i) => i.id === instanceId);
-    if (!instance) return;
+    if (!instance) {
+      console.log("Instance not found:", instanceId);
+      message.error("Instância não encontrada");
+      return;
+    }
+
+    console.log("Opening QR modal for instance:", instance);
 
     try {
-      setSelectedInstanceForQR({
-        id: instanceId,
-        name: instance.name,
-        isWhatsApp: true
-      });
+      // Definir o ID da instância e abrir o modal
+      setSelectedInstanceId(instanceId);
       setQrModalOpen(true);
-    } catch {
+
+      console.log(
+        "QR Modal should be open now - qrModalOpen:",
+        true,
+        "selectedInstanceId:",
+        instanceId
+      );
+    } catch (error) {
+      console.error("Error in handleConnect:", error);
       message.error("Erro ao conectar instância");
     }
   };
@@ -156,7 +169,7 @@ export const InstancesPage: React.FC = () => {
     const instance = mappedInstances.find((i) => i.id === instanceId);
     if (!instance) return;
 
-    if (instance.status === "connected") {
+    if (instance.status === "CONNECTED") {
       message.info(`Abrindo chat para ${instance.name}`);
     } else {
       message.warning("Instância deve estar conectada para abrir chat");
@@ -173,9 +186,22 @@ export const InstancesPage: React.FC = () => {
     }
   };
 
+  const handleCloseQRModal = () => {
+    console.log("Closing QR Modal");
+    setQrModalOpen(false);
+    setSelectedInstanceId("");
+  };
+
   if (whatsappError) {
     console.error("Erro ao carregar instâncias WhatsApp:", whatsappError);
   }
+
+  console.log(
+    "Render - qrModalOpen:",
+    qrModalOpen,
+    "selectedInstanceId:",
+    selectedInstanceId
+  );
 
   return (
     <div className="space-y-6">
@@ -218,17 +244,13 @@ export const InstancesPage: React.FC = () => {
         onWhatsAppInstanceCreated={handleWhatsAppInstanceCreated}
       />
 
-      {selectedInstanceForQR && (
-        <QRCodeModal
-          isOpen={qrModalOpen}
-          onClose={() => {
-            setQrModalOpen(false);
-            setSelectedInstanceForQR(null);
-          }}
-          id={selectedInstanceForQR.id}
-          loading={false}
-        />
-      )}
+      {/* Modal QR Code - sempre renderizado, controlado apenas pelo isOpen */}
+      <QRCodeModal
+        isOpen={qrModalOpen}
+        onClose={handleCloseQRModal}
+        id={selectedInstanceId}
+        loading={false}
+      />
     </div>
   );
 };

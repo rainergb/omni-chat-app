@@ -8,8 +8,8 @@ export const useInstancesData = () => {
   const { isDark } = useTheme();
   const { instances } = useInstances();
 
-  const connectedInstances = instances.filter(
-    (i) => i.status === "connected"
+  const CONNECTEDInstances = instances.filter(
+    (i) => i.status === "CONNECTED"
   ).length;
   const totalMessages = instances.reduce((acc, i) => acc + i.messagesCount, 0);
   const totalInstances = instances.length;
@@ -25,7 +25,7 @@ export const useInstancesData = () => {
     },
     {
       label: "Conectadas",
-      value: connectedInstances,
+      value: CONNECTEDInstances,
       icon: <Activity size={16} />,
       color: "text-green-500"
     },
@@ -41,7 +41,7 @@ export const useInstancesData = () => {
     content,
     stats,
     totalInstances,
-    connectedInstances,
+    CONNECTEDInstances,
     totalMessages
   };
 };

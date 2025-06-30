@@ -2,7 +2,7 @@ export interface Instance {
   id: string;
   name: string;
   type: "whatsapp" | "instagram" | "facebook" | "telegram";
-  status: "connected" | "disconnected" | "connecting" | "error";
+  status: "CONNECTED" | "DISCONNECTED" | "connecting" | "error";
   lastActivity: string;
   messagesCount: number;
   createdAt: string;

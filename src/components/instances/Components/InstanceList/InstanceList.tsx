@@ -114,7 +114,7 @@ export const InstanceList: React.FC<InstanceListProps> = ({
       label: "Ver QR Code",
       icon: <QrCode size={16} />,
       onClick: () => handleShowQR(instance.id),
-      disabled: instance.status === "connected"
+      disabled: instance.status === "CONNECTED"
     },
     {
       key: "settings",
@@ -134,7 +134,7 @@ export const InstanceList: React.FC<InstanceListProps> = ({
   ];
 
   const handleConnectionToggle = (instance: Instance) => {
-    if (instance.status === "connected") {
+    if (instance.status === "CONNECTED") {
       onDisconnect(instance.id);
     } else {
       onConnect(instance.id);
@@ -228,7 +228,7 @@ export const InstanceList: React.FC<InstanceListProps> = ({
 
         <ListContent>
           {filteredInstances.map((instance) => {
-            const isConnected = instance.status === "connected";
+            const isConnected = instance.status === "CONNECTED";
             const isConnecting = instance.status === "connecting";
 
             return (

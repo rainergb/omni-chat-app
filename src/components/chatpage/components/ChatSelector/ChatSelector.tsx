@@ -30,9 +30,9 @@ export const ChatSelector: React.FC<ChatSelectorProps> = ({
   const { setActiveTab } = useNavigation();
   const { instances } = useInstanceStore();
 
-  const disconnectedInstances = instances.filter(
+  const DISCONNECTEDInstances = instances.filter(
     (instance) =>
-      instance.status === "disconnected" || instance.status === "error"
+      instance.status === "DISCONNECTED" || instance.status === "error"
   );
 
   const handleGoToInstances = () => {
@@ -93,14 +93,14 @@ export const ChatSelector: React.FC<ChatSelectorProps> = ({
           Conecte uma das instâncias abaixo ou gerencie suas instâncias.
         </SelectorDescription>
 
-        {disconnectedInstances.length > 0 && (
+        {DISCONNECTEDInstances.length > 0 && (
           <InstancesList $isDark={isDark}>
-            {disconnectedInstances.map((instance) => (
+            {DISCONNECTEDInstances.map((instance) => (
               <InstanceItem key={instance.id} $isDark={isDark}>
                 <InstanceInfo>
                   <InstanceName $isDark={isDark}>{instance.name}</InstanceName>
                   <InstanceStatus $isDark={isDark} $status={instance.status}>
-                    {instance.status === "disconnected"
+                    {instance.status === "DISCONNECTED"
                       ? "Desconectado"
                       : "Erro"}
                   </InstanceStatus>
