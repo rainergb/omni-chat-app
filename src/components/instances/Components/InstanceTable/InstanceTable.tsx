@@ -5,7 +5,6 @@ import { Grid3X3, Plus } from "lucide-react";
 import { ViewMode, Instance } from "@/libs/types";
 import { InstanceCard } from "../InstanceCard/InstanceCard";
 import { InstanceList } from "../InstanceList/InstanceList";
-import { QRCodeModal } from "../QRCodeModal/QRCodeModal";
 import { useTheme } from "@/contexts/ThemeContext";
 import {
   Container,
@@ -18,6 +17,7 @@ import {
   EmptyDescription,
   CreateButton
 } from "./InstanceTable.styles";
+import QRCodeModal from "../QRCodeModal/QRCodeModal";
 
 interface InstanceTableProps {
   instances: Instance[];
@@ -152,9 +152,10 @@ export const InstanceTable: React.FC<InstanceTableProps> = ({
 
       {/* Modal QR Code */}
       <QRCodeModal
-        open={qrModalOpen}
+        isOpen={qrModalOpen}
         onClose={() => setQrModalOpen(false)}
-        instanceId={selectedInstanceId}
+        id={selectedInstanceId}
+        loading={false}
       />
     </Container>
   );

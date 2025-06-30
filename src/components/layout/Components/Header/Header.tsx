@@ -3,7 +3,6 @@ import { MessageOutlined, SettingOutlined } from "@ant-design/icons";
 import { useTheme } from "@/contexts/ThemeContext";
 import { useNavigation, NavigationTab } from "@/contexts/NavigationContext";
 import { ThemeToggle } from "@/components/ui/ThemeToggle";
-import { Segmented } from "@/components/ui/Segmented";
 import {
   StyledHeader,
   HeaderContainer,
@@ -13,6 +12,7 @@ import {
   NavigationContainer,
   ThemeToggleContainer
 } from "./Header.styles";
+import { Segmented } from "@/components/ui";
 
 export const Header: React.FC = () => {
   const { isDark } = useTheme();

@@ -3,7 +3,7 @@ import { message } from "antd";
 import { InstanceTable } from "@/components/instances/Components/InstanceTable/InstanceTable";
 import { InstanceHeader } from "./Components/InstanceHeader/InstanceHeader";
 import { CreateInstanceModal } from "./Components/CreateInstanceModal/CreateInstanceModal";
-import { QRCodeModal } from "./Components/QRCodeModal/QRCodeModal";
+import QRCodeModal from "./Components/QRCodeModal/QRCodeModal";
 import {
   useWhatsAppInstances,
   useCreateWhatsAppInstance,
@@ -164,8 +164,13 @@ export const InstancesPage: React.FC = () => {
   };
 
   const handleRefresh = () => {
-    refetchWhatsApp();
-    message.info("Atualizando lista de instâncias...");
+    try {
+      refetchWhatsApp();
+      message.info("Atualizando lista de instâncias...");
+    } catch (error) {
+      console.error("Erro ao atualizar instâncias:", error);
+      message.error("Erro ao atualizar lista de instâncias");
+    }
   };
 
   if (whatsappError) {
@@ -215,13 +220,13 @@ export const InstancesPage: React.FC = () => {
 
       {selectedInstanceForQR && (
         <QRCodeModal
-          open={qrModalOpen}
+          isOpen={qrModalOpen}
           onClose={() => {
             setQrModalOpen(false);
             setSelectedInstanceForQR(null);
           }}
-          instanceId={selectedInstanceForQR.id}
-          isWhatsApp={selectedInstanceForQR.isWhatsApp}
+          id={selectedInstanceForQR.id}
+          loading={false}
         />
       )}
     </div>

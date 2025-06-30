@@ -23,7 +23,6 @@ import {
   getStatusText
 } from "@/libs/utils";
 import { useTheme } from "@/contexts/ThemeContext";
-import { QRCodeModal } from "../QRCodeModal/QRCodeModal";
 import {
   ListContainer,
   ListHeader,
@@ -50,6 +49,7 @@ import {
   WebhookIndicator,
   WebhookDot
 } from "./InstanceList.styles";
+import QRCodeModal from "../QRCodeModal/QRCodeModal";
 
 interface InstanceListProps {
   instances: Instance[];
@@ -101,7 +101,7 @@ export const InstanceList: React.FC<InstanceListProps> = ({
 
   const handleShowQR = (instanceId: string) => {
     setSelectedInstanceId(instanceId);
-    setQrModalOpen(true);
+    setTimeout(() => setQrModalOpen(true), 100); // Delay para evitar conflito com Dropdown
   };
 
   const handleOpenChat = (instanceId: string) => {
@@ -346,9 +346,10 @@ export const InstanceList: React.FC<InstanceListProps> = ({
       </ListContainer>
 
       <QRCodeModal
-        open={qrModalOpen}
+        isOpen={qrModalOpen}
         onClose={() => setQrModalOpen(false)}
-        instanceId={selectedInstanceId}
+        id={selectedInstanceId}
+        loading={false}
       />
     </>
   );

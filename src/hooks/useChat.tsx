@@ -2,11 +2,7 @@ import { useCallback, useEffect, useMemo } from "react";
 import { message } from "antd";
 import { useChatStore } from "@/store/chatStore";
 import { useInstanceStore } from "@/store/instanceStore";
-import {
-  Chat,
-  ChatFilter,
-  MessageType
-} from "@/components/chatpage/types/chat.types";
+import { Chat, ChatFilter } from "@/components/chatpage/types/chat.types";
 
 export const useChat = () => {
   const {
@@ -24,14 +20,11 @@ export const useChat = () => {
     setFilter,
     markAsRead,
     addTypingIndicator,
-    removeTypingIndicator,
-    loadMockMessages,
-    sendMockMessage
+    removeTypingIndicator
   } = useChatStore();
 
   const { instances } = useInstanceStore();
 
-  // Instâncias conectadas disponíveis para chat
   const availableInstances = useMemo(() => {
     return instances.filter((instance) => instance.status === "connected");
   }, [instances]);
@@ -86,33 +79,22 @@ export const useChat = () => {
   }, [filteredChats]); // Selecionar chat
   const handleSelectChat = useCallback(
     async (chat: Chat) => {
-      // Sempre definir o chat selecionado para garantir re-renderização
       setSelectedChat(chat);
-
-      // Carregar mensagens se ainda não foram carregadas
-      if (!messages[chat.id]) {
-        await loadMockMessages(chat.id);
-      }
     },
-    [messages, setSelectedChat, loadMockMessages]
+    [setSelectedChat]
   );
 
   // Enviar mensagem
   const handleSendMessage = useCallback(
-    async (content: string, type: MessageType = "text") => {
+    async (content: string) => {
       if (!selectedChat || !content.trim()) {
         message.warning("Digite uma mensagem válida");
         return;
       }
 
-      try {
-        await sendMockMessage(selectedChat.id, content.trim(), type);
-      } catch (error) {
-        message.error("Erro ao enviar mensagem");
-        console.error("Erro ao enviar mensagem:", error);
-      }
+      message.info("Função de envio real não implementada");
     },
-    [selectedChat, sendMockMessage]
+    [selectedChat]
   );
 
   // Buscar chats
