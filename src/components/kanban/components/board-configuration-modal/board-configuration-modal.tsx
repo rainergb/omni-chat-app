@@ -1,5 +1,4 @@
-// components/BoardConfigurationModal.tsx - Componente de configuração avançada
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   Modal,
   Tabs,
@@ -39,7 +38,6 @@ interface BoardConfigurationModalProps {
   onExport: () => void;
   onImport: (file: File) => void;
   onReset: () => void;
-  // Props opcionais para funcionalidades avançadas
   columns?: Array<{ id: string; title: string; taskCount?: number }>;
   onSetColumnWipLimit?: (columnId: string, limit: number) => void;
   onAddTemplate?: (template: Omit<ColumnTemplate, 'id'>) => void;
@@ -62,6 +60,12 @@ export default function BoardConfigurationModal({
   const [form] = Form.useForm();
   const [loading, setLoading] = useState(false);
   const [editingTemplate, setEditingTemplate] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (isOpen) {
+      form.setFieldsValue(configuration);
+    }
+  }, [isOpen, configuration, form]);
 
   const handleSave = async () => {
     try {
@@ -95,6 +99,7 @@ export default function BoardConfigurationModal({
       open={isOpen}
       onCancel={onClose}
       width={600}
+      destroyOnHidden
       footer={[
         <Button key="cancel" onClick={onClose}>
           Cancelar
@@ -199,21 +204,6 @@ export default function BoardConfigurationModal({
             >
               <InputNumber min={1} max={100} style={{ width: '100%' }} />
             </Form.Item>
-
-            <div
-              style={{
-                marginTop: 16,
-                padding: 16,
-                backgroundColor: '#f8fafc',
-                borderRadius: 8,
-              }}
-            >
-              <Text type="secondary">
-                <strong>WIP (Work in Progress):</strong> Limite a quantidade de
-                tarefas em cada coluna para melhorar o fluxo de trabalho e
-                identificar gargalos.
-              </Text>
-            </div>
           </Form>
         </TabPane>
 

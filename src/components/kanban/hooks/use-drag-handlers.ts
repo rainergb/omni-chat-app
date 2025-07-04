@@ -4,13 +4,32 @@ import { DragDropType } from '../types/drag-drop';
 import { KanbanColumn } from '../types/kanban-column';
 import { Task, TaskStatus } from '../types/task-status';
 
-// Helper function local
-const getStatusByColumnId = (columnId: string): TaskStatus => {
-  // Implementação temporária - pode ser customizada baseada no columnId
-  if (columnId.includes('progress')) return TaskStatus.IN_PROGRESS;
-  if (columnId.includes('done') || columnId.includes('complete'))
+const getStatusByColumnId = (
+  columnId: string,
+  columns: KanbanColumn[]
+): TaskStatus => {
+  const column = columns.find((col) => col.id === columnId);
+  if (!column) return TaskStatus.NOT_STARTED;
+
+  const title = column.title.toLowerCase();
+
+  if (title.includes('progress') || title.includes('andamento'))
+    return TaskStatus.IN_PROGRESS;
+  if (
+    title.includes('done') ||
+    title.includes('complete') ||
+    title.includes('conclu')
+  )
     return TaskStatus.COMPLETED;
-  if (columnId.includes('pending')) return TaskStatus.PENDING;
+  if (title.includes('pending') || title.includes('pendente'))
+    return TaskStatus.PENDING;
+  if (title.includes('waiting') || title.includes('aguardando'))
+    return TaskStatus.WAITING_TASK;
+  if (title.includes('delay') || title.includes('atras'))
+    return TaskStatus.DELAYED;
+  if (title.includes('cancel') || title.includes('cancel'))
+    return TaskStatus.CANCELED;
+
   return TaskStatus.NOT_STARTED;
 };
 
@@ -67,50 +86,55 @@ export function useDragHandlers({
       const sourceColumnId = source.droppableId;
       const destinationColumnId = destination.droppableId;
       const sourceColumn = tasks[sourceColumnId];
-      const movedTask = sourceColumn[source.index];
 
-      if (!movedTask) {
-        console.error('Task not found');
+      if (!sourceColumn || !sourceColumn[source.index]) {
+        console.error('Task not found in source column');
         return;
       }
 
-      // Mover tarefa
-      moveTask(
-        movedTask.id,
-        sourceColumnId,
-        destinationColumnId,
-        destination.index
-      );
+      const movedTask = sourceColumn[source.index];
 
-      // Atualizar posições da coluna de destino
-      const destinationColumn = [...(tasks[destinationColumnId] || [])];
-      const taskWithNewColumn = { ...movedTask, columnId: destinationColumnId };
-      destinationColumn.splice(destination.index, 0, taskWithNewColumn);
+      try {
+        moveTask(
+          movedTask.id,
+          sourceColumnId,
+          destinationColumnId,
+          destination.index
+        );
 
-      const newTaskIds = destinationColumn.map((task) => task.id);
-      updateTaskPositions(destinationColumnId, newTaskIds);
+        const destinationColumn = [...(tasks[destinationColumnId] || [])];
+        const taskWithNewColumn = {
+          ...movedTask,
+          columnId: destinationColumnId,
+          status: getStatusByColumnId(destinationColumnId, columns),
+        };
+        destinationColumn.splice(destination.index, 0, taskWithNewColumn);
 
-      // Se mudou de coluna, também atualizar a coluna de origem
-      if (sourceColumnId !== destinationColumnId) {
-        const sourceTaskIds = sourceColumn
-          .filter((task) => task.id !== movedTask.id)
-          .map((task) => task.id);
-        updateTaskPositions(sourceColumnId, sourceTaskIds);
+        const newTaskIds = destinationColumn.map((task) => task.id);
+        updateTaskPositions(destinationColumnId, newTaskIds);
+
+        if (sourceColumnId !== destinationColumnId) {
+          const sourceTaskIds = sourceColumn
+            .filter((task) => task.id !== movedTask.id)
+            .map((task) => task.id);
+          updateTaskPositions(sourceColumnId, sourceTaskIds);
+        }
+
+        const updatesPayload = [
+          {
+            id: movedTask.id,
+            status: getStatusByColumnId(destinationColumnId, columns),
+            oldStatus: getStatusByColumnId(sourceColumnId, columns),
+            position: (destination.index + 1) * 1000,
+          },
+        ];
+
+        onChange(updatesPayload);
+      } catch (error) {
+        console.error('Error handling task drag:', error);
       }
-
-      // Callback para mudanças
-      const updatesPayload = [
-        {
-          id: movedTask.id,
-          status: getStatusByColumnId(destinationColumnId),
-          oldStatus: getStatusByColumnId(sourceColumnId),
-          position: (destination.index + 1) * 1000,
-        },
-      ];
-
-      onChange(updatesPayload);
     },
-    [tasks, moveTask, updateTaskPositions, onChange]
+    [tasks, moveTask, updateTaskPositions, onChange, columns]
   );
 
   const onDragEnd = useCallback(
@@ -119,15 +143,23 @@ export function useDragHandlers({
 
       const { type } = result;
 
-      switch (type) {
-        case DragDropType.COLUMN:
-          handleColumnDrag(result);
-          break;
-        case DragDropType.TASK:
-          handleTaskDrag(result);
-          break;
-        default:
-          console.warn('Unknown drag type:', type);
+      try {
+        switch (type) {
+          case DragDropType.COLUMN:
+            handleColumnDrag(result);
+            break;
+          case DragDropType.TASK:
+            handleTaskDrag(result);
+            break;
+          default:
+            if (!type) {
+              handleTaskDrag(result);
+            } else {
+              console.warn('Unknown drag type:', type);
+            }
+        }
+      } catch (error) {
+        console.error('Error in drag end handler:', error);
       }
     },
     [handleColumnDrag, handleTaskDrag]

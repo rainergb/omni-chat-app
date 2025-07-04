@@ -1,5 +1,4 @@
-// hooks/use-column-collapse.ts - Hook para gerenciar collapse de colunas
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useMemo } from 'react';
 
 export interface ColumnCollapseState {
   [columnId: string]: boolean;
@@ -32,11 +31,13 @@ export function useColumnCollapse() {
   }, []);
 
   const collapseAll = useCallback((columnIds: string[]) => {
-    const newState: ColumnCollapseState = {};
-    columnIds.forEach((id) => {
-      newState[id] = true;
+    setCollapsedColumns((prev) => {
+      const newState: ColumnCollapseState = { ...prev };
+      columnIds.forEach((id) => {
+        newState[id] = true;
+      });
+      return newState;
     });
-    setCollapsedColumns(newState);
   }, []);
 
   const expandAll = useCallback(() => {
@@ -50,7 +51,7 @@ export function useColumnCollapse() {
     [collapsedColumns]
   );
 
-  const getCollapsedCount = useCallback(() => {
+  const getCollapsedCount = useMemo(() => {
     return Object.values(collapsedColumns).filter(Boolean).length;
   }, [collapsedColumns]);
 

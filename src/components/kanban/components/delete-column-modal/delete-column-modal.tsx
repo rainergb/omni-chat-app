@@ -1,17 +1,7 @@
-// components/DeleteColumnModal.tsx
 import React, { useState } from 'react';
 import { Modal, Select, Alert, Typography, Button } from 'antd';
 import { TriangleAlert } from 'lucide-react';
-import { KanbanColumn } from '@/app/(dashboard)/kanban/types/kanban-column';
-import {
-  ModalTitle,
-  WarningIcon,
-  ContentContainer,
-  AlertContainer,
-  OptionContainer,
-  SelectContainer,
-  MoveToContainer,
-} from './DeleteColumnModal.styles';
+import { KanbanColumn } from '../../types/kanban-column';
 
 const { Text } = Typography;
 
@@ -46,15 +36,14 @@ export default function DeleteColumnModal({
   return (
     <Modal
       title={
-        <ModalTitle>
-          <WarningIcon>
-            <TriangleAlert />
-          </WarningIcon>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+          <TriangleAlert style={{ width: 20, height: 20, color: '#ef4444' }} />
           Deletar Coluna
-        </ModalTitle>
+        </div>
       }
       open={isOpen}
       onCancel={onClose}
+      destroyOnHidden
       footer={[
         <Button key="cancel" onClick={onClose}>
           Cancelar
@@ -70,24 +59,22 @@ export default function DeleteColumnModal({
         </Button>,
       ]}
     >
-      <ContentContainer>
-        <Text>
-          Tem certeza que deseja deletar a coluna &quot;{column?.title}&quot;?
-        </Text>
-      </ContentContainer>
+      <div style={{ marginBottom: 16 }}>
+        <Text>Tem certeza que deseja deletar a coluna {column?.title}?</Text>
+      </div>
 
       {taskCount > 0 && (
         <>
-          <AlertContainer>
+          <div style={{ marginBottom: 16 }}>
             <Alert
               message={`Esta coluna contém ${taskCount} tarefa(s)`}
               type="warning"
             />
-          </AlertContainer>
+          </div>
 
-          <OptionContainer>
+          <div style={{ marginBottom: 16 }}>
             <Text strong>O que fazer com as tarefas?</Text>
-            <SelectContainer>
+            <div style={{ width: '100%', marginTop: 8 }}>
               <Select
                 style={{ width: '100%' }}
                 value={deleteOption}
@@ -97,13 +84,13 @@ export default function DeleteColumnModal({
                   { label: 'Deletar tarefas junto', value: 'delete' },
                 ]}
               />
-            </SelectContainer>
-          </OptionContainer>
+            </div>
+          </div>
 
           {deleteOption === 'move' && (
-            <MoveToContainer>
+            <div>
               <Text>Mover tarefas para:</Text>
-              <SelectContainer>
+              <div style={{ width: '100%', marginTop: 8 }}>
                 <Select
                   style={{ width: '100%' }}
                   placeholder="Selecione uma coluna"
@@ -114,8 +101,8 @@ export default function DeleteColumnModal({
                     value: col.id,
                   }))}
                 />
-              </SelectContainer>
-            </MoveToContainer>
+              </div>
+            </div>
           )}
         </>
       )}

@@ -1,5 +1,4 @@
-// hooks/use-confirmation.tsx
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useRef } from 'react';
 
 interface ConfirmationState {
   isOpen: boolean;
@@ -13,51 +12,70 @@ interface ConfirmationState {
   loading?: boolean;
 }
 
+const initialState: ConfirmationState = {
+  isOpen: false,
+  title: '',
+  message: '',
+};
+
 export const useConfirmation = () => {
-  const [confirmation, setConfirmation] = useState<ConfirmationState>({
-    isOpen: false,
-    title: '',
-    message: '',
-  });
+  const [confirmation, setConfirmation] =
+    useState<ConfirmationState>(initialState);
+  const confirmCallbackRef = useRef<(() => void | Promise<void>) | null>(null);
+  const cancelCallbackRef = useRef<(() => void) | null>(null);
 
   const showConfirmation = useCallback(
-    (config: Omit<ConfirmationState, 'isOpen'>) => {
+    (config: Omit<ConfirmationState, 'isOpen' | 'loading'>) => {
+      confirmCallbackRef.current = config.onConfirm || null;
+      cancelCallbackRef.current = config.onCancel || null;
+
       setConfirmation({
         ...config,
         isOpen: true,
+        loading: false,
       });
     },
     []
   );
 
   const hideConfirmation = useCallback(() => {
-    setConfirmation((prev) => ({ ...prev, isOpen: false }));
+    setConfirmation(initialState);
+    confirmCallbackRef.current = null;
+    cancelCallbackRef.current = null;
   }, []);
 
   const handleConfirm = useCallback(async () => {
-    if (confirmation.onConfirm) {
+    const confirmCallback = confirmCallbackRef.current;
+
+    if (confirmCallback) {
       setConfirmation((prev) => ({ ...prev, loading: true }));
+
       try {
-        await confirmation.onConfirm();
+        await confirmCallback();
         hideConfirmation();
       } catch (error) {
         console.error('Erro na confirmação:', error);
-      } finally {
         setConfirmation((prev) => ({ ...prev, loading: false }));
       }
     } else {
       hideConfirmation();
     }
-  }, [confirmation.onConfirm, hideConfirmation]);
+  }, [hideConfirmation]);
 
   const handleCancel = useCallback(() => {
-    if (confirmation.onCancel) {
-      confirmation.onCancel();
-    }
-    hideConfirmation();
-  }, [confirmation.onCancel, hideConfirmation]);
+    const cancelCallback = cancelCallbackRef.current;
 
-  // Métodos de conveniência para tipos específicos
+    if (cancelCallback) {
+      try {
+        cancelCallback();
+      } catch (error) {
+        console.error('Erro no cancelamento:', error);
+      }
+    }
+
+    hideConfirmation();
+  }, [hideConfirmation]);
+
   const confirmDelete = useCallback(
     (
       title: string,

@@ -1,4 +1,3 @@
-// components/ColumnManagerModal.tsx - Versão Aprimorada
 import React, { useState, useEffect } from 'react';
 import {
   Modal,
@@ -60,10 +59,11 @@ export default function ColumnManagerModal({
 
   useEffect(() => {
     if (isOpen && mode === 'edit' && column) {
-      form.setFieldsValue({
+      const values = {
         title: column.title,
-        color: column.color,
-      });
+        color: column.color || '#f8fafc',
+      };
+      form.setFieldsValue(values);
       setSelectedColor(column.color || '#f8fafc');
     } else if (isOpen && mode === 'create') {
       form.resetFields();
@@ -122,6 +122,7 @@ export default function ColumnManagerModal({
       open={isOpen}
       onCancel={onClose}
       width={520}
+      destroyOnHidden
       footer={[
         <Button
           key="cancel"
@@ -140,7 +141,6 @@ export default function ColumnManagerModal({
           {mode === 'create' ? 'Criar Coluna' : 'Salvar Alterações'}
         </Button>,
       ]}
-      destroyOnClose
     >
       <div style={{ marginBottom: 24 }}>
         <Text type="secondary">
@@ -150,7 +150,6 @@ export default function ColumnManagerModal({
         </Text>
       </div>
 
-      {/* Templates disponíveis - apenas no modo criação */}
       {mode === 'create' && templates.length > 0 && (
         <div style={{ marginBottom: 24 }}>
           <div style={{ marginBottom: 16 }}>
@@ -234,7 +233,6 @@ export default function ColumnManagerModal({
           </Text>
         </div>
 
-        {/* Preview da cor selecionada */}
         <div
           style={{
             marginBottom: 16,
@@ -259,7 +257,6 @@ export default function ColumnManagerModal({
           </Text>
         </div>
 
-        {/* Cores predefinidas */}
         <div style={{ marginBottom: 16 }}>
           <Text strong style={{ marginBottom: 8, display: 'block' }}>
             Cores Sugeridas
@@ -271,7 +268,6 @@ export default function ColumnManagerModal({
               gap: 8,
             }}
           >
-            {/* Cor padrão */}
             <button
               type="button"
               onClick={() => handleColorSelect('#f8fafc')}
@@ -296,7 +292,6 @@ export default function ColumnManagerModal({
               Padrão
             </button>
 
-            {/* Cores predefinidas */}
             {predefinedColors.map((color) => (
               <button
                 key={color.value}
@@ -320,7 +315,6 @@ export default function ColumnManagerModal({
           </div>
         </div>
 
-        {/* Seletor de cor customizada */}
         <div style={{ marginBottom: 16 }}>
           <Space align="center">
             <Text strong>Cor Personalizada:</Text>

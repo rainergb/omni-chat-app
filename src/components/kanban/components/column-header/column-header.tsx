@@ -1,95 +1,197 @@
-import React from 'react';
-import { DraggableProvidedDragHandleProps } from '@hello-pangea/dnd';
-import { KanbanColumn } from '../../types/kanban-column';
-import ColumnOptionsMenu from '../column-options-menu/column-options-menu';
-import { GripVertical } from 'lucide-react';
+import React, { useState } from 'react';
+import { Button, Space, Dropdown, Switch, Tooltip, Typography } from 'antd';
+import {
+  Plus,
+  Settings,
+  Download,
+  Upload,
+  MoreHorizontal,
+  Grid,
+  List,
+} from 'lucide-react';
 
-interface ColumnHeaderProps {
-  column: KanbanColumn;
-  taskCount: number;
-  onEdit: () => void;
-  onDelete: () => void;
+const { Text } = Typography;
+
+interface BoardHeaderProps {
+  onAddColumn: () => void;
   onAddTask: () => void;
-  canDelete: boolean;
-  dragHandleProps?: DraggableProvidedDragHandleProps;
+  onExportBoard?: () => void;
+  onImportBoard?: () => void;
+  onResetBoard?: () => void;
+  viewMode?: 'grid' | 'list';
+  onViewModeChange?: (mode: 'grid' | 'list') => void;
+  showCompletedTasks?: boolean;
+  onToggleCompletedTasks?: (show: boolean) => void;
 }
 
-export default function ColumnHeader({
-  column,
-  taskCount,
-  onEdit,
-  onDelete,
+export default function BoardHeader({
+  onAddColumn,
   onAddTask,
-  canDelete,
-  dragHandleProps,
-}: ColumnHeaderProps) {
+  onExportBoard,
+  onImportBoard,
+  onResetBoard,
+  viewMode = 'grid',
+  onViewModeChange,
+  showCompletedTasks = true,
+  onToggleCompletedTasks,
+}: BoardHeaderProps) {
+  const [isCompactMode, setIsCompactMode] = useState(false);
+
+  const configMenuItems = [
+    {
+      key: 'export',
+      label: (
+        <div
+          style={{ display: 'flex', alignItems: 'center', gap: 8 }}
+          onClick={onExportBoard}
+        >
+          <Download style={{ width: 16, height: 16 }} />
+          Exportar Board
+        </div>
+      ),
+      disabled: !onExportBoard,
+    },
+    {
+      key: 'import',
+      label: (
+        <div
+          style={{ display: 'flex', alignItems: 'center', gap: 8 }}
+          onClick={onImportBoard}
+        >
+          <Upload style={{ width: 16, height: 16 }} />
+          Importar Board
+        </div>
+      ),
+      disabled: !onImportBoard,
+    },
+    { type: 'divider' as const },
+    {
+      key: 'reset',
+      label: (
+        <div
+          style={{ display: 'flex', alignItems: 'center', gap: 8 }}
+          onClick={onResetBoard}
+        >
+          <Settings style={{ width: 16, height: 16 }} />
+          Resetar para Padrão
+        </div>
+      ),
+      disabled: !onResetBoard,
+      danger: true,
+    },
+  ];
+
   return (
     <div
       style={{
-        display: 'flex',
-        justifyContent: 'space-between',
-        alignItems: 'center',
-        padding: '8px 12px',
-        backgroundColor: column.color || '#f8fafc',
-        borderRadius: '8px 8px 0 0',
-        borderBottom: '1px solid #e2e8f0',
-        cursor: 'default',
+        marginBottom: 16,
+        paddingBottom: 16,
+        borderBottom: '1px solid #e8e8e8',
+        transition: 'all 0.3s ease',
       }}
     >
-      <div style={{ display: 'flex', alignItems: 'center', gap: 8, flex: 1 }}>
-        <div
-          {...dragHandleProps}
-          style={{
-            cursor: 'grab',
-            display: 'flex',
-            alignItems: 'center',
-            padding: '2px',
-            borderRadius: '4px',
-            transition: 'background-color 0.2s',
-          }}
-          onMouseDown={(e) => e.stopPropagation()}
-        >
-          <GripVertical style={{ width: 16, height: 16, color: '#6b7280' }} />
+      <div
+        style={{
+          display: 'flex',
+          justifyContent: 'space-between',
+          alignItems: 'center',
+          marginBottom: isCompactMode ? 0 : 12,
+        }}
+      >
+        <div>
+          <Text style={{ fontSize: 16, fontWeight: 500, color: '#374151' }}>
+            Arraste e solte as tarefas entre as colunas para atualizar seu
+            status.
+          </Text>
         </div>
 
-        <h3
-          style={{
-            margin: 0,
-            fontSize: 14,
-            fontWeight: 600,
-            color: '#374151',
-            flex: 1,
-            textOverflow: 'ellipsis',
-            overflow: 'hidden',
-            whiteSpace: 'nowrap',
-          }}
-        >
-          {column.title}
-        </h3>
+        <Space size="middle">
+          {onViewModeChange && (
+            <Space>
+              <Tooltip title="Visualização em grade">
+                <Button
+                  type={viewMode === 'grid' ? 'primary' : 'default'}
+                  icon={<Grid style={{ width: 16, height: 16 }} />}
+                  onClick={() => onViewModeChange('grid')}
+                  size="small"
+                />
+              </Tooltip>
+              <Tooltip title="Visualização em lista">
+                <Button
+                  type={viewMode === 'list' ? 'primary' : 'default'}
+                  icon={<List style={{ width: 16, height: 16 }} />}
+                  onClick={() => onViewModeChange('list')}
+                  size="small"
+                />
+              </Tooltip>
+            </Space>
+          )}
 
-        <span
-          style={{
-            background: '#e5e7eb',
-            borderRadius: '12px',
-            padding: '2px 8px',
-            fontSize: 12,
-            fontWeight: 500,
-            color: '#374151',
-            minWidth: '20px',
-            textAlign: 'center',
-          }}
-        >
-          {taskCount}
-        </span>
+          <Button
+            onClick={onAddColumn}
+            icon={<Plus style={{ width: 16, height: 16 }} />}
+            size="middle"
+          >
+            Adicionar Coluna
+          </Button>
+
+          <Button
+            onClick={onAddTask}
+            type="primary"
+            icon={<Plus style={{ width: 16, height: 16 }} />}
+            size="middle"
+          >
+            Adicionar Tarefa
+          </Button>
+
+          <Dropdown menu={{ items: configMenuItems }} trigger={['click']}>
+            <Button
+              icon={<MoreHorizontal style={{ width: 16, height: 16 }} />}
+              size="middle"
+            />
+          </Dropdown>
+        </Space>
       </div>
 
-      <ColumnOptionsMenu
-        column={column}
-        canDelete={canDelete}
-        onEdit={onEdit}
-        onDelete={onDelete}
-        onAddTask={onAddTask}
-      />
+      {!isCompactMode && (
+        <div
+          style={{
+            display: 'flex',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+            padding: '8px 12px',
+            backgroundColor: '#f8fafc',
+            borderRadius: 6,
+            border: '1px solid #e2e8f0',
+          }}
+        >
+          <Space size="large">
+            {onToggleCompletedTasks && (
+              <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                <Text style={{ fontSize: 13 }}>
+                  Mostrar tarefas concluídas:
+                </Text>
+                <Switch
+                  checked={showCompletedTasks}
+                  onChange={onToggleCompletedTasks}
+                  size="small"
+                />
+              </div>
+            )}
+          </Space>
+
+          <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+            <Text type="secondary" style={{ fontSize: 13 }}>
+              Modo compacto:
+            </Text>
+            <Switch
+              checked={isCompactMode}
+              onChange={setIsCompactMode}
+              size="small"
+            />
+          </div>
+        </div>
+      )}
     </div>
   );
 }

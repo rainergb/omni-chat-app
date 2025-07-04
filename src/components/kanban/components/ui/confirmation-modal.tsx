@@ -1,4 +1,3 @@
-// components/ui/confirmation-modal.tsx
 import React from 'react';
 import { Modal, Button } from 'antd';
 import {
@@ -85,7 +84,7 @@ const ConfirmationModal: React.FC<ConfirmationModalProps> = ({
       ]}
       closable={!loading}
       maskClosable={!loading}
-      destroyOnClose
+      destroyOnHidden
     >
       <div style={{ padding: '16px 0' }}>
         {typeof message === 'string' ? (

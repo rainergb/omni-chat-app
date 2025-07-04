@@ -1,10 +1,5 @@
-// utils/validation-helpers.ts
 import { KanbanColumn } from '../types/kanban-column';
 import { Task } from '../types/task-status';
-
-/**
- * Utilitários de validação para colunas e tarefas
- */
 
 export interface ValidationResult {
   isValid: boolean;
@@ -12,9 +7,6 @@ export interface ValidationResult {
   warnings: string[];
 }
 
-/**
- * Valida título único de coluna
- */
 export function validateUniqueColumnTitle(
   title: string,
   columns: KanbanColumn[],
@@ -40,14 +32,12 @@ export function validateUniqueColumnTitle(
     result.errors.push('Título deve ter no máximo 50 caracteres');
   }
 
-  // Verificar caracteres especiais
   const invalidChars = /[<>:"/\\|?*]/;
   if (invalidChars.test(trimmedTitle)) {
     result.isValid = false;
     result.errors.push('Título contém caracteres inválidos');
   }
 
-  // Verificar título único
   const existingColumn = columns.find(
     (col) =>
       col.id !== excludeId &&
@@ -59,7 +49,6 @@ export function validateUniqueColumnTitle(
     result.errors.push('Já existe uma coluna com este título');
   }
 
-  // Warnings para títulos muito similares
   const similarColumns = columns.filter(
     (col) =>
       (col.id !== excludeId &&
@@ -76,9 +65,6 @@ export function validateUniqueColumnTitle(
   return result;
 }
 
-/**
- * Valida limites de colunas no board
- */
 export function validateColumnLimits(
   columns: KanbanColumn[]
 ): ValidationResult {
@@ -107,9 +93,6 @@ export function validateColumnLimits(
   return result;
 }
 
-/**
- * Valida proteção de colunas padrão
- */
 export function validateDefaultColumnProtection(
   column: KanbanColumn,
   operation: 'delete' | 'modify'
@@ -127,12 +110,13 @@ export function validateDefaultColumnProtection(
   return result;
 }
 
-/**
- * Valida estrutura de tarefa
- */
-export function validateTaskStructure(task: Partial<Task>): ValidationResult {
+export function validateTaskStructure(
+  task: Partial<Task>,
+  context: 'create' | 'edit' = 'edit'
+): ValidationResult {
   const result: ValidationResult = { isValid: true, errors: [], warnings: [] };
 
+  // Validação do título (sempre obrigatório)
   if (!task.title?.trim()) {
     result.isValid = false;
     result.errors.push('Título da tarefa é obrigatório');
@@ -143,17 +127,22 @@ export function validateTaskStructure(task: Partial<Task>): ValidationResult {
     result.errors.push('Título da tarefa deve ter no máximo 200 caracteres');
   }
 
-  if (!task.columnId) {
+  // Validação de columnId - flexível para criação
+  if (context === 'edit' && !task.columnId) {
     result.isValid = false;
     result.errors.push('Tarefa deve estar associada a uma coluna');
+  } else if (context === 'create' && !task.columnId) {
+    // Para criação, columnId é opcional (será definido automaticamente)
+    result.warnings.push('Coluna será definida automaticamente');
   }
 
+  // Validação de posição
   if (task.position && task.position < 0) {
     result.isValid = false;
     result.errors.push('Posição da tarefa deve ser um número positivo');
   }
 
-  // Validar datas
+  // Validação de datas
   if (task.startDate && task.endDate) {
     const start = new Date(task.startDate);
     const end = new Date(task.endDate);
@@ -164,12 +153,20 @@ export function validateTaskStructure(task: Partial<Task>): ValidationResult {
     }
   }
 
+  // Validação de descrição
+  if (task.description && task.description.length > 2000) {
+    result.isValid = false;
+    result.errors.push('Descrição deve ter no máximo 2000 caracteres');
+  }
+
+  // Validação de anexos
+  if (task.attachments && task.attachments.length > 10) {
+    result.warnings.push('Muitos anexos podem afetar a performance');
+  }
+
   return result;
 }
 
-/**
- * Valida WIP limits
- */
 export function validateWipLimits(
   columnId: string,
   currentTaskCount: number,

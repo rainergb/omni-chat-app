@@ -11,16 +11,21 @@ export const MainContainer = styled.div<MainContainerProps>`
     0 1px 3px 0 rgba(0, 0, 0, 0.1),
     0 1px 2px 0 rgba(0, 0, 0, 0.06);
   margin: 0 28px 28px 28px;
-  height: 100vh;
+  height: calc(100vh - 56px); /* Altura fixa baseada na viewport */
+  max-height: calc(100vh - 56px); /* Altura máxima */
   width: ${(props) =>
     props.$isMenuCollapsed ? 'calc(100vw - 62px)' : 'calc(100vw - 240px)'};
   transition: all 0.2s ease-in-out;
+  overflow: hidden; /* Evita overflow do container principal */
+  display: flex;
+  flex-direction: column;
 
-  /* Responsividade para mobile */
   @media (max-width: 768px) {
     margin: 0 8px 8px 8px;
     width: calc(100vw - 16px);
     border-radius: 4px;
+    height: calc(100vh - 32px);
+    max-height: calc(100vh - 32px);
   }
 
   @media (max-width: 480px) {
@@ -28,17 +33,36 @@ export const MainContainer = styled.div<MainContainerProps>`
     width: 100vw;
     border-radius: 0;
     height: 100vh;
+    max-height: 100vh;
+  }
+`;
+
+export const HeaderContainer = styled.div`
+  flex-shrink: 0; /* Não permite que o header diminua */
+  padding: 12px 24px;
+  border-bottom: 1px solid #e8e8e8;
+  background: #fafafa;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  @media (max-width: 768px) {
+    padding: 8px 16px;
+  }
+
+  @media (max-width: 480px) {
+    padding: 8px 12px;
   }
 `;
 
 export const ContentContainer = styled.div`
-  height: 100%;
+  flex: 1; /* Ocupa o restante do espaço disponível */
   display: flex;
   flex-direction: column;
-  overflow: auto;
+  overflow: hidden; /* Evita que o conteúdo vaze */
   padding: 24px;
+  min-height: 0; /* Importante para flexbox funcionar corretamente */
 
-  /* Responsividade */
   @media (max-width: 768px) {
     padding: 16px;
   }
@@ -48,15 +72,18 @@ export const ContentContainer = styled.div`
   }
 `;
 
-export const HeaderContainer = styled.div`
-  display: flex;
-  flex-direction: column;
-`;
-
 export const HeaderTop = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
+  margin-bottom: 16px;
+  flex-shrink: 0;
+
+  @media (max-width: 768px) {
+    flex-direction: column;
+    gap: 12px;
+    align-items: stretch;
+  }
 `;
 
 export const HeaderContent = styled.div``;
@@ -65,11 +92,30 @@ export const Title = styled.h1`
   font-size: 24px;
   font-weight: 600;
   margin: 0;
+
+  @media (max-width: 768px) {
+    font-size: 20px;
+  }
+
+  @media (max-width: 480px) {
+    font-size: 18px;
+  }
 `;
 
 export const Subtitle = styled.p`
   color: #6b7280;
   margin: 0 0 16px 0;
+  font-size: 16px;
+
+  @media (max-width: 768px) {
+    font-size: 14px;
+    margin: 0 0 12px 0;
+  }
+
+  @media (max-width: 480px) {
+    font-size: 12px;
+    margin: 0 0 8px 0;
+  }
 `;
 
 export const ButtonContainer = styled.div``;
@@ -79,8 +125,8 @@ export const FiltersContainer = styled.div`
   align-items: center;
   gap: 16px;
   margin-bottom: 16px;
+  flex-shrink: 0;
 
-  /* Responsividade */
   @media (max-width: 768px) {
     flex-direction: column;
     align-items: stretch;
@@ -96,23 +142,24 @@ export const FiltersContainer = styled.div`
 export const FilterSelect = styled.div`
   width: 192px;
 
-  /* Responsividade */
   @media (max-width: 768px) {
     width: 100%;
   }
 `;
 
 export const BoardsContainer = styled.div`
+  flex: 1; /* Ocupa o restante do espaço */
   width: 100%;
-  overflow-x: auto;
-  height: 100%;
+  overflow: auto; /* Permite scroll quando necessário */
+  min-height: 0; /* Importante para flexbox */
 
-  /* Scroll horizontal suave */
+  /* Scroll suave */
   scroll-behavior: smooth;
   -webkit-overflow-scrolling: touch;
 
   /* Estilização da scrollbar */
   &::-webkit-scrollbar {
+    width: 8px;
     height: 8px;
   }
 
@@ -131,15 +178,16 @@ export const BoardsContainer = styled.div`
     background: #a1a1a1;
   }
 
-  /* Responsividade */
   @media (max-width: 768px) {
     &::-webkit-scrollbar {
+      width: 6px;
       height: 6px;
     }
   }
 
   @media (max-width: 480px) {
     &::-webkit-scrollbar {
+      width: 4px;
       height: 4px;
     }
   }
@@ -150,16 +198,17 @@ export const BoardsContent = styled.div`
   gap: 16px;
   height: 100%;
   min-width: fit-content;
-  padding-bottom: 8px;
+  padding: 8px;
+  box-sizing: border-box;
 
-  /* Responsividade */
   @media (max-width: 768px) {
     gap: 12px;
+    padding: 6px;
   }
 
   @media (max-width: 480px) {
     gap: 8px;
-    padding-bottom: 4px;
+    padding: 4px;
   }
 `;
 
@@ -180,8 +229,9 @@ export const BoardColumn = styled.div<BoardColumnProps>`
     0 1px 2px 0 rgba(0, 0, 0, 0.06);
   transition: all 0.3s ease-in-out;
   position: relative;
+  display: flex;
+  flex-direction: column;
 
-  /* Responsividade */
   @media (max-width: 768px) {
     min-width: ${(props) => (props.$isCollapsed ? '50px' : '250px')};
     max-width: ${(props) => (props.$isCollapsed ? '50px' : '280px')};
@@ -197,8 +247,27 @@ export const BoardColumn = styled.div<BoardColumnProps>`
 `;
 
 export const DroppableArea = styled.div`
+  flex: 1;
   min-height: 200px;
   padding: 6px 0;
+  overflow-y: auto;
+
+  &::-webkit-scrollbar {
+    width: 4px;
+  }
+
+  &::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background: #d1d5db;
+    border-radius: 2px;
+  }
+
+  &::-webkit-scrollbar-thumb:hover {
+    background: #9ca3af;
+  }
 `;
 
 export const DraggableItem = styled.div`
@@ -210,14 +279,15 @@ export const EmptyState = styled.div`
   align-items: center;
   justify-content: center;
   height: 100%;
+  flex: 1;
 `;
 
 export const EmptyStateText = styled.p`
   color: #6b7280;
   margin: 0;
+  font-size: 16px;
 `;
 
-/* Novos componentes para responsividade */
 export const ColumnHeader = styled.div<{ $isCollapsed?: boolean }>`
   display: flex;
   justify-content: space-between;
@@ -226,6 +296,7 @@ export const ColumnHeader = styled.div<{ $isCollapsed?: boolean }>`
   border-radius: 6px 6px 0 0;
   position: relative;
   min-height: 40px;
+  flex-shrink: 0;
 `;
 
 export const ColumnTitle = styled.h3<{ $isCollapsed?: boolean }>`
@@ -246,8 +317,11 @@ export const ColumnTitle = styled.h3<{ $isCollapsed?: boolean }>`
 `;
 
 export const ColumnContent = styled.div<{ $isCollapsed?: boolean }>`
-  display: ${(props) => (props.$isCollapsed ? 'none' : 'block')};
+  display: ${(props) => (props.$isCollapsed ? 'none' : 'flex')};
+  flex-direction: column;
+  flex: 1;
   transition: all 0.3s ease-in-out;
+  min-height: 0;
 `;
 
 export const ColumnCollapsedIndicator = styled.div<{ $isCollapsed?: boolean }>`
@@ -312,8 +386,27 @@ export const TaskCount = styled.span<{ $isCollapsed?: boolean }>`
   }
 `;
 
+export const FooterContainer = styled.div`
+  flex-shrink: 0;
+  margin-top: 16px;
+  padding: 16px;
+  background-color: #f8f9fa;
+  border-radius: 8px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 14px;
+  color: #6c757d;
+
+  @media (max-width: 768px) {
+    flex-direction: column;
+    gap: 12px;
+    padding: 12px;
+    font-size: 12px;
+  }
+`;
+
 export const ResponsiveIndicator = styled.div`
-  /* Indicador para mostrar quando está em modo responsivo */
   @media (max-width: 768px) {
     &::after {
       content: '📱';
