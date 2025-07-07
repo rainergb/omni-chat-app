@@ -48,6 +48,7 @@ import PersistenceManager from './components/persistance-manager/persistance-man
 dayjs.locale('pt-br');
 
 // Componente de Debug temporário
+<<<<<<< HEAD
 // const DebugPanel = ({ columns, tasks, utilities, kanban }: any) => {
 //   const [isVisible, setIsVisible] = useState(false);
 
@@ -179,6 +180,139 @@ dayjs.locale('pt-br');
 //     </div>
 //   );
 // };
+=======
+const DebugPanel = ({ columns, tasks, utilities, kanban }: any) => {
+  const [isVisible, setIsVisible] = useState(false);
+
+  if (!isVisible) {
+    return (
+      <Button
+        icon={<Database style={{ width: 16, height: 16 }} />}
+        onClick={() => setIsVisible(true)}
+        style={{
+          position: 'fixed',
+          bottom: 80,
+          right: 20,
+          zIndex: 1000,
+          backgroundColor: '#ff4d4f',
+          borderColor: '#ff4d4f',
+          color: 'white',
+        }}
+        size="small"
+      >
+        Debug State
+      </Button>
+    );
+  }
+
+  const debugInfo = {
+    kanbanInitialized: kanban?.isInitialized,
+    columnsManager: {
+      exists: !!columns,
+      columnsCount: columns?.columns?.length || 0,
+      columns:
+        columns?.columns?.map((col: any) => ({
+          id: col.id,
+          title: col.title,
+        })) || [],
+    },
+    utilities: {
+      exists: !!utilities,
+      sortedColumns: utilities?.sortedColumns?.length || 0,
+      sortedColumnsData:
+        utilities?.sortedColumns?.map((col: any) => ({
+          id: col.id,
+          title: col.title,
+        })) || [],
+    },
+    tasksManager: {
+      exists: !!tasks,
+      addTaskExists: !!tasks?.addTask,
+      tasksData: tasks?.tasks || {},
+    },
+  };
+
+  return (
+    <div
+      style={{
+        position: 'fixed',
+        bottom: 20,
+        right: 20,
+        width: 350,
+        maxHeight: 400,
+        overflow: 'auto',
+        zIndex: 1000,
+        backgroundColor: 'white',
+        border: '1px solid #d9d9d9',
+        borderRadius: 6,
+        padding: 16,
+        boxShadow: '0 4px 12px rgba(0,0,0,0.15)',
+      }}
+    >
+      <div
+        style={{
+          marginBottom: 12,
+          display: 'flex',
+          justifyContent: 'space-between',
+        }}
+      >
+        <strong>Debug Panel</strong>
+        <Button size="small" onClick={() => setIsVisible(false)}>
+          ×
+        </Button>
+      </div>
+
+      <div style={{ fontSize: 12, lineHeight: 1.4 }}>
+        <div>
+          <strong>Kanban Inicializado:</strong>{' '}
+          {kanban?.isInitialized ? '✅' : '❌'}
+        </div>
+        <div>
+          <strong>Columns Manager:</strong>{' '}
+          {debugInfo.columnsManager.exists ? '✅' : '❌'}
+        </div>
+        <div>
+          <strong>Tasks Manager:</strong>{' '}
+          {debugInfo.tasksManager.exists ? '✅' : '❌'}
+        </div>
+        <div>
+          <strong>AddTask Method:</strong>{' '}
+          {debugInfo.tasksManager.addTaskExists ? '✅' : '❌'}
+        </div>
+        <div>
+          <strong>Utilities:</strong> {debugInfo.utilities.exists ? '✅' : '❌'}
+        </div>
+        <br />
+        <div>
+          <strong>Total Colunas:</strong>{' '}
+          {debugInfo.columnsManager.columnsCount}
+        </div>
+        <div>
+          <strong>Total Sorted:</strong> {debugInfo.utilities.sortedColumns}
+        </div>
+        <br />
+        <div>
+          <strong>Colunas:</strong>
+        </div>
+        {debugInfo.columnsManager.columns.map((col: any, i: number) => (
+          <div key={i} style={{ paddingLeft: 8 }}>
+            • {col.title}
+          </div>
+        ))}
+        <br />
+        <div>
+          <strong>Sorted Columns:</strong>
+        </div>
+        {debugInfo.utilities.sortedColumnsData.map((col: any, i: number) => (
+          <div key={i} style={{ paddingLeft: 8 }}>
+            • {col.title}
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+};
+>>>>>>> a7ac0c244681286c99f313bd55b99bdc93e88a12
 
 export default function KanbanPage() {
   const [persistenceModalOpen, setPersistenceModalOpen] = useState(false);
@@ -852,7 +986,11 @@ export default function KanbanPage() {
               }}
             >
               {/* Controles de Collapse */}
+<<<<<<< HEAD
               {/* {!responsive.isMobile && (
+=======
+              {!responsive.isMobile && (
+>>>>>>> a7ac0c244681286c99f313bd55b99bdc93e88a12
                 <>
                   <button
                     onClick={() => expandAll()}
@@ -870,7 +1008,11 @@ export default function KanbanPage() {
                   </button>
                   <span style={{ color: '#ccc' }}>|</span>
                 </>
+<<<<<<< HEAD
               )} */}
+=======
+              )}
+>>>>>>> a7ac0c244681286c99f313bd55b99bdc93e88a12
 
               <button
                 onClick={() => setIsTemplatesModalOpen(true)}
@@ -923,13 +1065,21 @@ export default function KanbanPage() {
       )}
 
       {/* Debug Panel - Temporário para diagnóstico */}
+<<<<<<< HEAD
       {/* <DebugPanel
+=======
+      <DebugPanel
+>>>>>>> a7ac0c244681286c99f313bd55b99bdc93e88a12
         columns={columns}
         tasks={tasks}
         board={board}
         utilities={utilities}
         kanban={kanban}
+<<<<<<< HEAD
       /> */}
+=======
+      />
+>>>>>>> a7ac0c244681286c99f313bd55b99bdc93e88a12
 
       <FloatButton.Group
         trigger="hover"
