@@ -62,6 +62,7 @@ export const ContentContainer = styled.div`
   overflow: hidden; /* Evita que o conteúdo vaze */
   padding: 24px;
   min-height: 0; /* Importante para flexbox funcionar corretamente */
+  height: 100%; /* Garante altura total */
 
   @media (max-width: 768px) {
     padding: 16px;
@@ -388,7 +389,6 @@ export const TaskCount = styled.span<{ $isCollapsed?: boolean }>`
 
 export const FooterContainer = styled.div`
   flex-shrink: 0;
-  margin-top: 16px;
   padding: 16px;
   background-color: #f8f9fa;
   border-radius: 8px;

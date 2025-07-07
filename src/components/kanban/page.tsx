@@ -1,21 +1,18 @@
 'use client';
 
 import { useCallback, useState, useMemo } from 'react';
-import { Button, Space, FloatButton, DatePicker, Select, message } from 'antd';
+import { FloatButton, DatePicker, Select, message } from 'antd';
 import { Database, Save, Settings } from 'lucide-react';
 import locale from 'antd/lib/date-picker/locale/pt_BR';
 import dayjs from 'dayjs';
 import 'dayjs/locale/pt-br';
 import { useSelector } from 'react-redux';
-
 import { useKanbanWithPersistence } from './hooks/use-kanban-with-persistence';
-import PersistenceStatusIndicator from './components/persistence-status-indicator/persistence-status-indicator';
 import ConfirmationModal from './components/ui/confirmation-modal';
 import { useConfirmation } from './hooks/use-confirmation';
 import { useBoardConfiguration } from './hooks/use-board-configuration';
 import { useColumnCollapse } from './hooks/use-column-collapse';
 import { useResponsive, useAutoCollapseOnMobile } from './hooks/use-responsive';
-
 import TaskManagerModal from '../components/TaskManager/modals/TaskManagerModal';
 import DroppableBoard from './components/droppable-board/droppable-board';
 import ColumnManagerModal from './components/column-manager-modal';
@@ -23,19 +20,15 @@ import DeleteColumnModal from './components/delete-column-modal';
 import BoardHeader from './components/board-header/board-header';
 import BoardConfigurationModal from './components/board-configuration-modal/board-configuration-modal';
 import ColumnTemplatesModal from './components/ColumnTemplatesModal/ColumnTemplatesModal';
-
 import { useCreateTaskModal } from './hooks/use-create-task.modal';
 import { useEditTaskModal } from './hooks/use-edit-task.modal';
 import { useColumnModal } from './hooks/use-column-modal';
 import { useDragHandlers } from './hooks/use-drag-handlers';
 import { useKanbanUtilities } from './hooks/use-kanban-utilities';
-
 import { mapTaskToModalTaskData } from './kanban.mocks';
 import { RootState } from '@/store';
-
 import {
   MainContainer,
-  HeaderContainer,
   ContentContainer,
   FiltersContainer,
   FilterSelect,
@@ -182,7 +175,7 @@ dayjs.locale('pt-br');
 
 export default function KanbanPage() {
   const [persistenceModalOpen, setPersistenceModalOpen] = useState(false);
-  const [hasErrors, setHasErrors] = useState(false);
+  const [isFullscreen, setIsFullscreen] = useState(false);
 
   const confirmationHook = useConfirmation();
 
@@ -192,11 +185,9 @@ export default function KanbanPage() {
     autoSaveInterval: 15000,
     loadOnMount: true,
     onLoadError: (error) => {
-      setHasErrors(true);
       console.error('Erro ao carregar dados:', error);
     },
     onSaveError: (error) => {
-      setHasErrors(true);
       console.error('Erro ao salvar dados:', error);
     },
     onMigrationStart: (from, to) => {
@@ -204,7 +195,6 @@ export default function KanbanPage() {
     },
     onMigrationComplete: (from, to) => {
       console.log(`Migração concluída: ${from} → ${to}`);
-      setHasErrors(false);
     },
   });
 
@@ -388,16 +378,8 @@ export default function KanbanPage() {
   const handleTaskSave = useCallback(
     (taskData: any) => {
       try {
-        console.log('Salvando tarefa:', { taskData, isEditOpen, isTaskOpen });
-        console.log('Colunas disponíveis:', {
-          utilitiesSorted: utilities.sortedColumns,
-          columnsData: columns?.columns,
-          totalColumns: board?.totalColumns,
-        });
-
         if (isEditOpen) {
-          // Para edição, manter a validação normal
-          const validation = utilities.validateTask(taskData);
+          const validation = utilities.validateTask(taskData, 'edit');
           if (!validation.isValid) {
             message.error(validation.errors.join(', '));
             return;
@@ -410,20 +392,16 @@ export default function KanbanPage() {
             message.warning(validation.warnings.join(', '));
           }
         } else {
-          // Para criação, validar primeiro sem columnId obrigatório
-          const preValidation = utilities.validateTask(taskData);
+          const preValidation = utilities.validateTask(taskData, 'create');
           if (!preValidation.isValid) {
             message.error(preValidation.errors.join(', '));
             return;
           }
 
-          // Tentar encontrar primeira coluna com múltiplas estratégias
           let firstColumn =
             utilities.sortedColumns?.[0] || columns?.columns?.[0] || null;
 
-          // Se ainda não tem coluna, tentar criar uma padrão
           if (!firstColumn && kanban.addColumnWithTasks) {
-            console.log('Criando coluna padrão para tarefa...');
             try {
               firstColumn = kanban.addColumnWithTasks({
                 title: 'Para Fazer',
@@ -441,8 +419,6 @@ export default function KanbanPage() {
             return;
           }
 
-          console.log('Usando coluna:', firstColumn);
-
           const taskWithColumnAndId = {
             ...taskData,
             id: utilities.createUniqueTaskId(),
@@ -452,10 +428,10 @@ export default function KanbanPage() {
             createdAt: new Date().toISOString(),
           };
 
-          console.log('Tarefa preparada:', taskWithColumnAndId);
-
-          // Validação final após definir a coluna
-          const finalValidation = utilities.validateTask(taskWithColumnAndId);
+          const finalValidation = utilities.validateTask(
+            taskWithColumnAndId,
+            'edit'
+          );
           if (!finalValidation.isValid) {
             message.error(finalValidation.errors.join(', '));
             return;
@@ -469,7 +445,6 @@ export default function KanbanPage() {
           tasks.addTask(firstColumn.id, taskWithColumnAndId);
           message.success('Tarefa criada com sucesso!');
 
-          // Mostrar warnings se houver
           const allWarnings = [
             ...(preValidation.warnings || []),
             ...(finalValidation.warnings || []),
@@ -480,10 +455,12 @@ export default function KanbanPage() {
           }
         }
 
-        // Fechar modais após sucesso
+        // Fechar modais após sucesso na criação/edição da tarefa
         if (isTaskOpen) closeTask();
         if (isEditOpen) closeEdit();
       } catch (error) {
+        // Tratamento de erros durante o salvamento da tarefa
+        // Captura qualquer erro não previsto nas validações anteriores
         console.error('Erro ao salvar tarefa:', error);
         message.error(
           error instanceof Error ? error.message : 'Erro ao salvar tarefa'
@@ -491,21 +468,83 @@ export default function KanbanPage() {
       }
     },
     [
-      isEditOpen,
-      isTaskOpen,
-      tasks,
-      columns,
-      utilities,
-      kanban,
-      board,
-      closeTask,
-      closeEdit,
+      // Dependências do useCallback para handleTaskSave
+      // Incluídas para garantir que a função seja recriada quando necessário
+      isEditOpen, // Estado do modal de edição
+      isTaskOpen, // Estado do modal de criação
+      tasks, // Manager de tarefas
+      columns, // Manager de colunas
+      utilities, // Utilitários de validação
+      kanban, // Hook principal do Kanban
+      board, // Estado do board
+      closeTask, // Função para fechar modal de criação
+      closeEdit, // Função para fechar modal de edição
     ]
   );
 
+  /**
+   * Handler para aplicar templates de colunas
+   * @param templateId - ID do template a ser aplicado
+   *
+   * TODO: Implementar lógica completa de aplicação de templates
+   * - Carregar configuração do template
+   * - Aplicar estrutura de colunas
+   * - Migrar tarefas existentes se necessário
+   * - Validar compatibilidade
+   */
   const handleUseTemplate = useCallback((templateId: string) => {
     console.log('Using template:', templateId);
     message.success('Template aplicado com sucesso!');
+  }, []);
+
+  // Handler para alternar modo fullscreen
+  const handleToggleFullscreen = useCallback(() => {
+    setIsFullscreen((prev) => {
+      const newFullscreen = !prev;
+
+      if (newFullscreen) {
+        // Esconder elementos do sistema em fullscreen
+        document.body.style.overflow = 'hidden';
+
+        // Esconder sidebar e header do sistema se existirem
+        const sidebar =
+          document.querySelector('[data-testid="sidebar"]') ||
+          document.querySelector('.sidebar') ||
+          document.querySelector('aside');
+        const header =
+          document.querySelector('[data-testid="header"]') ||
+          document.querySelector('.header') ||
+          document.querySelector('header');
+
+        if (sidebar) {
+          (sidebar as HTMLElement).style.display = 'none';
+        }
+        if (header) {
+          (header as HTMLElement).style.display = 'none';
+        }
+      } else {
+        // Restaurar elementos do sistema
+        document.body.style.overflow = '';
+
+        const sidebar =
+          document.querySelector('[data-testid="sidebar"]') ||
+          document.querySelector('.sidebar') ||
+          document.querySelector('aside');
+        const header =
+          document.querySelector('[data-testid="header"]') ||
+          document.querySelector('.header') ||
+          document.querySelector('header');
+
+        if (sidebar) {
+          (sidebar as HTMLElement).style.display = '';
+        }
+        if (header) {
+          (header as HTMLElement).style.display = '';
+        }
+      }
+
+      return newFullscreen;
+    });
   }, []);
 
   const handleExportBoard = useCallback(() => {
@@ -608,40 +647,21 @@ export default function KanbanPage() {
   }
 
   return (
-    <MainContainer $isMenuCollapsed={isMenuCollapsed}>
-      <HeaderContainer>
-        <div>
-          <h1 style={{ margin: 0, fontSize: 18 }}>Quadro Kanban</h1>
-        </div>
-
-        <Space>
-          <PersistenceStatusIndicator
-            isLoading={kanban.isLoading || false}
-            isSaving={kanban.isSaving || false}
-            lastSaved={kanban.lastSaved}
-            autoSaveEnabled={kanban.autoSaveEnabled || false}
-            migrationInProgress={kanban.migrationInProgress || false}
-            hasErrors={hasErrors}
-          />
-
-          <Button
-            icon={<Save style={{ width: 16, height: 16 }} />}
-            onClick={kanban.saveManually}
-            loading={kanban.isSaving}
-            size="small"
-          >
-            Salvar
-          </Button>
-
-          <Button
-            icon={<Database style={{ width: 16, height: 16 }} />}
-            onClick={() => setPersistenceModalOpen(true)}
-            size="small"
-          >
-            Persistência
-          </Button>
-        </Space>
-      </HeaderContainer>
+    <MainContainer
+      $isMenuCollapsed={isMenuCollapsed}
+      style={{
+        position: isFullscreen ? 'fixed' : 'relative',
+        top: isFullscreen ? 0 : 'auto',
+        left: isFullscreen ? 0 : 'auto',
+        width: isFullscreen ? '100vw' : undefined,
+        height: isFullscreen ? '100vh' : undefined,
+        margin: isFullscreen ? 0 : undefined,
+        zIndex: isFullscreen ? 9999 : 'auto',
+        borderRadius: isFullscreen ? 0 : undefined,
+        boxShadow: isFullscreen ? 'none' : undefined,
+      }}
+    >
+      {/* Comentário do HeaderContainer removido temporariamente */}
 
       <TaskManagerModal
         isOpen={isTaskOpen || !!isEditOpen}
@@ -758,6 +778,8 @@ export default function KanbanPage() {
           onToggleCompletedTasks={(show) =>
             updateConfig({ showCompletedTasks: show })
           }
+          isFullscreen={isFullscreen}
+          onToggleFullscreen={handleToggleFullscreen}
         />
 
         <FiltersContainer>
@@ -793,66 +815,77 @@ export default function KanbanPage() {
           </FilterSelect>
         </FiltersContainer>
 
-        <DroppableBoard
-          columns={columns?.columns || []}
-          tasks={tasks?.tasks || {}}
-          onDragEnd={onDragEnd}
-          onEditColumn={openColumnEdit}
-          onDeleteColumn={handleDeleteColumnClick}
-          onAddTask={openTask}
-          canDeleteColumn={columns?.canDelete || (() => false)}
-          onDuplicateColumn={handleDuplicateColumn}
-          configuration={config}
-          getColumnWipLimit={getColumnWipLimit}
-          collapsedColumns={collapsedColumns}
-          onToggleColumnCollapse={toggleColumnCollapse}
-        />
+        <div
+          style={{
+            flex: 1,
+            display: 'flex',
+            flexDirection: 'column',
+            minHeight: 0,
+            overflow: 'hidden',
+          }}
+        >
+          <DroppableBoard
+            columns={columns?.columns || []}
+            tasks={tasks?.tasks || {}}
+            onDragEnd={onDragEnd}
+            onEditColumn={openColumnEdit}
+            onDeleteColumn={handleDeleteColumnClick}
+            onAddTask={openTask}
+            canDeleteColumn={columns?.canDelete || (() => false)}
+            onDuplicateColumn={handleDuplicateColumn}
+            configuration={config}
+            getColumnWipLimit={getColumnWipLimit}
+            collapsedColumns={collapsedColumns}
+            onToggleColumnCollapse={toggleColumnCollapse}
+          />
+        </div>
 
-        {/* Rodapé com Estatísticas */}
-        <FooterContainer>
-          <div
-            style={{
-              display: 'flex',
-              justifyContent: 'space-between',
-              alignItems: 'center',
-              flexDirection: responsive.isMobile ? 'column' : 'row',
-              gap: responsive.isMobile ? 12 : 0,
-            }}
-          >
+        {/* Rodapé com Estatísticas - Sempre no final */}
+        <div style={{ flexShrink: 0 }}>
+          <FooterContainer>
             <div
               style={{
                 display: 'flex',
-                gap: 24,
-                flexDirection: responsive.isMobile ? 'column' : 'row',
-                alignItems: responsive.isMobile ? 'center' : 'flex-start',
-                textAlign: responsive.isMobile ? 'center' : 'left',
-              }}
-            >
-              <span>Colunas: {board?.totalColumns || 0}</span>
-              <span>Tarefas: {board?.totalTasks || 0}</span>
-              <span>
-                Personalizadas: {columns?.getCustomColumns()?.length || 0}
-              </span>
-              {getCollapsedCount > 0 && (
-                <span style={{ color: '#1890ff' }}>
-                  Recolhidas: {getCollapsedCount}
-                </span>
-              )}
-              {responsive.isMobile && (
-                <span style={{ color: '#faad14' }}>📱 Modo Mobile</span>
-              )}
-            </div>
-
-            <div
-              style={{
-                display: 'flex',
-                gap: 8,
-                flexDirection: responsive.isMobile ? 'column' : 'row',
+                justifyContent: 'space-between',
                 alignItems: 'center',
+                flexDirection: responsive.isMobile ? 'column' : 'row',
+                gap: responsive.isMobile ? 12 : 0,
               }}
             >
-              {/* Controles de Collapse */}
-              {/* {!responsive.isMobile && (
+              <div
+                style={{
+                  display: 'flex',
+                  gap: 24,
+                  flexDirection: responsive.isMobile ? 'column' : 'row',
+                  alignItems: responsive.isMobile ? 'center' : 'flex-start',
+                  textAlign: responsive.isMobile ? 'center' : 'left',
+                }}
+              >
+                <span>Colunas: {board?.totalColumns || 0}</span>
+                <span>Tarefas: {board?.totalTasks || 0}</span>
+                <span>
+                  Personalizadas: {columns?.getCustomColumns()?.length || 0}
+                </span>
+                {getCollapsedCount > 0 && (
+                  <span style={{ color: '#1890ff' }}>
+                    Recolhidas: {getCollapsedCount}
+                  </span>
+                )}
+                {responsive.isMobile && (
+                  <span style={{ color: '#faad14' }}>📱 Modo Mobile</span>
+                )}
+              </div>
+
+              <div
+                style={{
+                  display: 'flex',
+                  gap: 8,
+                  flexDirection: responsive.isMobile ? 'column' : 'row',
+                  alignItems: 'center',
+                }}
+              >
+                {/* Controles de Collapse */}
+                {/* {!responsive.isMobile && (
                 <>
                   <button
                     onClick={() => expandAll()}
@@ -872,33 +905,34 @@ export default function KanbanPage() {
                 </>
               )} */}
 
-              <button
-                onClick={() => setIsTemplatesModalOpen(true)}
-                style={{
-                  background: 'none',
-                  border: 'none',
-                  color: '#6366f1',
-                  cursor: 'pointer',
-                  textDecoration: 'underline',
-                }}
-              >
-                Templates
-              </button>
-              <button
-                onClick={() => setIsConfigModalOpen(true)}
-                style={{
-                  background: 'none',
-                  border: 'none',
-                  color: '#6366f1',
-                  cursor: 'pointer',
-                  textDecoration: 'underline',
-                }}
-              >
-                Configurações
-              </button>
+                <button
+                  onClick={() => setIsTemplatesModalOpen(true)}
+                  style={{
+                    background: 'none',
+                    border: 'none',
+                    color: '#6366f1',
+                    cursor: 'pointer',
+                    textDecoration: 'underline',
+                  }}
+                >
+                  Templates
+                </button>
+                <button
+                  onClick={() => setIsConfigModalOpen(true)}
+                  style={{
+                    background: 'none',
+                    border: 'none',
+                    color: '#6366f1',
+                    cursor: 'pointer',
+                    textDecoration: 'underline',
+                  }}
+                >
+                  Configurações
+                </button>
+              </div>
             </div>
-          </div>
-        </FooterContainer>
+          </FooterContainer>
+        </div>
       </ContentContainer>
 
       {responsive.isDesktop ? null : (

@@ -119,7 +119,8 @@ export function useKanbanUtilities({
   );
 
   const validateTask = useCallback(
-    (task: Partial<Task>) => validateTaskStructure(task),
+    (task: Partial<Task>, context: 'create' | 'edit' = 'edit') =>
+      validateTaskStructure(task, context),
     []
   );
 

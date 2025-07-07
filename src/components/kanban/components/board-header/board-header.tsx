@@ -9,6 +9,8 @@ import {
   MoreHorizontal,
   Grid,
   List,
+  Maximize,
+  Minimize,
 } from 'lucide-react';
 
 const { Title, Text } = Typography;
@@ -23,6 +25,8 @@ interface BoardHeaderProps {
   onViewModeChange?: (mode: 'grid' | 'list') => void;
   showCompletedTasks?: boolean;
   onToggleCompletedTasks?: (show: boolean) => void;
+  isFullscreen?: boolean;
+  onToggleFullscreen?: () => void;
 }
 
 export default function BoardHeader({
@@ -35,6 +39,8 @@ export default function BoardHeader({
   onViewModeChange,
   showCompletedTasks = true,
   onToggleCompletedTasks,
+  isFullscreen = false,
+  onToggleFullscreen,
 }: BoardHeaderProps) {
   const [isCompactMode, setIsCompactMode] = useState(false);
 
@@ -86,7 +92,6 @@ export default function BoardHeader({
     <div
       style={{
         marginBottom: 24,
-        padding: isCompactMode ? '16px 0' : '24px 0',
         transition: 'all 0.3s ease',
       }}
     >
@@ -112,6 +117,28 @@ export default function BoardHeader({
         </div>
 
         <Space size="middle">
+          {/* Botão de Fullscreen */}
+          {onToggleFullscreen && (
+            <Tooltip
+              title={
+                isFullscreen ? 'Sair do modo tela cheia' : 'Modo tela cheia'
+              }
+            >
+              <Button
+                icon={
+                  isFullscreen ? (
+                    <Minimize style={{ width: 16, height: 16 }} />
+                  ) : (
+                    <Maximize style={{ width: 16, height: 16 }} />
+                  )
+                }
+                onClick={onToggleFullscreen}
+                size="large"
+                type={isFullscreen ? 'primary' : 'default'}
+              />
+            </Tooltip>
+          )}
+
           {/* Controles de visualização */}
           {onViewModeChange && (
             <Space>

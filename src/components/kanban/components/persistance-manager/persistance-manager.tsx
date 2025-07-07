@@ -80,7 +80,7 @@ export default function PersistenceManager({
   return (
     <Modal
       title={
-        <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
           <Database style={{ width: 20, height: 20 }} />
           Gerenciador de Persistência
         </div>
@@ -102,25 +102,25 @@ export default function PersistenceManager({
           }
           key="settings"
         >
-          <Space direction="vertical" style={{ width: "100%" }} size="large">
+          <Space direction="vertical" style={{ width: '100%' }} size="large">
             {/* Status atual */}
             <Card size="small">
               <div
                 style={{
-                  display: "flex",
-                  justifyContent: "space-between",
-                  alignItems: "center"
+                  display: 'flex',
+                  justifyContent: 'space-between',
+                  alignItems: 'center',
                 }}
               >
                 <div>
                   <Text strong>Status da Persistência</Text>
                   <br />
                   <Text type="secondary">
-                    Última salvação:{" "}
-                    {persistence.lastSaved?.toLocaleString() || "Nunca"}
+                    Última salvação:{' '}
+                    {persistence.lastSaved?.toLocaleString() || 'Nunca'}
                   </Text>
                 </div>
-                <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
                   {persistence.isSaving && <Tag color="blue">Salvando...</Tag>}
                   {persistence.autoSaveEnabled && (
                     <Tag color="green">Auto-save Ativo</Tag>
@@ -139,19 +139,19 @@ export default function PersistenceManager({
 
             {/* Configurações de Auto-save */}
             <Card title="Salvamento Automático" size="small">
-              <Space direction="vertical" style={{ width: "100%" }}>
+              <Space direction="vertical" style={{ width: '100%' }}>
                 <div
                   style={{
-                    display: "flex",
-                    justifyContent: "space-between",
-                    alignItems: "center"
+                    display: 'flex',
+                    justifyContent: 'space-between',
+                    alignItems: 'center',
                   }}
                 >
                   <Text>Habilitar auto-save</Text>
                   <Switch
                     checked={config.autoSave}
                     onChange={(checked) =>
-                      handleConfigChange("autoSave", checked)
+                      handleConfigChange('autoSave', checked)
                     }
                   />
                 </div>
@@ -159,9 +159,9 @@ export default function PersistenceManager({
                 {config.autoSave && (
                   <div
                     style={{
-                      display: "flex",
-                      justifyContent: "space-between",
-                      alignItems: "center"
+                      display: 'flex',
+                      justifyContent: 'space-between',
+                      alignItems: 'center',
                     }}
                   >
                     <Text>Intervalo (segundos)</Text>
@@ -170,7 +170,7 @@ export default function PersistenceManager({
                       max={300}
                       value={config.autoSaveInterval}
                       onChange={(value) =>
-                        handleConfigChange("autoSaveInterval", value)
+                        handleConfigChange('autoSaveInterval', value)
                       }
                       style={{ width: 100 }}
                     />
@@ -187,12 +187,12 @@ export default function PersistenceManager({
 
             {/* Configurações de Backup */}
             <Card title="Backup e Versionamento" size="small">
-              <Space direction="vertical" style={{ width: "100%" }}>
+              <Space direction="vertical" style={{ width: '100%' }}>
                 <div
                   style={{
-                    display: "flex",
-                    justifyContent: "space-between",
-                    alignItems: "center"
+                    display: 'flex',
+                    justifyContent: 'space-between',
+                    alignItems: 'center',
                   }}
                 >
                   <Text>Máximo de backups</Text>
@@ -201,7 +201,7 @@ export default function PersistenceManager({
                     max={50}
                     value={config.maxBackups}
                     onChange={(value) =>
-                      handleConfigChange("maxBackups", value)
+                      handleConfigChange('maxBackups', value)
                     }
                     style={{ width: 100 }}
                   />
@@ -209,16 +209,16 @@ export default function PersistenceManager({
 
                 <div
                   style={{
-                    display: "flex",
-                    justifyContent: "space-between",
-                    alignItems: "center"
+                    display: 'flex',
+                    justifyContent: 'space-between',
+                    alignItems: 'center',
                   }}
                 >
                   <Text>Compressão (experimental)</Text>
                   <Switch
                     checked={config.compressionEnabled}
                     onChange={(checked) =>
-                      handleConfigChange("compressionEnabled", checked)
+                      handleConfigChange('compressionEnabled', checked)
                     }
                     disabled
                   />
