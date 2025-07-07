@@ -20,6 +20,26 @@ export const MainContainer = styled.div<MainContainerProps>`
   display: flex;
   flex-direction: column;
 
+  /* Estilos específicos para o modo fullscreen */
+  &.kanban-fullscreen-container {
+    position: fixed !important;
+    top: 0 !important;
+    left: 0 !important;
+    right: 0 !important;
+    bottom: 0 !important;
+    width: 100vw !important;
+    height: 100vh !important;
+    max-width: 100vw !important;
+    max-height: 100vh !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    z-index: 999999 !important;
+    background: white !important;
+    overflow: hidden !important;
+    border-radius: 0 !important;
+    box-shadow: none !important;
+  }
+
   @media (max-width: 768px) {
     margin: 0 8px 8px 8px;
     width: calc(100vw - 16px);
@@ -64,12 +84,28 @@ export const ContentContainer = styled.div`
   min-height: 0; /* Importante para flexbox funcionar corretamente */
   height: 100%; /* Garante altura total */
 
+  /* Ajustes para o modo fullscreen */
+  .kanban-fullscreen-container & {
+    padding: 8px !important;
+    height: 100vh !important;
+    max-height: 100vh !important;
+    margin: 0 !important;
+  }
+
   @media (max-width: 768px) {
     padding: 16px;
+
+    .kanban-fullscreen-container & {
+      padding: 4px !important;
+    }
   }
 
   @media (max-width: 480px) {
     padding: 12px 8px;
+
+    .kanban-fullscreen-container & {
+      padding: 4px !important;
+    }
   }
 `;
 
